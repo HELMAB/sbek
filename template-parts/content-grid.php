@@ -2,7 +2,7 @@
 $is_sponsored = get_post_meta( get_the_ID(), '_sabay_is_sponsored', true );
 $video_url = get_post_meta( get_the_ID(), '_sabay_video_url', true );
 ?>
-<article id="post-<?php the_ID(); ?>" <?php post_class('bg-white rounded shadow-sm overflow-hidden group hover:shadow-md transition-shadow ' . ($is_sponsored ? 'border-2 border-yellow-400' : '')); ?>>
+<article id="post-<?php the_ID(); ?>" <?php post_class('scroll-reveal bg-white rounded shadow-sm overflow-hidden group hover:shadow-md transition-shadow ' . ($is_sponsored ? 'border-2 border-yellow-400' : '')); ?>>
     <div class="relative h-48 overflow-hidden">
         <?php if ( has_post_thumbnail() ) : ?>
             <?php the_post_thumbnail('medium', ['class' => 'w-full h-full object-cover group-hover:scale-105 transition-transform duration-500']); ?>

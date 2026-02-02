@@ -6,7 +6,7 @@
     <link rel="profile" href="https://gmpg.org/xfn/11">
     <?php wp_head(); ?>
 </head>
-<body <?php body_class('bg-gray-50 font-khmer'); ?>>
+<body <?php body_class('bg-gray-50 font-khmer opacity-0 animate-fade-in'); ?>>
 <?php wp_body_open(); ?>
 
 <header id="masthead" class="site-header bg-white shadow-sm sticky top-0 z-50">

@@ -61,6 +61,9 @@ function sabay_clone_scripts() {
         'ajax_url' => admin_url( 'admin-ajax.php' ),
         'nonce'    => wp_create_nonce( 'sabay_load_more_nonce' )
     ) );
+
+    // Motion Effects JS
+    wp_enqueue_script( 'sabay-motion', get_template_directory_uri() . '/assets/js/motion.js', array(), '1.0.0', true );
 }
 add_action( 'wp_enqueue_scripts', 'sabay_clone_scripts' );
 

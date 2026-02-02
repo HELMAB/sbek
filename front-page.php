@@ -56,7 +56,7 @@
     $categories = get_categories( array('number' => 3) );
     foreach ( $categories as $category ) :
     ?>
-    <section class="container mx-auto px-4 py-8">
+    <section class="scroll-reveal container mx-auto px-4 py-8">
         <div class="flex items-center justify-between border-b-2 border-sabay-red mb-6">
             <h2 class="bg-sabay-red text-white px-4 py-1 text-lg font-bold uppercase"><?php echo $category->name; ?></h2>
             <a href="<?php echo get_category_link($category->term_id); ?>" class="text-sabay-red text-sm font-bold hover:underline">View All &rarr;</a>
