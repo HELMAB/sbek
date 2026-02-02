@@ -1,0 +1,49 @@
+<?php
+/**
+ * Performance optimizations for Sabay Clone
+ * Handles Transients and Caching logic.
+ */
+
+/**
+ * Get cached query or run a new one.
+ * 
+ * @param array  $args           WP_Query arguments.
+ * @param string $transient_name Unique name for the cache.
+ * @param int    $expiration     Time in seconds.
+ * @return WP_Query
+ */
+function sabay_get_cached_query( $args, $transient_name, $expiration = 900 ) {
+    // Check if transient exists
+    $cached_ids = get_transient( $transient_name );
+
+    if ( false === $cached_ids ) {
+        // Run the heavy query only to get IDs
+        $args['fields'] = 'ids'; // Optimization: only fetch IDs
+        $query = new WP_Query( $args );
+        
+        $cached_ids = $query->posts;
+        
+        // Save result to transient
+        set_transient( $transient_name, $cached_ids, $expiration );
+    }
+
+    if ( empty( $cached_ids ) ) {
+        return new WP_Query(); // Return empty query if no IDs
+    }
+
+    // Return a lightweight query using the cached IDs
+    return new WP_Query( array(
+        'post__in' => $cached_ids,
+        'orderby'  => 'post__in',
+        'posts_per_page' => count( $cached_ids ) // Ensure all are returned
+    ) );
+}
+
+/**
+ * Clear transients on save to ensure fresh content.
+ */
+function sabay_clear_transients_on_save() {
+    delete_transient( 'sabay_breaking_news' );
+    delete_transient( 'sabay_trending_sidebar' );
+}
+add_action( 'save_post', 'sabay_clear_transients_on_save' );
