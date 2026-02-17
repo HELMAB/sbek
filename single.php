@@ -47,15 +47,15 @@
         <!-- Sidebar -->
         <aside class="col-span-12 lg:col-span-4 space-y-8">
             <div class="bg-white p-6 rounded shadow-sm">
-                <h3 class="text-lg font-bold border-b-2 border-sabay-red pb-2 mb-4 uppercase">Trending</h3>
+                <h3 class="text-lg font-bold border-b-2 border-sabay-red pb-2 mb-4 uppercase"><?php echo esc_html( t( 'trending' ) ); ?></h3>
                 <div class="space-y-4">
                     <?php
-                    $trending = sabay_get_cached_query( array( 
-                        'posts_per_page' => 5, 
+                    $trending = sabay_get_cached_query( array(
+                        'posts_per_page' => 5,
                         'meta_key'       => '_sabay_trending_score',
                         'orderby'        => 'meta_value_num',
-                        'order'          => 'DESC'
-                    ), 'sabay_trending_sidebar', 3600 ); // Cache for 1 hour
+                        'order'          => 'DESC',
+                    ), 'sabay_trending_sidebar_' . sabay_lang(), 3600 ); // Cache per language, 1 hour
                     
                     if ( $trending->have_posts() ) : while ( $trending->have_posts() ) : $trending->the_post();
                     ?>
@@ -71,7 +71,7 @@
                                 <?php endif; ?>
                             </div>
                             <h4 class="text-sm font-bold group-hover:text-sabay-red transition-colors line-clamp-3">
-                                <a href="<?php the_permalink(); ?>"><?php the_title(); ?></a>
+                                <a href="<?php echo esc_url( sabay_localize_url( get_permalink() ) ); ?>"><?php the_title(); ?></a>
                             </h4>
                         </div>
                     <?php endwhile; wp_reset_postdata(); endif; ?>
@@ -80,7 +80,7 @@
 
             <!-- Ad Placeholder -->
             <div class="bg-gray-200 h-[600px] flex items-center justify-center text-gray-400 font-bold italic rounded">
-                ADVERTISEMENT
+                <?php echo esc_html( t( 'advertisement' ) ); ?>
             </div>
         </aside>
     </div>

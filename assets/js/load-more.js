@@ -9,12 +9,13 @@ document.addEventListener('DOMContentLoaded', function() {
         if (loading) return;
         loading = true;
         const originalText = loadMoreBtn.innerText;
-        loadMoreBtn.innerText = 'Loading...';
+        loadMoreBtn.innerText = sabay_ajax.loading_text;
 
         const data = new FormData();
         data.append('action', 'sabay_load_more');
         data.append('page', page);
         data.append('nonce', sabay_ajax.nonce);
+        data.append('lang', sabay_ajax.lang);
 
         fetch(sabay_ajax.ajax_url, {
             method: 'POST',
@@ -29,7 +30,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 loading = false;
                 loadMoreBtn.innerText = originalText;
             } else {
-                loadMoreBtn.innerText = 'No more posts';
+                loadMoreBtn.innerText = sabay_ajax.no_more_text;
                 loadMoreBtn.disabled = true;
                 loadMoreBtn.classList.add('opacity-50', 'cursor-not-allowed');
             }

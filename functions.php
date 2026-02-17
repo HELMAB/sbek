@@ -19,11 +19,22 @@ if ( ! function_exists( 'sabay_clone_setup' ) ) :
         ) );
 
         register_nav_menus( array(
-            'menu-1' => esc_html__( 'Primary', 'sabay-clone' ),
+            'menu-1'    => esc_html__( 'Primary (English)', 'sabay-clone' ),
+            'menu-1-jp' => esc_html__( 'Primary (Japanese)', 'sabay-clone' ),
         ) );
     }
 endif;
 add_action( 'after_setup_theme', 'sabay_clone_setup' );
+
+/**
+ * Multilingual (i18n) — must load first so sabay_lang() is available
+ */
+require get_template_directory() . '/inc/i18n.php';
+
+/**
+ * Multilingual Admin UI
+ */
+require get_template_directory() . '/inc/i18n-admin.php';
 
 /**
  * Custom Fields
@@ -58,8 +69,12 @@ function sabay_clone_scripts() {
     // Load More JS
     wp_enqueue_script( 'sabay-load-more', get_template_directory_uri() . '/assets/js/load-more.js', array(), '1.0.0', true );
     wp_localize_script( 'sabay-load-more', 'sabay_ajax', array(
-        'ajax_url' => admin_url( 'admin-ajax.php' ),
-        'nonce'    => wp_create_nonce( 'sabay_load_more_nonce' )
+        'ajax_url'       => admin_url( 'admin-ajax.php' ),
+        'nonce'          => wp_create_nonce( 'sabay_load_more_nonce' ),
+        'lang'           => sabay_lang(),
+        'loading_text'   => t( 'loading' ),
+        'no_more_text'   => t( 'no_more_posts' ),
+        'load_more_text' => t( 'load_more' ),
     ) );
 
     // Motion Effects JS
@@ -74,11 +89,27 @@ function sabay_ajax_load_more() {
     check_ajax_referer( 'sabay_load_more_nonce', 'nonce' );
 
     $paged = isset( $_POST['page'] ) ? intval( $_POST['page'] ) : 2;
+    $lang  = isset( $_POST['lang'] ) ? sanitize_key( $_POST['lang'] ) : SABAY_DEFAULT_LANGUAGE;
+
+    if ( ! in_array( $lang, SABAY_LANGUAGES, true ) ) {
+        $lang = SABAY_DEFAULT_LANGUAGE;
+    }
+
+    // Set global so sabay_localize_url() works correctly inside templates
+    $GLOBALS['sabay_lang'] = $lang;
+
     $args = array(
         'post_type'      => 'post',
         'post_status'    => 'publish',
-        'posts_per_page' => 4, // Match your grid count
-        'paged'          => $paged
+        'posts_per_page' => 4,
+        'paged'          => $paged,
+        'tax_query'      => array(
+            array(
+                'taxonomy' => 'language',
+                'field'    => 'slug',
+                'terms'    => array( $lang ),
+            ),
+        ),
     );
 
     $query = new WP_Query( $args );

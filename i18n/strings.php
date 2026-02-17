@@ -1,0 +1,63 @@
+<?php
+/**
+ * UI translation strings.
+ * Add new languages by adding a top-level key matching the language slug.
+ *
+ * Usage: t('key')  or  t('key', $arg1, $arg2, ...)
+ */
+return [
+    'en' => [
+        'breaking_news'    => 'Breaking News',
+        'featured'         => 'Featured',
+        'read_more'        => 'Read More',
+        'view_all'         => 'View All',
+        'latest_news'      => 'Latest News',
+        'trending'         => 'Trending',
+        'load_more'        => 'Load More News',
+        'loading'          => 'Loading...',
+        'no_more_posts'    => 'No more posts',
+        'no_posts_found'   => 'No posts found.',
+        'categories'       => 'Categories',
+        'quick_links'      => 'Quick Links',
+        'newsletter'       => 'Newsletter',
+        'newsletter_desc'  => 'Subscribe to get the latest news in your inbox.',
+        'email_address'    => 'Email Address',
+        'about_us'         => 'About Us',
+        'advertise'        => 'Advertise With Us',
+        'privacy_policy'   => 'Privacy Policy',
+        'terms_of_use'     => 'Terms of Use',
+        'contact_us'       => 'Contact Us',
+        'advertisement'    => 'ADVERTISEMENT',
+        'tags'             => 'Tags:',
+        'search_results'   => 'Search results for: %s',
+        'sponsored'        => 'Sponsored',
+        'time_ago'         => '%s ago',
+    ],
+    'jp' => [
+        'breaking_news'    => 'ブレイキングニュース',
+        'featured'         => '特集',
+        'read_more'        => '続きを読む',
+        'view_all'         => 'すべて見る →',
+        'latest_news'      => '最新ニュース',
+        'trending'         => 'トレンド',
+        'load_more'        => 'もっと見る',
+        'loading'          => '読み込み中...',
+        'no_more_posts'    => '記事がありません',
+        'no_posts_found'   => '投稿が見つかりませんでした。',
+        'categories'       => 'カテゴリー',
+        'quick_links'      => 'クイックリンク',
+        'newsletter'       => 'ニュースレター',
+        'newsletter_desc'  => '最新ニュースをメールでお届けします。',
+        'email_address'    => 'メールアドレス',
+        'about_us'         => '私たちについて',
+        'advertise'        => '広告掲載',
+        'privacy_policy'   => 'プライバシーポリシー',
+        'terms_of_use'     => '利用規約',
+        'contact_us'       => 'お問い合わせ',
+        'advertisement'    => '広告',
+        'tags'             => 'タグ:',
+        'search_results'   => '「%s」の検索結果',
+        'sponsored'        => 'スポンサード',
+        'time_ago'         => '%s前',
+    ],
+];

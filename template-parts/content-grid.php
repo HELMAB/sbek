@@ -21,17 +21,17 @@ $video_url = get_post_meta( get_the_ID(), '_sabay_video_url', true );
         <?php
         $categories = get_the_category();
         if ( ! empty( $categories ) ) {
-            echo '<a href="' . esc_url( get_category_link( $categories[0]->term_id ) ) . '" class="absolute top-2 left-2 bg-sabay-blue text-white text-[10px] font-bold px-2 py-0.5 rounded uppercase">' . esc_html( $categories[0]->name ) . '</a>';
+            echo '<a href="' . esc_url( sabay_localize_url( get_category_link( $categories[0]->term_id ) ) ) . '" class="absolute top-2 left-2 bg-sabay-blue text-white text-[10px] font-bold px-2 py-0.5 rounded uppercase">' . esc_html( sabay_term_name( $categories[0] ) ) . '</a>';
         }
         ?>
     </div>
     
     <div class="p-4">
         <?php if ( $is_sponsored ) : ?>
-            <span class="block text-[10px] text-gray-400 font-bold uppercase tracking-wider mb-1">Sponsored</span>
+            <span class="block text-[10px] text-gray-400 font-bold uppercase tracking-wider mb-1"><?php echo esc_html( t( 'sponsored' ) ); ?></span>
         <?php endif; ?>
         <h3 class="text-base font-bold line-clamp-2 mb-2 leading-snug">
-            <a href="<?php the_permalink(); ?>" class="hover:text-sabay-red transition-colors"><?php the_title(); ?></a>
+            <a href="<?php echo esc_url( sabay_localize_url( get_permalink() ) ); ?>" class="hover:text-sabay-red transition-colors"><?php the_title(); ?></a>
         </h3>
         <div class="flex items-center text-gray-500 text-xs space-x-2">
             <span><?php echo get_the_date(); ?></span>

@@ -41,9 +41,14 @@ function sabay_get_cached_query( $args, $transient_name, $expiration = 900 ) {
 
 /**
  * Clear transients on save to ensure fresh content.
+ * Clears per-language cache variants.
  */
-function sabay_clear_transients_on_save() {
-    delete_transient( 'sabay_breaking_news' );
-    delete_transient( 'sabay_trending_sidebar' );
+function sabay_clear_transients_on_save(): void {
+    $languages = defined( 'SABAY_LANGUAGES' ) ? SABAY_LANGUAGES : [ 'en', 'jp' ];
+
+    foreach ( $languages as $lang ) {
+        delete_transient( "sabay_breaking_news_{$lang}" );
+        delete_transient( "sabay_trending_sidebar_{$lang}" );
+    }
 }
 add_action( 'save_post', 'sabay_clear_transients_on_save' );

@@ -27,14 +27,14 @@
 
             <!-- Categories -->
             <div>
-                <h3 class="text-lg font-bold mb-6 border-l-4 border-sabay-red pl-3 uppercase">Categories</h3>
+                <h3 class="text-lg font-bold mb-6 border-l-4 border-sabay-red pl-3 uppercase"><?php echo esc_html( t( 'categories' ) ); ?></h3>
                 <ul class="space-y-3 text-gray-400 text-sm">
                     <?php
                     $footer_cats = get_categories( array('number' => 6) );
                     foreach ( $footer_cats as $cat ) :
                     ?>
-                        <li><a href="<?php echo get_category_link($cat->term_id); ?>" class="hover:text-sabay-red hover:pl-2 transition-all duration-300 flex items-center">
-                            <span class="mr-2">&rsaquo;</span> <?php echo $cat->name; ?>
+                        <li><a href="<?php echo esc_url( sabay_localize_url( get_category_link( $cat->term_id ) ) ); ?>" class="hover:text-sabay-red hover:pl-2 transition-all duration-300 flex items-center">
+                            <span class="mr-2">&rsaquo;</span> <?php echo esc_html( sabay_term_name( $cat ) ); ?>
                         </a></li>
                     <?php endforeach; ?>
                 </ul>
@@ -42,22 +42,22 @@
 
             <!-- Useful Links -->
             <div>
-                <h3 class="text-lg font-bold mb-6 border-l-4 border-sabay-red pl-3 uppercase">Quick Links</h3>
+                <h3 class="text-lg font-bold mb-6 border-l-4 border-sabay-red pl-3 uppercase"><?php echo esc_html( t( 'quick_links' ) ); ?></h3>
                 <ul class="space-y-3 text-gray-400 text-sm">
-                    <li><a href="#" class="hover:text-sabay-red transition-colors">About Us</a></li>
-                    <li><a href="#" class="hover:text-sabay-red transition-colors">Advertise With Us</a></li>
-                    <li><a href="#" class="hover:text-sabay-red transition-colors">Privacy Policy</a></li>
-                    <li><a href="#" class="hover:text-sabay-red transition-colors">Terms of Use</a></li>
-                    <li><a href="#" class="hover:text-sabay-red transition-colors">Contact Us</a></li>
+                    <li><a href="#" class="hover:text-sabay-red transition-colors"><?php echo esc_html( t( 'about_us' ) ); ?></a></li>
+                    <li><a href="#" class="hover:text-sabay-red transition-colors"><?php echo esc_html( t( 'advertise' ) ); ?></a></li>
+                    <li><a href="#" class="hover:text-sabay-red transition-colors"><?php echo esc_html( t( 'privacy_policy' ) ); ?></a></li>
+                    <li><a href="#" class="hover:text-sabay-red transition-colors"><?php echo esc_html( t( 'terms_of_use' ) ); ?></a></li>
+                    <li><a href="#" class="hover:text-sabay-red transition-colors"><?php echo esc_html( t( 'contact_us' ) ); ?></a></li>
                 </ul>
             </div>
 
             <!-- Contact/Newsletter -->
             <div>
-                <h3 class="text-lg font-bold mb-6 border-l-4 border-sabay-red pl-3 uppercase">Newsletter</h3>
-                <p class="text-gray-400 text-sm mb-4">Subscribe to get the latest news in your inbox.</p>
+                <h3 class="text-lg font-bold mb-6 border-l-4 border-sabay-red pl-3 uppercase"><?php echo esc_html( t( 'newsletter' ) ); ?></h3>
+                <p class="text-gray-400 text-sm mb-4"><?php echo esc_html( t( 'newsletter_desc' ) ); ?></p>
                 <form class="flex">
-                    <input type="email" placeholder="Email Address" class="bg-gray-800 border-none rounded-l px-4 py-2 w-full text-sm focus:ring-1 focus:ring-sabay-red">
+                    <input type="email" placeholder="<?php echo esc_attr( t( 'email_address' ) ); ?>" class="bg-gray-800 border-none rounded-l px-4 py-2 w-full text-sm focus:ring-1 focus:ring-sabay-red">
                     <button class="bg-sabay-red hover:bg-red-700 px-4 py-2 rounded-r transition-colors">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
                     </button>
@@ -67,9 +67,8 @@
 
         <div class="border-t border-gray-800 pt-8 flex flex-col md:flex-row justify-between items-center text-gray-500 text-xs">
             <p>&copy; <?php echo date('Y'); ?> Sabay Clone. Built for speed and performance.</p>
-            <div class="mt-4 md:mt-0 flex space-x-6">
-                <a href="#" class="hover:text-white">English</a>
-                <a href="#" class="hover:text-white font-khmer">ភាសាខ្មែរ</a>
+            <div class="mt-4 md:mt-0">
+                <?php echo sabay_language_switcher(); ?>
             </div>
         </div>
     </div>
