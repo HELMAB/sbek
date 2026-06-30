@@ -12,8 +12,15 @@
 <header id="masthead" class="site-header bg-white shadow-sm sticky top-0 z-50">
     <div class="container mx-auto px-4 py-3 flex justify-between items-center">
         <div class="site-branding">
-            <a href="<?php echo esc_url( sabay_localize_url( home_url( '/' ) ) ); ?>" class="text-sabay-red text-3xl font-bold uppercase">
-                Sabay Clone
+            <a href="<?php echo esc_url( sabay_localize_url( home_url( '/' ) ) ); ?>" class="inline-flex items-center text-sabay-red text-3xl font-bold uppercase">
+                <?php
+                $sabay_logo = function_exists( 'sabay_site_setting_image_url' ) ? sabay_site_setting_image_url( 'logo', 'medium' ) : '';
+                if ( $sabay_logo ) :
+                    ?>
+                    <img src="<?php echo esc_url( $sabay_logo ); ?>" alt="<?php echo esc_attr( get_bloginfo( 'name' ) ); ?>" class="h-10 w-auto">
+                <?php else : ?>
+                    <?php bloginfo( 'name' ); ?>
+                <?php endif; ?>
             </a>
         </div>
         <nav id="site-navigation" class="main-navigation hidden md:flex space-x-6 font-medium h-full">

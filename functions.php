@@ -37,6 +37,11 @@ require get_template_directory() . '/inc/i18n.php';
 require get_template_directory() . '/inc/i18n-admin.php';
 
 /**
+ * Inline SVG icons (Lucide)
+ */
+require get_template_directory() . '/inc/icons.php';
+
+/**
  * Custom Fields
  */
 require get_template_directory() . '/inc/custom-fields.php';
@@ -55,6 +60,21 @@ require get_template_directory() . '/inc/performance.php';
  * SEO
  */
 require get_template_directory() . '/inc/seo.php';
+
+/**
+ * Site Settings admin page
+ */
+require get_template_directory() . '/inc/site-settings.php';
+
+/**
+ * Third-party integrations (GA4, GTM, custom scripts)
+ */
+require get_template_directory() . '/inc/integrations.php';
+
+/**
+ * Admin dashboard setup widget
+ */
+require get_template_directory() . '/inc/dashboard-widget.php';
 
 /**
  * Enqueue scripts and styles.

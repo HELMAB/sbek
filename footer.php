@@ -9,20 +9,27 @@
                 <p class="text-gray-400 text-sm leading-relaxed">
                     The leading digital news source in Cambodia, providing the latest in Entertainment, Technology, Life, and Sport since 2026.
                 </p>
-                <div class="flex space-x-4">
-                    <!-- Facebook -->
-                    <a href="#" class="w-10 h-10 bg-gray-800 rounded-full flex items-center justify-center hover:bg-blue-600 transition-colors group">
-                        <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24"><path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"/></svg>
-                    </a>
-                    <!-- Telegram -->
-                    <a href="#" class="w-10 h-10 bg-gray-800 rounded-full flex items-center justify-center hover:bg-sky-500 transition-colors group">
-                        <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24"><path d="M20.665 3.717l-17.73 6.837c-1.213.486-1.203 1.163-.222 1.462l4.552 1.42 10.532-6.645c.498-.303.953-.14.579.192l-8.533 7.701v3.164c.31 0 .447-.142.621-.311l1.488-1.445 3.093 2.284c.57.315.98.153 1.121-.527l2.031-9.57c.208-.83-.313-1.206-.861-.96z"/></svg>
-                    </a>
-                    <!-- TikTok -->
-                    <a href="#" class="w-10 h-10 bg-gray-800 rounded-full flex items-center justify-center hover:bg-pink-600 transition-colors group">
-                        <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24"><path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.9-.32-1.98-.23-2.81.3-.64.4-.98 1.13-1.03 1.88-.12.82.26 1.67.96 2.1.51.35 1.15.44 1.76.39.81-.03 1.57-.45 2.01-1.13.44-.65.59-1.45.59-2.24l.01-11.49z"/></svg>
-                    </a>
-                </div>
+                <?php
+                $sabay_socials = function_exists( 'sabay_site_setting' ) ? sabay_site_setting( 'socials', [] ) : [];
+                if ( ! empty( $sabay_socials ) ) :
+                    ?>
+                    <div class="flex space-x-4">
+                        <?php foreach ( $sabay_socials as $sabay_social ) :
+                            if ( empty( $sabay_social['url'] ) ) {
+                                continue;
+                            }
+                            $sabay_platform = $sabay_social['platform'] ?? '';
+                            ?>
+                            <a href="<?php echo esc_url( $sabay_social['url'] ); ?>"
+                                target="_blank" rel="noopener noreferrer"
+                                aria-label="<?php echo esc_attr( $sabay_platform ); ?>"
+                                title="<?php echo esc_attr( $sabay_platform ); ?>"
+                                class="w-10 h-10 bg-gray-800 text-white rounded-full flex items-center justify-center hover:bg-sabay-red transition-colors">
+                                <?php echo sabay_icon( sabay_social_icon_name( $sabay_platform ), [ 'width' => 20, 'height' => 20 ] ); ?>
+                            </a>
+                        <?php endforeach; ?>
+                    </div>
+                <?php endif; ?>
             </div>
 
             <!-- Categories -->
