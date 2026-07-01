@@ -26,24 +26,65 @@ function sabay_login_logo_title(): string {
 add_filter( 'login_headertext', 'sabay_login_logo_title' );
 
 /**
+ * Give WordPress's own #login h1.wp-login-logo (already positioned at the
+ * top of the form card by core) our site logo instead of the WordPress mark.
+ * There's no filter for this markup, so a tiny inline <style> block is the
+ * standard, update-safe way to swap the background-image WP renders it with.
+ */
+function sabay_login_logo_styles(): void {
+    $logo = function_exists( 'sabay_site_setting_image_url' ) ? sabay_site_setting_image_url( 'logo', 'medium' ) : '';
+
+    if ( $logo ) {
+        printf(
+            '<style>#login h1.wp-login-logo a{background-image:url(%s);}</style>',
+            esc_url( $logo )
+        );
+    } else {
+        // No logo uploaded yet — fall back to a text wordmark instead of a broken image.
+        printf(
+            '<style>#login h1.wp-login-logo a{background-image:none;text-indent:0;font-size:1.375rem;font-weight:800;color:%s;text-transform:uppercase;letter-spacing:.02em;}</style>',
+            '#e31e24'
+        );
+    }
+}
+add_action( 'login_head', 'sabay_login_logo_styles' );
+
+/**
+ * Placeholder text on the username/password fields. WordPress core hardcodes
+ * that markup with no filter, so the documented approach is a small inline
+ * script (fired on login_footer, after the fields exist in the DOM).
+ */
+function sabay_login_footer_script(): void {
+    ?>
+    <script>
+    ( function () {
+        var user = document.getElementById( 'user_login' );
+        if ( user ) {
+            user.setAttribute( 'placeholder', <?php echo wp_json_encode( __( 'you@example.com', 'sabay-clone' ) ); ?> );
+        }
+        var pass = document.getElementById( 'user_pass' );
+        if ( pass ) {
+            pass.setAttribute( 'placeholder', <?php echo wp_json_encode( __( 'Enter your password', 'sabay-clone' ) ); ?> );
+        }
+    } )();
+    </script>
+    <?php
+}
+add_action( 'login_footer', 'sabay_login_footer_script' );
+
+/**
  * Fires right after <body> opens, before #login — gives us a sibling div to
  * lay out as the left brand panel via CSS flexbox in login.css.
  */
 function sabay_login_brand_panel(): void {
-    $logo = function_exists( 'sabay_site_setting_image_url' ) ? sabay_site_setting_image_url( 'logo', 'medium' ) : '';
     ?>
     <div class="sabay-login-panel">
+        <div class="sabay-login-panel__grid" aria-hidden="true"></div>
         <span class="sabay-login-shape sabay-login-shape--1" aria-hidden="true"></span>
         <span class="sabay-login-shape sabay-login-shape--2" aria-hidden="true"></span>
         <span class="sabay-login-shape sabay-login-shape--3" aria-hidden="true"></span>
 
         <div class="sabay-login-panel__content">
-            <?php if ( $logo ) : ?>
-                <img src="<?php echo esc_url( $logo ); ?>" alt="<?php echo esc_attr( get_bloginfo( 'name' ) ); ?>" class="sabay-login-panel__logo">
-            <?php else : ?>
-                <span class="sabay-login-panel__brand"><?php echo esc_html( get_bloginfo( 'name' ) ); ?></span>
-            <?php endif; ?>
-
             <h1 class="sabay-login-panel__title"><?php esc_html_e( 'Stay ahead of the story.', 'sabay-clone' ); ?></h1>
             <p class="sabay-login-panel__subtitle"><?php esc_html_e( 'Sign in to publish, edit, and manage the news your readers trust.', 'sabay-clone' ); ?></p>
         </div>

@@ -13,9 +13,20 @@ body.login {
     overflow-x: hidden;
 }
 
-/* WP's own logo mark — the brand panel carries the identity instead */
+/* WP's own logo mark, repurposed to show the site logo above the form card.
+   The actual background-image URL is injected inline by sabay_login_logo_styles(). */
 body.login #login h1.wp-login-logo {
-    display: none;
+    width: 140px;
+    margin: 0 auto 1.75rem;
+}
+
+body.login #login h1.wp-login-logo a {
+    width: 140px;
+    height: 48px;
+    margin: 0;
+    background-size: contain;
+    background-position: center;
+    animation: sabayFadeUp 0.6s ease-out both;
 }
 
 /* ---------- Left brand panel ---------- */
@@ -30,27 +41,47 @@ body.login #login h1.wp-login-logo {
     color: #fff;
 }
 
+/*
+ * Diagonal striped grid, revealed through a drifting circular spotlight
+ * mask. Adapted from a Tailwind/React inline-style snippet — ported to
+ * plain CSS and recolored from emerald to translucent white so it reads as
+ * a subtle texture on the brand-red panel rather than a clashing accent.
+ * The original drove the spotlight's center via --x/--y on mousemove; there's
+ * no JS wiring that up here, so it auto-drifts between four points instead.
+ */
+.sabay-login-panel__grid {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    background-image:
+        linear-gradient(90deg, rgba(255, 255, 255, 0.22) 1px, transparent 0),
+        linear-gradient(180deg, rgba(255, 255, 255, 0.22) 1px, transparent 0),
+        repeating-linear-gradient(45deg, rgba(255, 255, 255, 0.16) 0 2px, transparent 2px 6px);
+    background-size: 24px 24px, 24px 24px, 24px 24px;
+    -webkit-mask-image: radial-gradient(circle, black 0, transparent 30%);
+    mask-image: radial-gradient(circle, black 0, transparent 30%);
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+    -webkit-mask-size: 220% 220%;
+    mask-size: 220% 220%;
+    -webkit-mask-position: 15% 20%;
+    mask-position: 15% 20%;
+    animation: sabaySpotlight 12s ease-in-out infinite;
+}
+
+@keyframes sabaySpotlight {
+    0%, 100% { -webkit-mask-position: 15% 20%; mask-position: 15% 20%; }
+    25%      { -webkit-mask-position: 85% 15%; mask-position: 85% 15%; }
+    50%      { -webkit-mask-position: 80% 85%; mask-position: 80% 85%; }
+    75%      { -webkit-mask-position: 20% 80%; mask-position: 20% 80%; }
+}
+
 .sabay-login-panel__content {
     position: relative;
     z-index: 2;
     max-width: 420px;
     padding: 3rem;
-}
-
-.sabay-login-panel__logo {
-    max-height: 48px;
-    margin-bottom: 2rem;
-    animation: sabayFadeUp 0.8s ease-out both;
-}
-
-.sabay-login-panel__brand {
-    display: inline-block;
-    font-size: 1.75rem;
-    font-weight: 800;
-    text-transform: uppercase;
-    letter-spacing: 0.02em;
-    margin-bottom: 2rem;
-    animation: sabayFadeUp 0.8s ease-out both;
 }
 
 .sabay-login-panel__title {
@@ -177,6 +208,34 @@ body.login #login h1.wp-login-logo {
 #login input[type="email"]:focus {
     border-color: var(--sabay-primary);
     box-shadow: 0 0 0 3px rgb(var(--sabay-ring) / 0.18);
+}
+
+/* Show/hide-password toggle — swap WP's dashicon for Lucide's eye / eye-off */
+#login .wp-hide-pw {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#login .wp-hide-pw .dashicons {
+    display: none;
+}
+
+#login .wp-hide-pw::before {
+    content: "";
+    display: block;
+    width: 1.1rem;
+    height: 1.1rem;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain;
+    /* Lucide "eye" — password is masked, click to reveal */
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0'/%3E%3Ccircle cx='12' cy='12' r='3'/%3E%3C/svg%3E");
+}
+
+/* Lucide "eye-off" — password is revealed, click to hide */
+#login .wp-hide-pw:has(.dashicons-hidden)::before {
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M10.733 5.076a10.744 10.744 0 0 1 11.205 6.575 1 1 0 0 1 0 .696 10.747 10.747 0 0 1-1.444 2.49'/%3E%3Cpath d='M14.084 14.158a3 3 0 0 1-4.242-4.242'/%3E%3Cpath d='M17.479 17.499a10.75 10.75 0 0 1-15.417-5.151 1 1 0 0 1 0-.696 10.75 10.75 0 0 1 4.446-5.143'/%3E%3Cpath d='m2 2 20 20'/%3E%3C/svg%3E");
 }
 
 /* ---------- Checkbox ("Remember Me") ---------- */
