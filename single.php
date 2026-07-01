@@ -9,7 +9,7 @@
                     <?php
                     $categories = get_the_category();
                     if ( ! empty( $categories ) ) {
-                        echo '<span class="text-sabay-red font-bold uppercase text-sm">' . esc_html( $categories[0]->name ) . '</span>';
+                        echo '<span class="text-sbek-red font-bold uppercase text-sm">' . esc_html( $categories[0]->name ) . '</span>';
                     }
                     ?>
                     <h1 class="text-3xl lg:text-5xl font-bold mt-2 mb-4 leading-tight"><?php the_title(); ?></h1>
@@ -49,31 +49,31 @@
         <!-- Sidebar -->
         <aside class="col-span-12 lg:col-span-4 space-y-8">
             <div class="bg-white p-6 rounded shadow-sm">
-                <h3 class="text-lg font-bold border-b-2 border-sabay-red pb-2 mb-4 uppercase"><?php echo esc_html( t( 'trending' ) ); ?></h3>
+                <h3 class="text-lg font-bold border-b-2 border-sbek-red pb-2 mb-4 uppercase"><?php echo esc_html( t( 'trending' ) ); ?></h3>
                 <div class="space-y-4">
                     <?php
-                    $trending = sabay_get_cached_query( array(
+                    $trending = sbek_get_cached_query( array(
                         'posts_per_page' => 5,
-                        'meta_key'       => '_sabay_trending_score',
+                        'meta_key'       => '_sbek_trending_score',
                         'orderby'        => 'meta_value_num',
                         'order'          => 'DESC',
-                    ), 'sabay_trending_sidebar_' . sabay_lang(), 3600 ); // Cache per language, 1 hour
+                    ), 'sbek_trending_sidebar_' . sbek_lang(), 3600 ); // Cache per language, 1 hour
                     
                     if ( $trending->have_posts() ) : while ( $trending->have_posts() ) : $trending->the_post();
                     ?>
                         <div class="flex space-x-3 group">
                             <div class="flex-shrink-0 w-20 h-16 bg-gray-200 rounded overflow-hidden relative">
                                 <?php if ( has_post_thumbnail() ) the_post_thumbnail('thumbnail', ['class' => 'w-full h-full object-cover']); ?>
-                                <?php if ( get_post_meta( get_the_ID(), '_sabay_video_url', true ) ) : ?>
+                                <?php if ( get_post_meta( get_the_ID(), '_sbek_video_url', true ) ) : ?>
                                     <div class="absolute inset-0 flex items-center justify-center bg-black/30">
                                         <div class="w-6 h-6 bg-white/80 rounded-full flex items-center justify-center pl-0.5">
-                                            <svg class="w-3 h-3 text-sabay-red fill-current" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                                            <svg class="w-3 h-3 text-sbek-red fill-current" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
                                         </div>
                                     </div>
                                 <?php endif; ?>
                             </div>
-                            <h4 class="text-sm font-bold group-hover:text-sabay-red transition-colors line-clamp-3">
-                                <a href="<?php echo esc_url( sabay_localize_url( get_permalink() ) ); ?>"><?php the_title(); ?></a>
+                            <h4 class="text-sm font-bold group-hover:text-sbek-red transition-colors line-clamp-3">
+                                <a href="<?php echo esc_url( sbek_localize_url( get_permalink() ) ); ?>"><?php the_title(); ?></a>
                             </h4>
                         </div>
                     <?php endwhile; wp_reset_postdata(); endif; ?>

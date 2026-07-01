@@ -3,7 +3,7 @@
  * SEO & Open Graph Tags
  */
 
-function sabay_seo_meta_tags() {
+function sbek_seo_meta_tags() {
     global $post;
 
     if ( ! is_singular() ) return;
@@ -17,21 +17,21 @@ function sabay_seo_meta_tags() {
     // Featured image, falling back to the site-wide default share image.
     $img_src = has_post_thumbnail( $post->ID )
         ? wp_get_attachment_image_url( get_post_thumbnail_id( $post->ID ), 'large' )
-        : ( function_exists( 'sabay_site_setting_image_url' ) ? sabay_site_setting_image_url( 'og_image', 'large' ) : '' );
+        : ( function_exists( 'sbek_site_setting_image_url' ) ? sbek_site_setting_image_url( 'og_image', 'large' ) : '' );
 
     if ( $img_src ) {
         echo '<meta property="og:image" content="' . esc_url( $img_src ) . '" />' . "\n";
     }
 
     echo '<meta name="twitter:card" content="summary_large_image" />' . "\n";
-    echo '<meta property="og:description" content="' . esc_attr( sabay_seo_description( $post ) ) . '" />' . "\n";
+    echo '<meta property="og:description" content="' . esc_attr( sbek_seo_description( $post ) ) . '" />' . "\n";
 }
-add_action( 'wp_head', 'sabay_seo_meta_tags' );
+add_action( 'wp_head', 'sbek_seo_meta_tags' );
 
 /**
  * Shared excerpt/description text for OG tags and NewsArticle JSON-LD.
  */
-function sabay_seo_description( WP_Post $post ): string {
+function sbek_seo_description( WP_Post $post ): string {
     $excerpt = has_excerpt( $post->ID ) ? $post->post_excerpt : wp_trim_words( $post->post_content, 30 );
     return wp_strip_all_tags( $excerpt );
 }
@@ -42,12 +42,12 @@ function sabay_seo_description( WP_Post $post ): string {
  * Built from the values collected on the Options page: description, logo,
  * socials (sameAs), phones (contactPoint), and lat/lng (location).
  */
-function sabay_organization_jsonld() {
-    if ( ! function_exists( 'sabay_site_setting' ) ) {
+function sbek_organization_jsonld() {
+    if ( ! function_exists( 'sbek_site_setting' ) ) {
         return;
     }
 
-    $settings = sabay_site_setting();
+    $settings = sbek_site_setting();
 
     $data = [
         '@context' => 'https://schema.org',
@@ -60,7 +60,7 @@ function sabay_organization_jsonld() {
         $data['description'] = $settings['description'];
     }
 
-    $logo = sabay_site_setting_image_url( 'logo', 'full' );
+    $logo = sbek_site_setting_image_url( 'logo', 'full' );
     if ( $logo ) {
         $data['logo'] = $logo;
     }
@@ -110,7 +110,7 @@ function sabay_organization_jsonld() {
         . wp_json_encode( $data, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE )
         . '</script>' . "\n";
 }
-add_action( 'wp_head', 'sabay_organization_jsonld' );
+add_action( 'wp_head', 'sbek_organization_jsonld' );
 
 /**
  * Output NewsArticle JSON-LD structured data on single posts.
@@ -119,7 +119,7 @@ add_action( 'wp_head', 'sabay_organization_jsonld' );
  * publish/modified dates, author, and a publisher block matching the
  * NewsMediaOrganization data above.
  */
-function sabay_article_jsonld() {
+function sbek_article_jsonld() {
     if ( ! is_singular( 'post' ) ) {
         return;
     }
@@ -130,7 +130,7 @@ function sabay_article_jsonld() {
         '@context'         => 'https://schema.org',
         '@type'            => 'NewsArticle',
         'headline'         => get_the_title( $post ),
-        'description'      => sabay_seo_description( $post ),
+        'description'      => sbek_seo_description( $post ),
         'datePublished'    => get_the_date( 'c', $post ),
         'dateModified'     => get_the_modified_date( 'c', $post ),
         'mainEntityOfPage' => [
@@ -147,8 +147,8 @@ function sabay_article_jsonld() {
         ],
     ];
 
-    if ( function_exists( 'sabay_site_setting_image_url' ) ) {
-        $logo = sabay_site_setting_image_url( 'logo', 'full' );
+    if ( function_exists( 'sbek_site_setting_image_url' ) ) {
+        $logo = sbek_site_setting_image_url( 'logo', 'full' );
         if ( $logo ) {
             $data['publisher']['logo'] = [
                 '@type' => 'ImageObject',
@@ -159,7 +159,7 @@ function sabay_article_jsonld() {
 
     $image_src = has_post_thumbnail( $post->ID )
         ? wp_get_attachment_image_url( get_post_thumbnail_id( $post->ID ), 'full' )
-        : ( function_exists( 'sabay_site_setting_image_url' ) ? sabay_site_setting_image_url( 'og_image', 'full' ) : '' );
+        : ( function_exists( 'sbek_site_setting_image_url' ) ? sbek_site_setting_image_url( 'og_image', 'full' ) : '' );
 
     if ( $image_src ) {
         $data['image'] = [ $image_src ];
@@ -167,12 +167,12 @@ function sabay_article_jsonld() {
 
     $categories = get_the_category( $post->ID );
     if ( ! empty( $categories ) ) {
-        $data['articleSection'] = function_exists( 'sabay_term_name' ) ? sabay_term_name( $categories[0] ) : $categories[0]->name;
+        $data['articleSection'] = function_exists( 'sbek_term_name' ) ? sbek_term_name( $categories[0] ) : $categories[0]->name;
     }
 
     echo '<script type="application/ld+json">'
         . wp_json_encode( $data, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE )
         . '</script>' . "\n";
 }
-add_action( 'wp_head', 'sabay_article_jsonld' );
+add_action( 'wp_head', 'sbek_article_jsonld' );
 

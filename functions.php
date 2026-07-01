@@ -1,11 +1,11 @@
 <?php
 /**
- * Sabay Clone functions and definitions
+ * Sbek Clone functions and definitions
  */
 
-if ( ! function_exists( 'sabay_clone_setup' ) ) :
-    function sabay_clone_setup() {
-        load_theme_textdomain( 'sabay-clone', get_template_directory() . '/languages' );
+if ( ! function_exists( 'sbek_clone_setup' ) ) :
+    function sbek_clone_setup() {
+        load_theme_textdomain( 'sbek-clone', get_template_directory() . '/languages' );
 
         add_theme_support( 'title-tag' );
         add_theme_support( 'post-thumbnails' );
@@ -21,15 +21,15 @@ if ( ! function_exists( 'sabay_clone_setup' ) ) :
         ) );
 
         register_nav_menus( array(
-            'menu-1'    => esc_html__( 'Primary (English)', 'sabay-clone' ),
-            'menu-1-jp' => esc_html__( 'Primary (Japanese)', 'sabay-clone' ),
+            'menu-1'    => esc_html__( 'Primary (English)', 'sbek-clone' ),
+            'menu-1-jp' => esc_html__( 'Primary (Japanese)', 'sbek-clone' ),
         ) );
     }
 endif;
-add_action( 'after_setup_theme', 'sabay_clone_setup' );
+add_action( 'after_setup_theme', 'sbek_clone_setup' );
 
 /**
- * Multilingual (i18n) — must load first so sabay_lang() is available
+ * Multilingual (i18n) — must load first so sbek_lang() is available
  */
 require get_template_directory() . '/inc/i18n.php';
 
@@ -91,49 +91,49 @@ require get_template_directory() . '/inc/admin/login.php';
 /**
  * Enqueue scripts and styles.
  */
-function sabay_clone_scripts() {
+function sbek_clone_scripts() {
     // Google Fonts for Khmer
-    wp_enqueue_style( 'sabay-clone-fonts', 'https://fonts.googleapis.com/css2?family=Battambang:wght@400;700&family=Kantumruy+Pro:wght@400;700&display=swap', array(), null );
+    wp_enqueue_style( 'sbek-clone-fonts', 'https://fonts.googleapis.com/css2?family=Battambang:wght@400;700&family=Kantumruy+Pro:wght@400;700&display=swap', array(), null );
     
     // Main Tailwind CSS
-    wp_enqueue_style( 'sabay-clone-style', get_template_directory_uri() . '/assets/css/main.css', array(), '1.0.0' );
+    wp_enqueue_style( 'sbek-clone-style', get_template_directory_uri() . '/assets/css/main.css', array(), '1.0.0' );
 
     // Load More JS
-    wp_enqueue_script( 'sabay-load-more', get_template_directory_uri() . '/assets/js/load-more.js', array(), '1.0.0', true );
-    wp_localize_script( 'sabay-load-more', 'sabay_ajax', array(
+    wp_enqueue_script( 'sbek-load-more', get_template_directory_uri() . '/assets/js/load-more.js', array(), '1.0.0', true );
+    wp_localize_script( 'sbek-load-more', 'sbek_ajax', array(
         'ajax_url'       => admin_url( 'admin-ajax.php' ),
-        'nonce'          => wp_create_nonce( 'sabay_load_more_nonce' ),
-        'lang'           => sabay_lang(),
+        'nonce'          => wp_create_nonce( 'sbek_load_more_nonce' ),
+        'lang'           => sbek_lang(),
         'loading_text'   => t( 'loading' ),
         'no_more_text'   => t( 'no_more_posts' ),
         'load_more_text' => t( 'load_more' ),
     ) );
 
     // Motion Effects JS
-    wp_enqueue_script( 'sabay-motion', get_template_directory_uri() . '/assets/js/motion.js', array(), '1.0.0', true );
+    wp_enqueue_script( 'sbek-motion', get_template_directory_uri() . '/assets/js/motion.js', array(), '1.0.0', true );
 
     // Threaded comment reply script
     if ( is_singular() && comments_open() && get_option( 'thread_comments' ) ) {
         wp_enqueue_script( 'comment-reply' );
     }
 }
-add_action( 'wp_enqueue_scripts', 'sabay_clone_scripts' );
+add_action( 'wp_enqueue_scripts', 'sbek_clone_scripts' );
 
 /**
  * AJAX Load More Handler
  */
-function sabay_ajax_load_more() {
-    check_ajax_referer( 'sabay_load_more_nonce', 'nonce' );
+function sbek_ajax_load_more() {
+    check_ajax_referer( 'sbek_load_more_nonce', 'nonce' );
 
     $paged = isset( $_POST['page'] ) ? intval( $_POST['page'] ) : 2;
-    $lang  = isset( $_POST['lang'] ) ? sanitize_key( $_POST['lang'] ) : SABAY_DEFAULT_LANGUAGE;
+    $lang  = isset( $_POST['lang'] ) ? sanitize_key( $_POST['lang'] ) : SBEK_DEFAULT_LANGUAGE;
 
-    if ( ! in_array( $lang, SABAY_LANGUAGES, true ) ) {
-        $lang = SABAY_DEFAULT_LANGUAGE;
+    if ( ! in_array( $lang, SBEK_LANGUAGES, true ) ) {
+        $lang = SBEK_DEFAULT_LANGUAGE;
     }
 
-    // Set global so sabay_localize_url() works correctly inside templates
-    $GLOBALS['sabay_lang'] = $lang;
+    // Set global so sbek_localize_url() works correctly inside templates
+    $GLOBALS['sbek_lang'] = $lang;
 
     $args = array(
         'post_type'      => 'post',
@@ -160,6 +160,6 @@ function sabay_ajax_load_more() {
     wp_reset_postdata();
     die();
 }
-add_action( 'wp_ajax_sabay_load_more', 'sabay_ajax_load_more' );
-add_action( 'wp_ajax_nopriv_sabay_load_more', 'sabay_ajax_load_more' );
+add_action( 'wp_ajax_sbek_load_more', 'sbek_ajax_load_more' );
+add_action( 'wp_ajax_nopriv_sbek_load_more', 'sbek_ajax_load_more' );
 

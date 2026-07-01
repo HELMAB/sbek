@@ -2,10 +2,10 @@
  * Site Setting page — repeatable rows for phone numbers and social links.
  *
  * Markup contract:
- *   [data-sabay-add="<group>"]   button that appends a row
- *   [data-sabay-rows="<group>"]  container holding the rows
- *   #sabay-tmpl-<group>          <template> with inputs using data-name="…[__i__]…"
- *   [data-sabay-remove]          button inside a row that removes its [data-sabay-row]
+ *   [data-sbek-add="<group>"]   button that appends a row
+ *   [data-sbek-rows="<group>"]  container holding the rows
+ *   #sbek-tmpl-<group>          <template> with inputs using data-name="…[__i__]…"
+ *   [data-sbek-remove]          button inside a row that removes its [data-sbek-row]
  */
 document.addEventListener('DOMContentLoaded', function () {
     // Monotonic index per group keeps field names unique across add/remove.
@@ -13,15 +13,15 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function nextIndex(group) {
         if (typeof counters[group] === 'undefined') {
-            const container = document.querySelector('[data-sabay-rows="' + group + '"]');
-            counters[group] = container ? container.querySelectorAll('[data-sabay-row]').length : 0;
+            const container = document.querySelector('[data-sbek-rows="' + group + '"]');
+            counters[group] = container ? container.querySelectorAll('[data-sbek-row]').length : 0;
         }
         return counters[group]++;
     }
 
     function addRow(group) {
-        const tmpl = document.getElementById('sabay-tmpl-' + group);
-        const container = document.querySelector('[data-sabay-rows="' + group + '"]');
+        const tmpl = document.getElementById('sbek-tmpl-' + group);
+        const container = document.querySelector('[data-sbek-rows="' + group + '"]');
         if (!tmpl || !container) return;
 
         const index = nextIndex(group);
@@ -39,26 +39,26 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     // Add buttons.
-    document.querySelectorAll('[data-sabay-add]').forEach(function (button) {
+    document.querySelectorAll('[data-sbek-add]').forEach(function (button) {
         button.addEventListener('click', function () {
-            addRow(button.getAttribute('data-sabay-add'));
+            addRow(button.getAttribute('data-sbek-add'));
         });
     });
 
     // Remove buttons (delegated, so cloned rows work too).
     document.addEventListener('click', function (event) {
-        const remove = event.target.closest('[data-sabay-remove]');
+        const remove = event.target.closest('[data-sbek-remove]');
         if (!remove) return;
-        const row = remove.closest('[data-sabay-row]');
+        const row = remove.closest('[data-sbek-row]');
         if (row) row.remove();
     });
 
     // ── Media library pickers (logo / OG image) ──────────────────────────────
-    document.querySelectorAll('[data-sabay-media-field]').forEach(function (field) {
-        const input    = field.querySelector('[data-sabay-media-input]');
-        const preview  = field.querySelector('[data-sabay-media-preview]');
-        const triggers = field.querySelectorAll('[data-sabay-media-select]'); // dropzone + replace
-        const remove   = field.querySelector('[data-sabay-media-remove]');
+    document.querySelectorAll('[data-sbek-media-field]').forEach(function (field) {
+        const input    = field.querySelector('[data-sbek-media-input]');
+        const preview  = field.querySelector('[data-sbek-media-preview]');
+        const triggers = field.querySelectorAll('[data-sbek-media-select]'); // dropzone + replace
+        const remove   = field.querySelector('[data-sbek-media-remove]');
         let frame = null; // one media frame per field, reused
 
         function openPicker() {

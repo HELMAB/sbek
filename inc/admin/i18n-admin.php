@@ -10,17 +10,17 @@
 
 add_action( 'add_meta_boxes', function () {
     add_meta_box(
-        'sabay_translation_link',
+        'sbek_translation_link',
         'Translation',
-        'sabay_render_translation_meta_box',
+        'sbek_render_translation_meta_box',
         [ 'post', 'page' ],
         'side',
         'default'
     );
 } );
 
-function sabay_render_translation_meta_box( WP_Post $post ): void {
-    wp_nonce_field( 'sabay_translation_nonce', 'sabay_translation_nonce' );
+function sbek_render_translation_meta_box( WP_Post $post ): void {
+    wp_nonce_field( 'sbek_translation_nonce', 'sbek_translation_nonce' );
 
     $linked_id   = (int) get_post_meta( $post->ID, '_translation_id', true );
     $linked_post = $linked_id ? get_post( $linked_id ) : null;
@@ -36,7 +36,7 @@ function sabay_render_translation_meta_box( WP_Post $post ): void {
     </p>
     <input
         type="number"
-        name="sabay_translation_id"
+        name="sbek_translation_id"
         value="<?php echo esc_attr( $linked_id ?: '' ); ?>"
         style="width:100%;margin-bottom:6px"
         placeholder="Post ID"
@@ -56,8 +56,8 @@ add_action( 'save_post', function ( int $post_id ): void {
     }
 
     if (
-        ! isset( $_POST['sabay_translation_nonce'] )
-        || ! wp_verify_nonce( $_POST['sabay_translation_nonce'], 'sabay_translation_nonce' )
+        ! isset( $_POST['sbek_translation_nonce'] )
+        || ! wp_verify_nonce( $_POST['sbek_translation_nonce'], 'sbek_translation_nonce' )
     ) {
         return;
     }
@@ -66,8 +66,8 @@ add_action( 'save_post', function ( int $post_id ): void {
         return;
     }
 
-    $translation_id = isset( $_POST['sabay_translation_id'] )
-        ? (int) $_POST['sabay_translation_id']
+    $translation_id = isset( $_POST['sbek_translation_id'] )
+        ? (int) $_POST['sbek_translation_id']
         : 0;
 
     if ( $translation_id ) {
@@ -80,16 +80,16 @@ add_action( 'save_post', function ( int $post_id ): void {
 
 // ─── Localized category / tag names ──────────────────────────────────────────
 
-foreach ( [ 'category', 'post_tag' ] as $_sabay_tax ) {
-    add_action( "{$_sabay_tax}_add_form_fields",  'sabay_render_term_lang_add_fields' );
-    add_action( "{$_sabay_tax}_edit_form_fields", 'sabay_render_term_lang_edit_fields' );
-    add_action( "edited_{$_sabay_tax}",           'sabay_save_term_lang_fields' );
-    add_action( "created_{$_sabay_tax}",          'sabay_save_term_lang_fields' );
+foreach ( [ 'category', 'post_tag' ] as $_sbek_tax ) {
+    add_action( "{$_sbek_tax}_add_form_fields",  'sbek_render_term_lang_add_fields' );
+    add_action( "{$_sbek_tax}_edit_form_fields", 'sbek_render_term_lang_edit_fields' );
+    add_action( "edited_{$_sbek_tax}",           'sbek_save_term_lang_fields' );
+    add_action( "created_{$_sbek_tax}",          'sbek_save_term_lang_fields' );
 }
 
-function sabay_render_term_lang_add_fields(): void {
-    foreach ( SABAY_LANGUAGES as $lang ) {
-        if ( $lang === SABAY_DEFAULT_LANGUAGE ) {
+function sbek_render_term_lang_add_fields(): void {
+    foreach ( SBEK_LANGUAGES as $lang ) {
+        if ( $lang === SBEK_DEFAULT_LANGUAGE ) {
             continue;
         }
         ?>
@@ -107,9 +107,9 @@ function sabay_render_term_lang_add_fields(): void {
     }
 }
 
-function sabay_render_term_lang_edit_fields( WP_Term $term ): void {
-    foreach ( SABAY_LANGUAGES as $lang ) {
-        if ( $lang === SABAY_DEFAULT_LANGUAGE ) {
+function sbek_render_term_lang_edit_fields( WP_Term $term ): void {
+    foreach ( SBEK_LANGUAGES as $lang ) {
+        if ( $lang === SBEK_DEFAULT_LANGUAGE ) {
             continue;
         }
         $current = get_term_meta( $term->term_id, "name_{$lang}", true );
@@ -133,9 +133,9 @@ function sabay_render_term_lang_edit_fields( WP_Term $term ): void {
     }
 }
 
-function sabay_save_term_lang_fields( int $term_id ): void {
-    foreach ( SABAY_LANGUAGES as $lang ) {
-        if ( $lang === SABAY_DEFAULT_LANGUAGE ) {
+function sbek_save_term_lang_fields( int $term_id ): void {
+    foreach ( SBEK_LANGUAGES as $lang ) {
+        if ( $lang === SBEK_DEFAULT_LANGUAGE ) {
             continue;
         }
 

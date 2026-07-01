@@ -8,8 +8,8 @@
  *   /en/...   → 301 redirect to canonical (drop /en/ prefix)
  */
 
-define( 'SABAY_LANGUAGES',        [ 'en', 'jp' ] );
-define( 'SABAY_DEFAULT_LANGUAGE', 'en' );
+define( 'SBEK_LANGUAGES',        [ 'en', 'jp' ] );
+define( 'SBEK_DEFAULT_LANGUAGE', 'en' );
 
 // ─── 1. Language detection & REQUEST_URI rewrite ──────────────────────────────
 // Runs at init priority 1 — before WP::parse_request() is called.
@@ -36,7 +36,7 @@ add_action( 'init', function () {
             exit;
         }
 
-        $GLOBALS['sabay_lang'] = $lang;
+        $GLOBALS['sbek_lang'] = $lang;
 
         // Strip /jp prefix so WordPress parses the URL normally
         $query_string = isset( $_SERVER['QUERY_STRING'] ) && $_SERVER['QUERY_STRING']
@@ -46,28 +46,28 @@ add_action( 'init', function () {
         $_SERVER['REQUEST_URI'] = $site_path . $stripped . $query_string;
 
     } else {
-        $GLOBALS['sabay_lang'] = SABAY_DEFAULT_LANGUAGE;
+        $GLOBALS['sbek_lang'] = SBEK_DEFAULT_LANGUAGE;
     }
 }, 1 );
 
 // ─── 2. Language helpers ──────────────────────────────────────────────────────
 
-function sabay_lang(): string {
-    return $GLOBALS['sabay_lang'] ?? SABAY_DEFAULT_LANGUAGE;
+function sbek_lang(): string {
+    return $GLOBALS['sbek_lang'] ?? SBEK_DEFAULT_LANGUAGE;
 }
 
-function sabay_is_default_lang(): bool {
-    return sabay_lang() === SABAY_DEFAULT_LANGUAGE;
+function sbek_is_default_lang(): bool {
+    return sbek_lang() === SBEK_DEFAULT_LANGUAGE;
 }
 
 /**
  * Prefix a URL with the language segment.
  * English URLs are returned as-is (no /en/ prefix — canonical).
  */
-function sabay_localize_url( string $url, ?string $lang = null ): string {
-    $lang ??= sabay_lang();
+function sbek_localize_url( string $url, ?string $lang = null ): string {
+    $lang ??= sbek_lang();
 
-    if ( $lang === SABAY_DEFAULT_LANGUAGE ) {
+    if ( $lang === SBEK_DEFAULT_LANGUAGE ) {
         return $url;
     }
 
@@ -93,7 +93,7 @@ add_action( 'init', function () {
         'rewrite'           => false,
     ] );
 
-    foreach ( SABAY_LANGUAGES as $code ) {
+    foreach ( SBEK_LANGUAGES as $code ) {
         if ( ! term_exists( $code, 'language' ) ) {
             wp_insert_term( strtoupper( $code ), 'language', [ 'slug' => $code ] );
         }
@@ -107,7 +107,7 @@ add_action( 'pre_get_posts', function ( WP_Query $query ) {
         return;
     }
 
-    $lang = sabay_lang();
+    $lang = sbek_lang();
 
     $existing = (array) $query->get( 'tax_query' );
 
@@ -131,7 +131,7 @@ add_action( 'template_redirect', function () {
     }
 
     $post_id = get_the_ID();
-    $lang    = sabay_lang();
+    $lang    = sbek_lang();
     $terms   = wp_get_post_terms( $post_id, 'language', [ 'fields' => 'slugs' ] );
 
     if ( is_wp_error( $terms ) || in_array( $lang, $terms, true ) ) {
@@ -139,7 +139,7 @@ add_action( 'template_redirect', function () {
     }
 
     // Post not in current language → send to language homepage
-    $home = $lang === SABAY_DEFAULT_LANGUAGE ? home_url( '/' ) : home_url( "/{$lang}/" );
+    $home = $lang === SBEK_DEFAULT_LANGUAGE ? home_url( '/' ) : home_url( "/{$lang}/" );
     wp_redirect( $home, 302 );
     exit;
 } );
@@ -163,13 +163,13 @@ add_action( 'wp_head', function () {
     $jp_post_id = $is_en ? (int) get_post_meta( $post_id, '_translation_id', true ) : $post_id;
 
     if ( $en_post_id ) {
-        $en_url = sabay_localize_url( get_permalink( $en_post_id ), 'en' );
+        $en_url = sbek_localize_url( get_permalink( $en_post_id ), 'en' );
         printf( "<link rel=\"alternate\" hreflang=\"en\" href=\"%s\">\n", esc_url( $en_url ) );
         printf( "<link rel=\"alternate\" hreflang=\"x-default\" href=\"%s\">\n", esc_url( $en_url ) );
     }
 
     if ( $jp_post_id ) {
-        $jp_url = sabay_localize_url( get_permalink( $jp_post_id ), 'jp' );
+        $jp_url = sbek_localize_url( get_permalink( $jp_post_id ), 'jp' );
         printf( "<link rel=\"alternate\" hreflang=\"ja\" href=\"%s\">\n", esc_url( $jp_url ) );
     }
 }, 5 );
@@ -183,9 +183,9 @@ function t( string $key, ...$args ): string {
         $strings = include get_template_directory() . '/i18n/strings.php';
     }
 
-    $lang = sabay_lang();
+    $lang = sbek_lang();
     $text = $strings[ $lang ][ $key ]
-        ?? $strings[ SABAY_DEFAULT_LANGUAGE ][ $key ]
+        ?? $strings[ SBEK_DEFAULT_LANGUAGE ][ $key ]
         ?? $key;
 
     return $args ? sprintf( $text, ...$args ) : $text;
@@ -193,7 +193,7 @@ function t( string $key, ...$args ): string {
 
 // ─── 8. Translation counterpart helper ───────────────────────────────────────
 
-function sabay_get_translation( int $post_id, string $target_lang ): ?WP_Post {
+function sbek_get_translation( int $post_id, string $target_lang ): ?WP_Post {
     $translation_id = (int) get_post_meta( $post_id, '_translation_id', true );
 
     if ( ! $translation_id ) {
@@ -212,31 +212,31 @@ function sabay_get_translation( int $post_id, string $target_lang ): ?WP_Post {
 
 // ─── 9. Language switcher HTML ────────────────────────────────────────────────
 
-function sabay_language_switcher(): string {
-    $current_lang = sabay_lang();
+function sbek_language_switcher(): string {
+    $current_lang = sbek_lang();
     $post_id      = get_the_ID() ?: 0;
     $html         = '<div class="flex items-center space-x-1 text-sm font-bold">';
 
-    foreach ( SABAY_LANGUAGES as $lang ) {
+    foreach ( SBEK_LANGUAGES as $lang ) {
         $url = home_url( '/' );
 
         if ( $post_id ) {
             if ( $lang === $current_lang ) {
                 $url = get_permalink( $post_id ) ?: home_url( '/' );
             } else {
-                $translation = sabay_get_translation( $post_id, $lang );
+                $translation = sbek_get_translation( $post_id, $lang );
                 $url         = $translation
                     ? get_permalink( $translation->ID )
                     : home_url( '/' );
             }
         }
 
-        $localized  = sabay_localize_url( $url, $lang );
+        $localized  = sbek_localize_url( $url, $lang );
         $is_active  = $lang === $current_lang;
         $label      = strtoupper( $lang );
         $active_cls = $is_active
-            ? 'bg-sabay-red text-white px-2 py-0.5 rounded'
-            : 'text-gray-600 hover:text-sabay-red px-2 py-0.5 transition-colors';
+            ? 'bg-sbek-red text-white px-2 py-0.5 rounded'
+            : 'text-gray-600 hover:text-sbek-red px-2 py-0.5 transition-colors';
 
         $html .= sprintf(
             '<a href="%s" class="%s"%s>%s</a>',
@@ -254,10 +254,10 @@ function sabay_language_switcher(): string {
 
 // ─── 10. Localized term name helper ──────────────────────────────────────────
 
-function sabay_term_name( WP_Term $term ): string {
-    $lang = sabay_lang();
+function sbek_term_name( WP_Term $term ): string {
+    $lang = sbek_lang();
 
-    if ( $lang !== SABAY_DEFAULT_LANGUAGE ) {
+    if ( $lang !== SBEK_DEFAULT_LANGUAGE ) {
         $localized = get_term_meta( $term->term_id, "name_{$lang}", true );
 
         if ( $localized ) {

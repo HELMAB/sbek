@@ -1,12 +1,12 @@
 <?php get_header(); ?>
 
 <main id="primary" class="site-main container mx-auto px-4 py-8">
-    <div class="flex items-center justify-between border-b-2 border-sabay-red mb-6">
-        <h1 class="bg-sabay-red text-white px-4 py-1 text-lg font-bold uppercase">
+    <div class="flex items-center justify-between border-b-2 border-sbek-red mb-6">
+        <h1 class="bg-sbek-red text-white px-4 py-1 text-lg font-bold uppercase">
             <?php
-            $sabay_archive_term = get_queried_object();
-            if ( $sabay_archive_term instanceof WP_Term ) {
-                echo esc_html( sabay_term_name( $sabay_archive_term ) );
+            $sbek_archive_term = get_queried_object();
+            if ( $sbek_archive_term instanceof WP_Term ) {
+                echo esc_html( sbek_term_name( $sbek_archive_term ) );
             } else {
                 echo wp_kses_post( get_the_archive_title() );
             }

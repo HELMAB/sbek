@@ -17,9 +17,9 @@
                             <div class="w-full h-full bg-gray-200"></div>
                         <?php endif; ?>
                         <div class="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-black/80 to-transparent">
-                            <span class="bg-sabay-red text-white text-xs font-bold px-2 py-1 uppercase mb-2 inline-block"><?php echo esc_html( t( 'featured' ) ); ?></span>
+                            <span class="bg-sbek-red text-white text-xs font-bold px-2 py-1 uppercase mb-2 inline-block"><?php echo esc_html( t( 'featured' ) ); ?></span>
                             <h2 class="text-white text-2xl lg:text-4xl font-bold leading-tight">
-                                <a href="<?php echo esc_url( sabay_localize_url( get_permalink() ) ); ?>"><?php the_title(); ?></a>
+                                <a href="<?php echo esc_url( sbek_localize_url( get_permalink() ) ); ?>"><?php the_title(); ?></a>
                             </h2>
                         </div>
                     </div>
@@ -42,7 +42,7 @@
                         </div>
                         <div class="p-3">
                             <h3 class="text-sm lg:text-base font-bold line-clamp-2 leading-snug">
-                                <a href="<?php echo esc_url( sabay_localize_url( get_permalink() ) ); ?>" class="hover:text-sabay-red transition-colors"><?php the_title(); ?></a>
+                                <a href="<?php echo esc_url( sbek_localize_url( get_permalink() ) ); ?>" class="hover:text-sbek-red transition-colors"><?php the_title(); ?></a>
                             </h3>
                         </div>
                     </div>
@@ -57,9 +57,9 @@
     foreach ( $categories as $category ) :
     ?>
     <section class="scroll-reveal container mx-auto px-4 py-8">
-        <div class="flex items-center justify-between border-b-2 border-sabay-red mb-6">
-            <h2 class="bg-sabay-red text-white px-4 py-1 text-lg font-bold uppercase"><?php echo esc_html( sabay_term_name( $category ) ); ?></h2>
-            <a href="<?php echo esc_url( sabay_localize_url( get_category_link( $category->term_id ) ) ); ?>" class="text-sabay-red text-sm font-bold hover:underline"><?php echo esc_html( t( 'view_all' ) ); ?></a>
+        <div class="flex items-center justify-between border-b-2 border-sbek-red mb-6">
+            <h2 class="bg-sbek-red text-white px-4 py-1 text-lg font-bold uppercase"><?php echo esc_html( sbek_term_name( $category ) ); ?></h2>
+            <a href="<?php echo esc_url( sbek_localize_url( get_category_link( $category->term_id ) ) ); ?>" class="text-sbek-red text-sm font-bold hover:underline"><?php echo esc_html( t( 'view_all' ) ); ?></a>
         </div>
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             <?php
@@ -94,7 +94,7 @@
         </div>
 
         <div class="text-center mt-12">
-            <button id="load-more-posts" class="bg-gray-200 hover:bg-sabay-red hover:text-white text-gray-800 font-bold py-3 px-8 rounded-full transition-colors duration-300">
+            <button id="load-more-posts" class="bg-gray-200 hover:bg-sbek-red hover:text-white text-gray-800 font-bold py-3 px-8 rounded-full transition-colors duration-300">
                 <?php echo esc_html( t( 'load_more' ) ); ?>
             </button>
         </div>

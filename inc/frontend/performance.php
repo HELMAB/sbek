@@ -1,6 +1,6 @@
 <?php
 /**
- * Performance optimizations for Sabay Clone
+ * Performance optimizations for Sbek Clone
  * Handles Transients and Caching logic.
  */
 
@@ -12,7 +12,7 @@
  * @param int    $expiration     Time in seconds.
  * @return WP_Query
  */
-function sabay_get_cached_query( $args, $transient_name, $expiration = 900 ) {
+function sbek_get_cached_query( $args, $transient_name, $expiration = 900 ) {
     // Check if transient exists
     $cached_ids = get_transient( $transient_name );
 
@@ -43,12 +43,12 @@ function sabay_get_cached_query( $args, $transient_name, $expiration = 900 ) {
  * Clear transients on save to ensure fresh content.
  * Clears per-language cache variants.
  */
-function sabay_clear_transients_on_save(): void {
-    $languages = defined( 'SABAY_LANGUAGES' ) ? SABAY_LANGUAGES : [ 'en', 'jp' ];
+function sbek_clear_transients_on_save(): void {
+    $languages = defined( 'SBEK_LANGUAGES' ) ? SBEK_LANGUAGES : [ 'en', 'jp' ];
 
     foreach ( $languages as $lang ) {
-        delete_transient( "sabay_breaking_news_{$lang}" );
-        delete_transient( "sabay_trending_sidebar_{$lang}" );
+        delete_transient( "sbek_breaking_news_{$lang}" );
+        delete_transient( "sbek_trending_sidebar_{$lang}" );
     }
 }
-add_action( 'save_post', 'sabay_clear_transients_on_save' );
+add_action( 'save_post', 'sbek_clear_transients_on_save' );

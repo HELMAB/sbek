@@ -1,4 +1,4 @@
-# Sabay Clone - High-Performance WordPress News Theme
+# Sbek Clone - High-Performance WordPress News Theme
 
 A custom-built WordPress theme designed for high-traffic news portals, inspired by Sabay News. Built with a focus on Core Web Vitals, Khmer typography, and editorial control.
 

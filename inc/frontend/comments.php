@@ -8,7 +8,7 @@
 /**
  * wp_list_comments() callback — renders a single <li> per comment.
  */
-function sabay_comment_list_item( $comment, $args, $depth ) {
+function sbek_comment_list_item( $comment, $args, $depth ) {
     $tag = ( 'div' === $args['style'] ) ? 'div' : 'li';
     ?>
     <<?php echo $tag; ?> <?php comment_class( 'flex gap-3 py-4' . ( $depth > 1 ? ' ml-8 md:ml-12' : '' ), $comment ); ?> id="comment-<?php comment_ID(); ?>">
@@ -19,7 +19,7 @@ function sabay_comment_list_item( $comment, $args, $depth ) {
             <div class="flex items-center gap-2 text-sm">
                 <span class="font-bold text-gray-900"><?php comment_author(); ?></span>
                 <span class="text-gray-400">•</span>
-                <a href="<?php echo esc_url( get_comment_link( $comment ) ); ?>" class="text-gray-400 hover:text-sabay-red">
+                <a href="<?php echo esc_url( get_comment_link( $comment ) ); ?>" class="text-gray-400 hover:text-sbek-red">
                     <?php echo esc_html( get_comment_date( '', $comment ) ); ?>
                 </a>
             </div>
@@ -50,11 +50,11 @@ function sabay_comment_list_item( $comment, $args, $depth ) {
  * Localize and restyle the default comment_form() output to match the
  * theme's Tailwind look. Passed directly to comment_form() in comments.php.
  */
-function sabay_comment_form_args(): array {
+function sbek_comment_form_args(): array {
     $commenter    = wp_get_current_commenter();
     $req          = get_option( 'require_name_email' );
     $html_req     = ( $req ? " required" : '' );
-    $input_class  = 'w-full border border-gray-200 rounded px-3 py-2 text-sm focus:outline-none focus:border-sabay-red';
+    $input_class  = 'w-full border border-gray-200 rounded px-3 py-2 text-sm focus:outline-none focus:border-sbek-red';
 
     $required_notice = $req
         ? ' <span class="required-field-message">' . esc_html( t( 'comment_required_notice' ) ) . ' <span class="required">*</span></span>'
@@ -76,7 +76,7 @@ function sabay_comment_form_args(): array {
 
     return [
         'title_reply'          => esc_html( t( 'leave_a_comment' ) ),
-        'title_reply_before'   => '<h3 id="reply-title" class="comment-reply-title text-lg font-bold border-b-2 border-sabay-red pb-2 mb-4 uppercase">',
+        'title_reply_before'   => '<h3 id="reply-title" class="comment-reply-title text-lg font-bold border-b-2 border-sbek-red pb-2 mb-4 uppercase">',
         'title_reply_after'    => '</h3>',
         'class_form'           => 'comment-form space-y-4',
         'class_submit'         => 'submit',
@@ -85,7 +85,7 @@ function sabay_comment_form_args(): array {
         'comment_field'        => '<div class="comment-form-comment mb-4"><label for="comment" class="block text-sm font-bold mb-1">' . esc_html( t( 'comment_field' ) ) . '</label><textarea id="comment" name="comment" rows="5" class="' . esc_attr( $input_class ) . '" required></textarea></div>',
         'fields'               => $fields,
         'label_submit'         => esc_html( t( 'post_comment' ) ),
-        'submit_button'        => '<button name="%1$s" type="submit" id="%2$s" class="%3$s bg-sabay-red text-white font-bold py-2 px-6 rounded-full hover:bg-gray-900 transition-colors duration-300">%4$s</button>',
+        'submit_button'        => '<button name="%1$s" type="submit" id="%2$s" class="%3$s bg-sbek-red text-white font-bold py-2 px-6 rounded-full hover:bg-gray-900 transition-colors duration-300">%4$s</button>',
         'submit_field'         => '<div class="form-submit">%1$s %2$s</div>',
     ];
 }

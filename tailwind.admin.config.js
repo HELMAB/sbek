@@ -3,7 +3,8 @@
 // fight wp-admin's own styles. Output: assets/css/admin.css.
 module.exports = {
   content: [
-    "./inc/site-settings.php",
+    "./inc/admin/site-settings.php",
+    "./inc/admin/dashboard-widget.php",
     "./assets/js/admin-site-settings.js",
   ],
   corePlugins: {
@@ -12,8 +13,8 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        'sabay-red': '#e31e24',
-        'sabay-blue': '#0056b3',
+        'sbek-red': '#e31e24',
+        'sbek-blue': '#0056b3',
       },
     },
   },

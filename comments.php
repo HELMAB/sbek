@@ -12,7 +12,7 @@ if ( post_password_required() ) {
 <div id="comments" class="comments-area mt-12 pt-8 border-t border-gray-100">
 
     <?php if ( have_comments() ) : ?>
-        <h2 class="comments-title text-lg font-bold border-b-2 border-sabay-red pb-2 mb-4 uppercase">
+        <h2 class="comments-title text-lg font-bold border-b-2 border-sbek-red pb-2 mb-4 uppercase">
             <?php echo esc_html( t( 'comments_heading', get_comments_number() ) ); ?>
         </h2>
 
@@ -22,7 +22,7 @@ if ( post_password_required() ) {
                 'style'       => 'ol',
                 'short_ping'  => true,
                 'avatar_size' => 48,
-                'callback'    => 'sabay_comment_list_item',
+                'callback'    => 'sbek_comment_list_item',
             ] );
             ?>
         </ol>
@@ -37,6 +37,6 @@ if ( post_password_required() ) {
         <p class="no-comments text-gray-500 italic mt-4"><?php echo esc_html( t( 'comments_closed' ) ); ?></p>
     <?php endif; ?>
 
-    <?php comment_form( sabay_comment_form_args() ); ?>
+    <?php comment_form( sbek_comment_form_args() ); ?>
 
 </div>

@@ -3,17 +3,17 @@
         <?php
         $categories = get_the_category();
         if ( ! empty( $categories ) ) {
-            echo '<a href="' . esc_url( sabay_localize_url( get_category_link( $categories[0]->term_id ) ) ) . '" class="text-sabay-red font-bold uppercase text-sm">' . esc_html( sabay_term_name( $categories[0] ) ) . '</a>';
+            echo '<a href="' . esc_url( sbek_localize_url( get_category_link( $categories[0]->term_id ) ) ) . '" class="text-sbek-red font-bold uppercase text-sm">' . esc_html( sbek_term_name( $categories[0] ) ) . '</a>';
         }
         ?>
         <h2 class="text-xl font-bold mt-1 mb-2 leading-snug">
-            <a href="<?php echo esc_url( sabay_localize_url( get_permalink() ) ); ?>" class="hover:text-sabay-red transition-colors"><?php the_title(); ?></a>
+            <a href="<?php echo esc_url( sbek_localize_url( get_permalink() ) ); ?>" class="hover:text-sbek-red transition-colors"><?php the_title(); ?></a>
         </h2>
         <span class="text-gray-500 text-xs"><?php echo get_the_date(); ?></span>
     </header>
 
     <?php if ( has_post_thumbnail() ) : ?>
-        <a href="<?php echo esc_url( sabay_localize_url( get_permalink() ) ); ?>" class="block mb-4 rounded overflow-hidden">
+        <a href="<?php echo esc_url( sbek_localize_url( get_permalink() ) ); ?>" class="block mb-4 rounded overflow-hidden">
             <?php the_post_thumbnail( 'medium', [ 'class' => 'w-full h-auto' ] ); ?>
         </a>
     <?php endif; ?>

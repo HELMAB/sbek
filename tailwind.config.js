@@ -7,8 +7,9 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        'sabay-red': '#d77655',
-        'sabay-blue': '#0056b3',
+        'sbek-red': '#d77655',
+        // 'sbek-blue': '#0056b3',
+        'sbek-blue': '#d77655',
       },
       fontFamily: {
         'khmer': ['Kantumruy Pro', 'Battambang', 'system-ui', 'sans-serif'],

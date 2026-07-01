@@ -6,7 +6,7 @@
    Settings card — two layers: header (icon + title + description) and body.
    ───────────────────────────────────────────────────────────────────────── */
 
-.sabay-card {
+.sbek-card {
 	background: #edeef1; /* gray group container */
 	border: 1px solid #e2e4e9;
 	border-radius: 16px;
@@ -14,14 +14,14 @@
 }
 
 /* Layer 1 — header label, sitting directly on the gray container */
-.sabay-card__head {
+.sbek-card__head {
 	display: flex;
 	align-items: flex-start;
 	gap: 14px;
 	padding: 0 2px 10px;
 	background: transparent;
 }
-.sabay-card__icon {
+.sbek-card__icon {
 	display: flex;
 	flex: none;
 	align-items: center;
@@ -32,24 +32,24 @@
 	background: rgba(227, 30, 36, .10);
 	color: #e31e24;
 }
-.sabay-card__heading { flex: 1 1 auto; min-width: 0; }
-.sabay-card__title {
+.sbek-card__heading { flex: 1 1 auto; min-width: 0; }
+.sbek-card__title {
 	margin: 0;
 	font-size: 15px;
 	font-weight: 700;
 	line-height: 1.3;
 	color: #111827;
 }
-.sabay-card__desc {
+.sbek-card__desc {
 	margin: 3px 0 0;
 	font-size: 12.5px;
 	line-height: 1.45;
 	color: #6b7280;
 }
-.sabay-card__action { flex: none; }
+.sbek-card__action { flex: none; }
 
 /* Layer 2 — body: a detached white panel floating inside the gray container */
-.sabay-card__body {
+.sbek-card__body {
 	padding: 20px;
 	background: #fff;
 	border: 1px solid rgba(16, 24, 40, .05);
@@ -58,7 +58,7 @@
 }
 
 /* Header "Add" button */
-.sabay-card__add {
+.sbek-card__add {
 	display: inline-flex;
 	align-items: center;
 	gap: 5px;
@@ -73,8 +73,8 @@
 	cursor: pointer;
 	transition: opacity .15s ease, transform .05s ease;
 }
-.sabay-card__add:hover { opacity: .9; }
-.sabay-card__add:active { transform: translateY(1px); }
+.sbek-card__add:hover { opacity: .9; }
+.sbek-card__add:active { transform: translateY(1px); }
 
 /* ─────────────────────────────────────────────────────────────────────────
    Media upload field — dropzone + framed preview.
@@ -82,16 +82,16 @@
    because preflight/Tailwind theme() is not available here.
    ───────────────────────────────────────────────────────────────────────── */
 
-.sabay-media {
+.sbek-media {
 	max-width: 420px;
 }
 
 /* State visibility */
-.sabay-media[data-state="empty"] .sabay-media-preview { display: none; }
-.sabay-media[data-state="filled"] .sabay-media-dropzone { display: none; }
+.sbek-media[data-state="empty"] .sbek-media-preview { display: none; }
+.sbek-media[data-state="filled"] .sbek-media-dropzone { display: none; }
 
 /* ── Empty state: dropzone ──────────────────────────────────────────────── */
-.sabay-media-dropzone {
+.sbek-media-dropzone {
 	display: flex;
 	width: 100%;
 	flex-direction: column;
@@ -108,20 +108,20 @@
 	cursor: pointer;
 	transition: border-color .18s ease, background .18s ease, box-shadow .18s ease, transform .18s ease;
 }
-.sabay-media-dropzone:hover {
+.sbek-media-dropzone:hover {
 	border-color: #0056b3;
 	background: linear-gradient(180deg, #f6faff 0%, #eaf3ff 100%);
 	box-shadow: 0 10px 24px -14px rgba(0, 86, 179, .55);
 }
-.sabay-media-dropzone:active { transform: translateY(1px); }
-.sabay-media-dropzone:focus-visible {
+.sbek-media-dropzone:active { transform: translateY(1px); }
+.sbek-media-dropzone:focus-visible {
 	outline: none;
 	border-color: #0056b3;
 	border-style: solid;
 	box-shadow: 0 0 0 3px rgba(0, 86, 179, .28);
 }
 
-.sabay-media-dropzone__icon {
+.sbek-media-dropzone__icon {
 	display: flex;
 	align-items: center;
 	justify-content: center;
@@ -132,15 +132,15 @@
 	color: #0056b3;
 	transition: transform .18s ease, background .18s ease;
 }
-.sabay-media-dropzone:hover .sabay-media-dropzone__icon {
+.sbek-media-dropzone:hover .sbek-media-dropzone__icon {
 	transform: translateY(-3px) scale(1.06);
 	background: rgba(0, 86, 179, .15);
 }
-.sabay-media-dropzone__label { font-size: 14px; font-weight: 700; letter-spacing: .01em; }
-.sabay-media-dropzone__hint  { font-size: 12px; color: #9ca3af; }
+.sbek-media-dropzone__label { font-size: 14px; font-weight: 700; letter-spacing: .01em; }
+.sbek-media-dropzone__hint  { font-size: 12px; color: #9ca3af; }
 
 /* ── Filled state: framed preview ───────────────────────────────────────── */
-.sabay-media-preview {
+.sbek-media-preview {
 	max-width: 340px;
 	border: 1px solid #e5e7eb;
 	border-radius: 14px;
@@ -148,28 +148,28 @@
 	background: #fff;
 	box-shadow: 0 1px 2px rgba(16, 24, 40, .05);
 }
-.sabay-media-preview__frame {
+.sbek-media-preview__frame {
 	display: flex;
 	align-items: center;
 	justify-content: center;
 	min-height: 128px;
 	padding: 22px;
 }
-.sabay-media-preview__img {
+.sbek-media-preview__img {
 	max-height: 96px;
 	max-width: 100%;
 	width: auto;
 	object-fit: contain;
 	filter: drop-shadow(0 2px 6px rgba(16, 24, 40, .18));
 }
-.sabay-media-preview__actions {
+.sbek-media-preview__actions {
 	display: flex;
 	gap: 8px;
 	padding: 10px 12px;
 	border-top: 1px solid #f0f1f3;
 	background: #fafbfc;
 }
-.sabay-media-btn {
+.sbek-media-btn {
 	display: inline-flex;
 	align-items: center;
 	gap: 6px;
@@ -182,13 +182,13 @@
 	cursor: pointer;
 	transition: background .15s ease, color .15s ease, border-color .15s ease;
 }
-.sabay-media-btn--change { color: #0056b3; background: rgba(0, 86, 179, .08); }
-.sabay-media-btn--change:hover { background: rgba(0, 86, 179, .16); }
-.sabay-media-btn--remove { color: #e31e24; background: transparent; }
-.sabay-media-btn--remove:hover { background: rgba(227, 30, 36, .1); }
+.sbek-media-btn--change { color: #0056b3; background: rgba(0, 86, 179, .08); }
+.sbek-media-btn--change:hover { background: rgba(0, 86, 179, .16); }
+.sbek-media-btn--remove { color: #e31e24; background: transparent; }
+.sbek-media-btn--remove:hover { background: rgba(227, 30, 36, .1); }
 
 /* Checkerboard backdrop so transparent logos stay legible. */
-.sabay-checkerboard {
+.sbek-checkerboard {
 	background-color: #fff;
 	background-image:
 		linear-gradient(45deg, #eceef1 25%, transparent 25%),
@@ -203,7 +203,7 @@
    Dashboard "Theme Setup" checklist widget.
    ───────────────────────────────────────────────────────────────────────── */
 
-.sabay-setup__intro {
+.sbek-setup__intro {
 	margin: 0 0 14px;
 	font-size: 13px;
 	line-height: 1.5;
@@ -211,28 +211,28 @@
 }
 
 /* Progress summary */
-.sabay-setup__summary {
+.sbek-setup__summary {
 	display: flex;
 	align-items: center;
 	gap: 12px;
 	margin-bottom: 16px;
 }
-.sabay-setup__track {
+.sbek-setup__track {
 	flex: 1 1 auto;
 	height: 8px;
 	border-radius: 999px;
 	background: #e9ebef;
 	overflow: hidden;
 }
-.sabay-setup__fill {
+.sbek-setup__fill {
 	display: block;
 	height: 100%;
 	border-radius: 999px;
 	background: #0056b3;
 	transition: width .4s ease;
 }
-.sabay-setup__fill.is-complete { background: #16a34a; }
-.sabay-setup__count {
+.sbek-setup__fill.is-complete { background: #16a34a; }
+.sbek-setup__count {
 	flex: none;
 	font-size: 12px;
 	font-weight: 700;
@@ -241,7 +241,7 @@
 }
 
 /* Completion banner */
-.sabay-setup__done {
+.sbek-setup__done {
 	display: flex;
 	align-items: center;
 	gap: 8px;
@@ -256,7 +256,7 @@
 }
 
 /* Checklist */
-.sabay-setup__list {
+.sbek-setup__list {
 	list-style: none;
 	margin: 0 0 16px;
 	padding: 0;
@@ -264,7 +264,7 @@
 	flex-direction: column;
 	gap: 2px;
 }
-.sabay-setup__item {
+.sbek-setup__item {
 	display: flex;
 	align-items: center;
 	gap: 10px;
@@ -274,17 +274,17 @@
 	color: #374151;
 	transition: background .15s ease;
 }
-.sabay-setup__item:hover { background: #f6f7f9; }
-.sabay-setup__icon {
+.sbek-setup__item:hover { background: #f6f7f9; }
+.sbek-setup__icon {
 	display: flex;
 	flex: none;
 	color: #c4c8cf; /* pending */
 }
-.sabay-setup__item.is-done .sabay-setup__icon { color: #16a34a; }
-.sabay-setup__item.is-done .sabay-setup__label { color: #9ca3af; }
+.sbek-setup__item.is-done .sbek-setup__icon { color: #16a34a; }
+.sbek-setup__item.is-done .sbek-setup__label { color: #9ca3af; }
 
 /* Call to action */
-.sabay-setup__cta {
+.sbek-setup__cta {
 	display: inline-flex;
 	align-items: center;
 	gap: 6px;
@@ -294,4 +294,4 @@
 	text-decoration: none;
 	transition: gap .15s ease, color .15s ease;
 }
-.sabay-setup__cta:hover { color: #e31e24; gap: 9px; }
+.sbek-setup__cta:hover { color: #e31e24; gap: 9px; }

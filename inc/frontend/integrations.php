@@ -3,7 +3,7 @@
  * Third-party integrations: Google Analytics 4, Google Tag Manager, and
  * custom header/footer scripts — all driven by the Options page.
  *
- * @package sabay-clone
+ * @package sbek-clone
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -12,14 +12,14 @@ defined( 'ABSPATH' ) || exit;
  * Head output: GTM container, GA4 gtag, and raw header scripts.
  * Skipped in the admin and for logged-in editors to keep analytics clean.
  */
-function sabay_integrations_head(): void {
+function sbek_integrations_head(): void {
 	if ( is_admin() ) {
 		return;
 	}
 
-	$gtm_id         = sabay_site_setting( 'gtm_id', '' );
-	$ga4_id         = sabay_site_setting( 'ga4_id', '' );
-	$header_scripts = sabay_site_setting( 'header_scripts', '' );
+	$gtm_id         = sbek_site_setting( 'gtm_id', '' );
+	$ga4_id         = sbek_site_setting( 'ga4_id', '' );
+	$header_scripts = sbek_site_setting( 'header_scripts', '' );
 
 	// Google Tag Manager (head half).
 	if ( $gtm_id ) {
@@ -43,17 +43,17 @@ function sabay_integrations_head(): void {
 		echo "\n" . $header_scripts . "\n"; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 	}
 }
-add_action( 'wp_head', 'sabay_integrations_head', 20 );
+add_action( 'wp_head', 'sbek_integrations_head', 20 );
 
 /**
  * Immediately-after-<body> output: the GTM <noscript> fallback.
  */
-function sabay_integrations_body_open(): void {
+function sbek_integrations_body_open(): void {
 	if ( is_admin() ) {
 		return;
 	}
 
-	$gtm_id = sabay_site_setting( 'gtm_id', '' );
+	$gtm_id = sbek_site_setting( 'gtm_id', '' );
 
 	if ( $gtm_id ) {
 		printf(
@@ -62,20 +62,20 @@ function sabay_integrations_body_open(): void {
 		);
 	}
 }
-add_action( 'wp_body_open', 'sabay_integrations_body_open' );
+add_action( 'wp_body_open', 'sbek_integrations_body_open' );
 
 /**
  * Footer output: raw custom footer scripts.
  */
-function sabay_integrations_footer(): void {
+function sbek_integrations_footer(): void {
 	if ( is_admin() ) {
 		return;
 	}
 
-	$footer_scripts = sabay_site_setting( 'footer_scripts', '' );
+	$footer_scripts = sbek_site_setting( 'footer_scripts', '' );
 
 	if ( $footer_scripts ) {
 		echo "\n" . $footer_scripts . "\n"; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 	}
 }
-add_action( 'wp_footer', 'sabay_integrations_footer', 20 );
+add_action( 'wp_footer', 'sbek_integrations_footer', 20 );

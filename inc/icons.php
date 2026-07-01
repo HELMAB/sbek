@@ -7,9 +7,9 @@
  *   - "line"  UI icons from Lucide (https://lucide.dev, ISC).
  *   - "solid" brand logos from Simple Icons (https://simpleicons.org, CC0).
  *
- * Usage:  echo sabay_icon( 'map-pin', [ 'width' => 20, 'class' => 'text-sabay-red' ] );
+ * Usage:  echo sbek_icon( 'map-pin', [ 'width' => 20, 'class' => 'text-sbek-red' ] );
  *
- * @package sabay-clone
+ * @package sbek-clone
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -19,7 +19,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @return array<string,array{0:string,1:string}>
  */
-function sabay_icon_paths(): array {
+function sbek_icon_paths(): array {
 	return [
 		// ── Lucide UI icons (line) ──────────────────────────────────────────
 		'image'       => [ 'line', '<rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/>' ],
@@ -55,12 +55,12 @@ function sabay_icon_paths(): array {
  *
  * Inner markup is trusted/static; caller-supplied attributes are escaped.
  *
- * @param string               $name  Icon name from sabay_icon_paths().
+ * @param string               $name  Icon name from sbek_icon_paths().
  * @param array<string,scalar> $attrs Extra/override SVG attributes (e.g. width, height, class).
  * @return string SVG markup, or '' if the icon is unknown.
  */
-function sabay_icon( string $name, array $attrs = [] ): string {
-	$icons = sabay_icon_paths();
+function sbek_icon( string $name, array $attrs = [] ): string {
+	$icons = sbek_icon_paths();
 
 	if ( ! isset( $icons[ $name ] ) ) {
 		return '';
@@ -95,7 +95,7 @@ function sabay_icon( string $name, array $attrs = [] ): string {
 		$attrs
 	);
 
-	$attributes['class'] = 'sabay-icon sabay-icon-' . $name . $extra_class;
+	$attributes['class'] = 'sbek-icon sbek-icon-' . $name . $extra_class;
 
 	$out = '<svg';
 	foreach ( $attributes as $key => $value ) {
@@ -111,9 +111,9 @@ function sabay_icon( string $name, array $attrs = [] ): string {
  * Falls back to the generic "link" icon for unknown platforms.
  *
  * @param string $platform Platform label (e.g. "Facebook", "X", "Tik Tok").
- * @return string Icon name registered in sabay_icon_paths().
+ * @return string Icon name registered in sbek_icon_paths().
  */
-function sabay_social_icon_name( string $platform ): string {
+function sbek_social_icon_name( string $platform ): string {
 	$map = [
 		'facebook'  => 'facebook',
 		'fb'        => 'facebook',

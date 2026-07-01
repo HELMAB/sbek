@@ -5,7 +5,7 @@
  * Shows, at a glance, which Options page fields are still empty so the user
  * knows what is left to configure (logo, share image, location, etc.).
  *
- * @package sabay-clone
+ * @package sbek-clone
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -15,36 +15,36 @@ defined( 'ABSPATH' ) || exit;
  *
  * @return array<int,array{label:string,done:bool}>
  */
-function sabay_setup_checklist(): array {
-	$s = sabay_site_setting();
+function sbek_setup_checklist(): array {
+	$s = sbek_site_setting();
 
 	return [
 		[
-			'label' => __( 'Upload a site logo', 'sabay-clone' ),
+			'label' => __( 'Upload a site logo', 'sbek-clone' ),
 			'done'  => ! empty( $s['logo'] ),
 		],
 		[
-			'label' => __( 'Add a default share image', 'sabay-clone' ),
+			'label' => __( 'Add a default share image', 'sbek-clone' ),
 			'done'  => ! empty( $s['og_image'] ),
 		],
 		[
-			'label' => __( 'Set the company location', 'sabay-clone' ),
+			'label' => __( 'Set the company location', 'sbek-clone' ),
 			'done'  => '' !== ( $s['lat'] ?? '' ) && '' !== ( $s['lng'] ?? '' ),
 		],
 		[
-			'label' => __( 'Write a company description', 'sabay-clone' ),
+			'label' => __( 'Write a company description', 'sbek-clone' ),
 			'done'  => '' !== trim( (string) ( $s['description'] ?? '' ) ),
 		],
 		[
-			'label' => __( 'Add a contact phone number', 'sabay-clone' ),
+			'label' => __( 'Add a contact phone number', 'sbek-clone' ),
 			'done'  => ! empty( $s['phones'] ),
 		],
 		[
-			'label' => __( 'Link a social profile', 'sabay-clone' ),
+			'label' => __( 'Link a social profile', 'sbek-clone' ),
 			'done'  => ! empty( $s['socials'] ),
 		],
 		[
-			'label' => __( 'Connect analytics (GA4 or GTM)', 'sabay-clone' ),
+			'label' => __( 'Connect analytics (GA4 or GTM)', 'sbek-clone' ),
 			'done'  => '' !== ( $s['ga4_id'] ?? '' ) || '' !== ( $s['gtm_id'] ?? '' ),
 		],
 	];
@@ -59,9 +59,9 @@ add_action( 'wp_dashboard_setup', function (): void {
 	}
 
 	wp_add_dashboard_widget(
-		'sabay_setup_widget',
-		__( 'Theme Setup', 'sabay-clone' ),
-		'sabay_render_setup_widget'
+		'sbek_setup_widget',
+		__( 'Theme Setup', 'sbek-clone' ),
+		'sbek_render_setup_widget'
 	);
 } );
 
@@ -75,7 +75,7 @@ add_action( 'admin_enqueue_scripts', function ( string $hook ): void {
 
 	$version = wp_get_theme()->get( 'Version' ) ?: '1.0.0';
 	wp_enqueue_style(
-		'sabay-admin-settings',
+		'sbek-admin-settings',
 		get_template_directory_uri() . '/assets/css/admin.css',
 		[],
 		$version
@@ -85,56 +85,56 @@ add_action( 'admin_enqueue_scripts', function ( string $hook ): void {
 /**
  * Render the setup checklist widget.
  */
-function sabay_render_setup_widget(): void {
-	$items = sabay_setup_checklist();
+function sbek_render_setup_widget(): void {
+	$items = sbek_setup_checklist();
 	$total = count( $items );
 	$done  = count( array_filter( $items, static fn( $i ) => $i['done'] ) );
 	$pct   = $total ? (int) round( ( $done / $total ) * 100 ) : 0;
 	$all   = $done === $total;
 
-	$settings_url = menu_page_url( SABAY_SETTINGS_SLUG, false );
+	$settings_url = menu_page_url( SBEK_SETTINGS_SLUG, false );
 	if ( ! $settings_url ) {
-		$settings_url = admin_url( 'options-general.php?page=' . SABAY_SETTINGS_SLUG );
+		$settings_url = admin_url( 'options-general.php?page=' . SBEK_SETTINGS_SLUG );
 	}
 	?>
-	<div class="sabay-setup">
-		<p class="sabay-setup__intro">
-			<?php esc_html_e( 'Finish setting up your site identity. These details power your header, SEO tags, structured data, and footer.', 'sabay-clone' ); ?>
+	<div class="sbek-setup">
+		<p class="sbek-setup__intro">
+			<?php esc_html_e( 'Finish setting up your site identity. These details power your header, SEO tags, structured data, and footer.', 'sbek-clone' ); ?>
 		</p>
 
-		<div class="sabay-setup__summary">
-			<div class="sabay-setup__track" role="progressbar" aria-valuenow="<?php echo esc_attr( (string) $pct ); ?>" aria-valuemin="0" aria-valuemax="100">
-				<span class="sabay-setup__fill<?php echo $all ? ' is-complete' : ''; ?>" style="width:<?php echo esc_attr( (string) $pct ); ?>%"></span>
+		<div class="sbek-setup__summary">
+			<div class="sbek-setup__track" role="progressbar" aria-valuenow="<?php echo esc_attr( (string) $pct ); ?>" aria-valuemin="0" aria-valuemax="100">
+				<span class="sbek-setup__fill<?php echo $all ? ' is-complete' : ''; ?>" style="width:<?php echo esc_attr( (string) $pct ); ?>%"></span>
 			</div>
-			<span class="sabay-setup__count">
+			<span class="sbek-setup__count">
 				<?php
 				/* translators: 1: completed count, 2: total count. */
-				echo esc_html( sprintf( __( '%1$d of %2$d complete', 'sabay-clone' ), $done, $total ) );
+				echo esc_html( sprintf( __( '%1$d of %2$d complete', 'sbek-clone' ), $done, $total ) );
 				?>
 			</span>
 		</div>
 
 		<?php if ( $all ) : ?>
-			<p class="sabay-setup__done">
-				<?php echo sabay_icon( 'rocket', [ 'width' => 18, 'height' => 18 ] ); ?>
-				<?php esc_html_e( 'All set — your site identity is fully configured!', 'sabay-clone' ); ?>
+			<p class="sbek-setup__done">
+				<?php echo sbek_icon( 'rocket', [ 'width' => 18, 'height' => 18 ] ); ?>
+				<?php esc_html_e( 'All set — your site identity is fully configured!', 'sbek-clone' ); ?>
 			</p>
 		<?php endif; ?>
 
-		<ul class="sabay-setup__list">
+		<ul class="sbek-setup__list">
 			<?php foreach ( $items as $item ) : ?>
-				<li class="sabay-setup__item<?php echo $item['done'] ? ' is-done' : ''; ?>">
-					<span class="sabay-setup__icon">
-						<?php echo sabay_icon( $item['done'] ? 'circle-check' : 'circle', [ 'width' => 18, 'height' => 18 ] ); ?>
+				<li class="sbek-setup__item<?php echo $item['done'] ? ' is-done' : ''; ?>">
+					<span class="sbek-setup__icon">
+						<?php echo sbek_icon( $item['done'] ? 'circle-check' : 'circle', [ 'width' => 18, 'height' => 18 ] ); ?>
 					</span>
-					<span class="sabay-setup__label"><?php echo esc_html( $item['label'] ); ?></span>
+					<span class="sbek-setup__label"><?php echo esc_html( $item['label'] ); ?></span>
 				</li>
 			<?php endforeach; ?>
 		</ul>
 
-		<a class="sabay-setup__cta" href="<?php echo esc_url( $settings_url ); ?>">
-			<?php echo $all ? esc_html__( 'Review settings', 'sabay-clone' ) : esc_html__( 'Go to Options page', 'sabay-clone' ); ?>
-			<?php echo sabay_icon( 'arrow-right', [ 'width' => 15, 'height' => 15 ] ); ?>
+		<a class="sbek-setup__cta" href="<?php echo esc_url( $settings_url ); ?>">
+			<?php echo $all ? esc_html__( 'Review settings', 'sbek-clone' ) : esc_html__( 'Go to Options page', 'sbek-clone' ); ?>
+			<?php echo sbek_icon( 'arrow-right', [ 'width' => 15, 'height' => 15 ] ); ?>
 		</a>
 	</div>
 	<?php

@@ -3,33 +3,33 @@
  * Site Settings admin page.
  *
  * Adds an "Options page" submenu under Settings storing global company info in a single
- * option array (`sabay_site_settings`):
+ * option array (`sbek_site_settings`):
  *   - lat / lng        Company location coordinates.
  *   - description      Company description.
  *   - phones[]         Repeatable contact phone numbers (label + number).
  *   - socials[]        Repeatable social links (platform + url).
  *
- * Read anywhere in the theme with sabay_site_setting( 'key' ).
+ * Read anywhere in the theme with sbek_site_setting( 'key' ).
  *
- * @package sabay-clone
+ * @package sbek-clone
  */
 
 defined( 'ABSPATH' ) || exit;
 
-const SABAY_SETTINGS_OPTION = 'sabay_site_settings';
-const SABAY_SETTINGS_GROUP  = 'sabay_site_settings_group';
-const SABAY_SETTINGS_SLUG   = 'sabay-site-settings';
+const SBEK_SETTINGS_OPTION = 'sbek_site_settings';
+const SBEK_SETTINGS_GROUP  = 'sbek_site_settings_group';
+const SBEK_SETTINGS_SLUG   = 'sbek-site-settings';
 
 // ─── 1. Register the option + sanitize callback ──────────────────────────────
 
 add_action( 'admin_init', function (): void {
 	register_setting(
-		SABAY_SETTINGS_GROUP,
-		SABAY_SETTINGS_OPTION,
+		SBEK_SETTINGS_GROUP,
+		SBEK_SETTINGS_OPTION,
 		[
 			'type'              => 'array',
-			'sanitize_callback' => 'sabay_sanitize_site_settings',
-			'default'           => sabay_site_settings_defaults(),
+			'sanitize_callback' => 'sbek_sanitize_site_settings',
+			'default'           => sbek_site_settings_defaults(),
 		]
 	);
 } );
@@ -39,7 +39,7 @@ add_action( 'admin_init', function (): void {
  *
  * @return array<string,mixed>
  */
-function sabay_site_settings_defaults(): array {
+function sbek_site_settings_defaults(): array {
 	return [
 		'logo'           => 0,
 		'og_image'       => 0,
@@ -61,9 +61,9 @@ function sabay_site_settings_defaults(): array {
  * @param mixed $input Raw $_POST value.
  * @return array<string,mixed>
  */
-function sabay_sanitize_site_settings( $input ): array {
+function sbek_sanitize_site_settings( $input ): array {
 	$input = is_array( $input ) ? $input : [];
-	$clean = sabay_site_settings_defaults();
+	$clean = sbek_site_settings_defaults();
 
 	// Media library attachment IDs.
 	$clean['logo']     = absint( $input['logo'] ?? 0 );
@@ -125,10 +125,10 @@ function sabay_sanitize_site_settings( $input ): array {
  * @param mixed       $default Fallback when the key is unset.
  * @return mixed
  */
-function sabay_site_setting( ?string $key = null, $default = null ) {
+function sbek_site_setting( ?string $key = null, $default = null ) {
 	$settings = wp_parse_args(
-		(array) get_option( SABAY_SETTINGS_OPTION, [] ),
-		sabay_site_settings_defaults()
+		(array) get_option( SBEK_SETTINGS_OPTION, [] ),
+		sbek_site_settings_defaults()
 	);
 
 	if ( null === $key ) {
@@ -145,8 +145,8 @@ function sabay_site_setting( ?string $key = null, $default = null ) {
  * @param string $size Image size.
  * @return string Image URL, or '' when unset/missing.
  */
-function sabay_site_setting_image_url( string $key, string $size = 'full' ): string {
-	$id = absint( sabay_site_setting( $key, 0 ) );
+function sbek_site_setting_image_url( string $key, string $size = 'full' ): string {
+	$id = absint( sbek_site_setting( $key, 0 ) );
 
 	if ( ! $id ) {
 		return '';
@@ -159,21 +159,21 @@ function sabay_site_setting_image_url( string $key, string $size = 'full' ): str
 
 add_action( 'admin_menu', function (): void {
 	$hook = add_options_page(
-		__( 'Options page', 'sabay-clone' ),
-		__( 'Options page', 'sabay-clone' ),
+		__( 'Options page', 'sbek-clone' ),
+		__( 'Options page', 'sbek-clone' ),
 		'manage_options',
-		SABAY_SETTINGS_SLUG,
-		'sabay_render_site_settings_page'
+		SBEK_SETTINGS_SLUG,
+		'sbek_render_site_settings_page'
 	);
 
 	// Load page-specific assets only on this screen.
-	add_action( "admin_print_styles-{$hook}", 'sabay_site_settings_assets' );
+	add_action( "admin_print_styles-{$hook}", 'sbek_site_settings_assets' );
 } );
 
 /**
  * Enqueue the (preflight-free) Tailwind admin build + repeater JS for this page.
  */
-function sabay_site_settings_assets(): void {
+function sbek_site_settings_assets(): void {
 	$theme   = wp_get_theme();
 	$version = $theme->get( 'Version' ) ?: '1.0.0';
 
@@ -181,14 +181,14 @@ function sabay_site_settings_assets(): void {
 	wp_enqueue_media();
 
 	wp_enqueue_style(
-		'sabay-admin-settings',
+		'sbek-admin-settings',
 		get_template_directory_uri() . '/assets/css/admin.css',
 		[],
 		$version
 	);
 
 	wp_enqueue_script(
-		'sabay-admin-settings',
+		'sbek-admin-settings',
 		get_template_directory_uri() . '/assets/js/admin-site-settings.js',
 		[ 'jquery', 'media-editor' ],
 		$version,
@@ -207,38 +207,38 @@ function sabay_site_settings_assets(): void {
  * @param string $select_label  Call-to-action shown in the empty state.
  * @param string $hint          Optional helper text (file types, dimensions…).
  */
-function sabay_render_media_field( string $opt, string $key, int $attachment_id, string $select_label, string $hint = '' ): void {
+function sbek_render_media_field( string $opt, string $key, int $attachment_id, string $select_label, string $hint = '' ): void {
 	$url   = $attachment_id ? wp_get_attachment_image_url( $attachment_id, 'medium' ) : '';
 	$state = $url ? 'filled' : 'empty';
 	?>
-	<div class="sabay-media" data-sabay-media-field data-state="<?php echo esc_attr( $state ); ?>">
+	<div class="sbek-media" data-sbek-media-field data-state="<?php echo esc_attr( $state ); ?>">
 		<input type="hidden" name="<?php echo esc_attr( $opt ); ?>[<?php echo esc_attr( $key ); ?>]"
-			value="<?php echo esc_attr( $attachment_id ?: '' ); ?>" data-sabay-media-input>
+			value="<?php echo esc_attr( $attachment_id ?: '' ); ?>" data-sbek-media-input>
 
 		<?php // Empty state — full-area dropzone (click opens the media modal). ?>
-		<button type="button" class="sabay-media-dropzone" data-sabay-media-select>
-			<span class="sabay-media-dropzone__icon">
-				<?php echo sabay_icon( 'image-plus', [ 'width' => 26, 'height' => 26 ] ); ?>
+		<button type="button" class="sbek-media-dropzone" data-sbek-media-select>
+			<span class="sbek-media-dropzone__icon">
+				<?php echo sbek_icon( 'image-plus', [ 'width' => 26, 'height' => 26 ] ); ?>
 			</span>
-			<span class="sabay-media-dropzone__label"><?php echo esc_html( $select_label ); ?></span>
+			<span class="sbek-media-dropzone__label"><?php echo esc_html( $select_label ); ?></span>
 			<?php if ( $hint ) : ?>
-				<span class="sabay-media-dropzone__hint"><?php echo esc_html( $hint ); ?></span>
+				<span class="sbek-media-dropzone__hint"><?php echo esc_html( $hint ); ?></span>
 			<?php endif; ?>
 		</button>
 
 		<?php // Filled state — framed preview + actions. ?>
-		<div class="sabay-media-preview">
-			<div class="sabay-media-preview__frame sabay-checkerboard">
-				<img src="<?php echo esc_url( $url ); ?>" alt="" class="sabay-media-preview__img" data-sabay-media-preview>
+		<div class="sbek-media-preview">
+			<div class="sbek-media-preview__frame sbek-checkerboard">
+				<img src="<?php echo esc_url( $url ); ?>" alt="" class="sbek-media-preview__img" data-sbek-media-preview>
 			</div>
-			<div class="sabay-media-preview__actions">
-				<button type="button" class="sabay-media-btn sabay-media-btn--change" data-sabay-media-select>
-					<?php echo sabay_icon( 'image-up', [ 'width' => 15, 'height' => 15 ] ); ?>
-					<?php esc_html_e( 'Replace', 'sabay-clone' ); ?>
+			<div class="sbek-media-preview__actions">
+				<button type="button" class="sbek-media-btn sbek-media-btn--change" data-sbek-media-select>
+					<?php echo sbek_icon( 'image-up', [ 'width' => 15, 'height' => 15 ] ); ?>
+					<?php esc_html_e( 'Replace', 'sbek-clone' ); ?>
 				</button>
-				<button type="button" class="sabay-media-btn sabay-media-btn--remove" data-sabay-media-remove>
-					<?php echo sabay_icon( 'trash-2', [ 'width' => 15, 'height' => 15 ] ); ?>
-					<?php esc_html_e( 'Remove', 'sabay-clone' ); ?>
+				<button type="button" class="sbek-media-btn sbek-media-btn--remove" data-sbek-media-remove>
+					<?php echo sbek_icon( 'trash-2', [ 'width' => 15, 'height' => 15 ] ); ?>
+					<?php esc_html_e( 'Remove', 'sbek-clone' ); ?>
 				</button>
 			</div>
 		</div>
@@ -248,34 +248,34 @@ function sabay_render_media_field( string $opt, string $key, int $attachment_id,
 
 /**
  * Open a settings card: a header layer (icon, title, description) followed by
- * an open body layer for the form. Pair with sabay_section_close().
+ * an open body layer for the form. Pair with sbek_section_close().
  *
- * @param string $icon        Icon name from sabay_icon_paths().
+ * @param string $icon        Icon name from sbek_icon_paths().
  * @param string $title       Section title.
  * @param string $description Short description shown under the title.
  * @param string $action      Optional trusted HTML aligned to the header's right (e.g. an Add button).
  */
-function sabay_section_open( string $icon, string $title, string $description, string $action = '' ): void {
+function sbek_section_open( string $icon, string $title, string $description, string $action = '' ): void {
 	?>
-	<section class="sabay-card">
-		<header class="sabay-card__head">
-			<span class="sabay-card__icon"><?php echo sabay_icon( $icon, [ 'width' => 20, 'height' => 20 ] ); ?></span>
-			<div class="sabay-card__heading">
-				<h2 class="sabay-card__title"><?php echo esc_html( $title ); ?></h2>
-				<p class="sabay-card__desc"><?php echo esc_html( $description ); ?></p>
+	<section class="sbek-card">
+		<header class="sbek-card__head">
+			<span class="sbek-card__icon"><?php echo sbek_icon( $icon, [ 'width' => 20, 'height' => 20 ] ); ?></span>
+			<div class="sbek-card__heading">
+				<h2 class="sbek-card__title"><?php echo esc_html( $title ); ?></h2>
+				<p class="sbek-card__desc"><?php echo esc_html( $description ); ?></p>
 			</div>
 			<?php if ( $action ) : ?>
-				<div class="sabay-card__action"><?php echo $action; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- trusted markup ?></div>
+				<div class="sbek-card__action"><?php echo $action; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- trusted markup ?></div>
 			<?php endif; ?>
 		</header>
-		<div class="sabay-card__body">
+		<div class="sbek-card__body">
 	<?php
 }
 
 /**
- * Close a settings card opened with sabay_section_open().
+ * Close a settings card opened with sbek_section_open().
  */
-function sabay_section_close(): void {
+function sbek_section_close(): void {
 	?>
 		</div>
 	</section>
@@ -288,159 +288,159 @@ function sabay_section_close(): void {
  * @param string $group Repeater group key (e.g. "phones").
  * @return string Button markup.
  */
-function sabay_add_button( string $group ): string {
+function sbek_add_button( string $group ): string {
 	return sprintf(
-		'<button type="button" class="sabay-card__add" data-sabay-add="%s">%s<span>%s</span></button>',
+		'<button type="button" class="sbek-card__add" data-sbek-add="%s">%s<span>%s</span></button>',
 		esc_attr( $group ),
-		sabay_icon( 'plus', [ 'width' => 15, 'height' => 15 ] ),
-		esc_html__( 'Add', 'sabay-clone' )
+		sbek_icon( 'plus', [ 'width' => 15, 'height' => 15 ] ),
+		esc_html__( 'Add', 'sbek-clone' )
 	);
 }
 
-function sabay_render_site_settings_page(): void {
+function sbek_render_site_settings_page(): void {
 	if ( ! current_user_can( 'manage_options' ) ) {
-		wp_die( esc_html__( 'You do not have permission to access this page.', 'sabay-clone' ) );
+		wp_die( esc_html__( 'You do not have permission to access this page.', 'sbek-clone' ) );
 	}
 
-	$settings = sabay_site_setting();
-	$opt      = SABAY_SETTINGS_OPTION;
+	$settings = sbek_site_setting();
+	$opt      = SBEK_SETTINGS_OPTION;
 	?>
 	<div class="wrap">
-		<div class="sabay-admin max-w-3xl mx-auto font-sans text-gray-800">
-			<h1 class="text-2xl font-bold mb-1"><?php esc_html_e( 'Options page', 'sabay-clone' ); ?></h1>
-			<p class="text-sm text-gray-500 mb-6"><?php esc_html_e( 'Global company information used across the site.', 'sabay-clone' ); ?></p>
+		<div class="sbek-admin max-w-3xl mx-auto font-sans text-gray-800">
+			<h1 class="text-2xl font-bold mb-1"><?php esc_html_e( 'Options page', 'sbek-clone' ); ?></h1>
+			<p class="text-sm text-gray-500 mb-6"><?php esc_html_e( 'Global company information used across the site.', 'sbek-clone' ); ?></p>
 
 			<form method="post" action="options.php" class="space-y-6">
-				<?php settings_fields( SABAY_SETTINGS_GROUP ); ?>
+				<?php settings_fields( SBEK_SETTINGS_GROUP ); ?>
 
 				<!-- Branding -->
-				<?php sabay_section_open( 'image', __( 'Branding', 'sabay-clone' ), __( 'Your logo and the default image shown when pages are shared on social media.', 'sabay-clone' ) ); ?>
+				<?php sbek_section_open( 'image', __( 'Branding', 'sbek-clone' ), __( 'Your logo and the default image shown when pages are shared on social media.', 'sbek-clone' ) ); ?>
 					<div class="space-y-5">
 						<div>
-							<span class="block text-sm font-semibold mb-1"><?php esc_html_e( 'Site Logo', 'sabay-clone' ); ?></span>
-							<p class="text-xs text-gray-500 mb-2"><?php esc_html_e( 'Shown in the site header and used in structured data.', 'sabay-clone' ); ?></p>
-							<?php sabay_render_media_field( $opt, 'logo', (int) $settings['logo'], __( 'Upload or choose a logo', 'sabay-clone' ), __( 'PNG, JPG or SVG · transparent background recommended', 'sabay-clone' ) ); ?>
+							<span class="block text-sm font-semibold mb-1"><?php esc_html_e( 'Site Logo', 'sbek-clone' ); ?></span>
+							<p class="text-xs text-gray-500 mb-2"><?php esc_html_e( 'Shown in the site header and used in structured data.', 'sbek-clone' ); ?></p>
+							<?php sbek_render_media_field( $opt, 'logo', (int) $settings['logo'], __( 'Upload or choose a logo', 'sbek-clone' ), __( 'PNG, JPG or SVG · transparent background recommended', 'sbek-clone' ) ); ?>
 						</div>
 						<div class="border-t border-solid border-gray-100 pt-5">
-							<span class="block text-sm font-semibold mb-1"><?php esc_html_e( 'Default Share Image', 'sabay-clone' ); ?></span>
-							<p class="text-xs text-gray-500 mb-2"><?php esc_html_e( 'Fallback Open Graph image for pages with no featured image.', 'sabay-clone' ); ?></p>
-							<?php sabay_render_media_field( $opt, 'og_image', (int) $settings['og_image'], __( 'Upload or choose an image', 'sabay-clone' ), __( 'JPG or PNG · 1200×630px recommended', 'sabay-clone' ) ); ?>
+							<span class="block text-sm font-semibold mb-1"><?php esc_html_e( 'Default Share Image', 'sbek-clone' ); ?></span>
+							<p class="text-xs text-gray-500 mb-2"><?php esc_html_e( 'Fallback Open Graph image for pages with no featured image.', 'sbek-clone' ); ?></p>
+							<?php sbek_render_media_field( $opt, 'og_image', (int) $settings['og_image'], __( 'Upload or choose an image', 'sbek-clone' ), __( 'JPG or PNG · 1200×630px recommended', 'sbek-clone' ) ); ?>
 						</div>
 					</div>
-				<?php sabay_section_close(); ?>
+				<?php sbek_section_close(); ?>
 
 				<!-- Location -->
-				<?php sabay_section_open( 'map-pin', __( 'Company Location', 'sabay-clone' ), __( 'Coordinates of your office, used in maps and structured data.', 'sabay-clone' ) ); ?>
+				<?php sbek_section_open( 'map-pin', __( 'Company Location', 'sbek-clone' ), __( 'Coordinates of your office, used in maps and structured data.', 'sbek-clone' ) ); ?>
 					<div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
 						<label class="block">
-							<span class="block text-sm font-semibold mb-1"><?php esc_html_e( 'Latitude', 'sabay-clone' ); ?></span>
+							<span class="block text-sm font-semibold mb-1"><?php esc_html_e( 'Latitude', 'sbek-clone' ); ?></span>
 							<input type="text" inputmode="decimal" name="<?php echo esc_attr( $opt ); ?>[lat]"
 								value="<?php echo esc_attr( $settings['lat'] ); ?>" placeholder="11.5564"
-								class="w-full rounded-md border border-solid border-gray-300 px-3 py-2 text-sm focus:border-sabay-blue focus:outline-none">
+								class="w-full rounded-md border border-solid border-gray-300 px-3 py-2 text-sm focus:border-sbek-blue focus:outline-none">
 						</label>
 						<label class="block">
-							<span class="block text-sm font-semibold mb-1"><?php esc_html_e( 'Longitude', 'sabay-clone' ); ?></span>
+							<span class="block text-sm font-semibold mb-1"><?php esc_html_e( 'Longitude', 'sbek-clone' ); ?></span>
 							<input type="text" inputmode="decimal" name="<?php echo esc_attr( $opt ); ?>[lng]"
 								value="<?php echo esc_attr( $settings['lng'] ); ?>" placeholder="104.9282"
-								class="w-full rounded-md border border-solid border-gray-300 px-3 py-2 text-sm focus:border-sabay-blue focus:outline-none">
+								class="w-full rounded-md border border-solid border-gray-300 px-3 py-2 text-sm focus:border-sbek-blue focus:outline-none">
 						</label>
 					</div>
-				<?php sabay_section_close(); ?>
+				<?php sbek_section_close(); ?>
 
 				<!-- Description -->
-				<?php sabay_section_open( 'info', __( 'Company Description', 'sabay-clone' ), __( 'A short summary of your organization for SEO and structured data.', 'sabay-clone' ) ); ?>
+				<?php sbek_section_open( 'info', __( 'Company Description', 'sbek-clone' ), __( 'A short summary of your organization for SEO and structured data.', 'sbek-clone' ) ); ?>
 					<textarea name="<?php echo esc_attr( $opt ); ?>[description]" rows="4"
-						class="w-full rounded-md border border-solid border-gray-300 px-3 py-2 text-sm focus:border-sabay-blue focus:outline-none"
-						placeholder="<?php esc_attr_e( 'A short description of the company…', 'sabay-clone' ); ?>"><?php echo esc_textarea( $settings['description'] ); ?></textarea>
-				<?php sabay_section_close(); ?>
+						class="w-full rounded-md border border-solid border-gray-300 px-3 py-2 text-sm focus:border-sbek-blue focus:outline-none"
+						placeholder="<?php esc_attr_e( 'A short description of the company…', 'sbek-clone' ); ?>"><?php echo esc_textarea( $settings['description'] ); ?></textarea>
+				<?php sbek_section_close(); ?>
 
 				<!-- Phone numbers (repeatable) -->
-				<?php sabay_section_open( 'phone', __( 'Contact Phone Numbers', 'sabay-clone' ), __( 'Public contact numbers shown across the site. Add as many as you need.', 'sabay-clone' ), sabay_add_button( 'phones' ) ); ?>
-					<div data-sabay-rows="phones" class="space-y-3">
+				<?php sbek_section_open( 'phone', __( 'Contact Phone Numbers', 'sbek-clone' ), __( 'Public contact numbers shown across the site. Add as many as you need.', 'sbek-clone' ), sbek_add_button( 'phones' ) ); ?>
+					<div data-sbek-rows="phones" class="space-y-3">
 						<?php
 						$phones = ! empty( $settings['phones'] ) ? $settings['phones'] : [ [ 'label' => '', 'number' => '' ] ];
 						foreach ( $phones as $i => $row ) :
 							?>
-							<div class="flex flex-wrap items-center gap-2" data-sabay-row>
+							<div class="flex flex-wrap items-center gap-2" data-sbek-row>
 								<input type="text" name="<?php echo esc_attr( $opt ); ?>[phones][<?php echo (int) $i; ?>][label]"
 									value="<?php echo esc_attr( $row['label'] ?? '' ); ?>"
-									placeholder="<?php esc_attr_e( 'Label (e.g. Sales)', 'sabay-clone' ); ?>"
-									class="flex-1 min-w-[8rem] rounded-md border border-solid border-gray-300 px-3 py-2 text-sm focus:border-sabay-blue focus:outline-none">
+									placeholder="<?php esc_attr_e( 'Label (e.g. Sales)', 'sbek-clone' ); ?>"
+									class="flex-1 min-w-[8rem] rounded-md border border-solid border-gray-300 px-3 py-2 text-sm focus:border-sbek-blue focus:outline-none">
 								<input type="text" name="<?php echo esc_attr( $opt ); ?>[phones][<?php echo (int) $i; ?>][number]"
 									value="<?php echo esc_attr( $row['number'] ?? '' ); ?>"
 									placeholder="+855 12 345 678"
-									class="flex-1 min-w-[10rem] rounded-md border border-solid border-gray-300 px-3 py-2 text-sm focus:border-sabay-blue focus:outline-none">
-								<button type="button" data-sabay-remove
-									class="cursor-pointer shrink-0 text-gray-400 hover:text-sabay-red bg-transparent border-0 p-1" aria-label="<?php esc_attr_e( 'Remove', 'sabay-clone' ); ?>">
-									<?php echo sabay_icon( 'trash-2', [ 'width' => 18, 'height' => 18 ] ); ?>
+									class="flex-1 min-w-[10rem] rounded-md border border-solid border-gray-300 px-3 py-2 text-sm focus:border-sbek-blue focus:outline-none">
+								<button type="button" data-sbek-remove
+									class="cursor-pointer shrink-0 text-gray-400 hover:text-sbek-red bg-transparent border-0 p-1" aria-label="<?php esc_attr_e( 'Remove', 'sbek-clone' ); ?>">
+									<?php echo sbek_icon( 'trash-2', [ 'width' => 18, 'height' => 18 ] ); ?>
 								</button>
 							</div>
 						<?php endforeach; ?>
 					</div>
-				<?php sabay_section_close(); ?>
+				<?php sbek_section_close(); ?>
 
 				<!-- Social links (repeatable) -->
-				<?php sabay_section_open( 'share-2', __( 'Social Links', 'sabay-clone' ), __( 'Links to your social profiles, displayed in the site footer.', 'sabay-clone' ), sabay_add_button( 'socials' ) ); ?>
-					<div data-sabay-rows="socials" class="space-y-3">
+				<?php sbek_section_open( 'share-2', __( 'Social Links', 'sbek-clone' ), __( 'Links to your social profiles, displayed in the site footer.', 'sbek-clone' ), sbek_add_button( 'socials' ) ); ?>
+					<div data-sbek-rows="socials" class="space-y-3">
 						<?php
 						$socials = ! empty( $settings['socials'] ) ? $settings['socials'] : [ [ 'platform' => '', 'url' => '' ] ];
 						foreach ( $socials as $i => $row ) :
 							?>
-							<div class="flex flex-wrap items-center gap-2" data-sabay-row>
+							<div class="flex flex-wrap items-center gap-2" data-sbek-row>
 								<input type="text" name="<?php echo esc_attr( $opt ); ?>[socials][<?php echo (int) $i; ?>][platform]"
 									value="<?php echo esc_attr( $row['platform'] ?? '' ); ?>"
-									placeholder="<?php esc_attr_e( 'Platform (e.g. Facebook)', 'sabay-clone' ); ?>"
-									class="flex-1 min-w-[8rem] rounded-md border border-solid border-gray-300 px-3 py-2 text-sm focus:border-sabay-blue focus:outline-none">
+									placeholder="<?php esc_attr_e( 'Platform (e.g. Facebook)', 'sbek-clone' ); ?>"
+									class="flex-1 min-w-[8rem] rounded-md border border-solid border-gray-300 px-3 py-2 text-sm focus:border-sbek-blue focus:outline-none">
 								<input type="url" name="<?php echo esc_attr( $opt ); ?>[socials][<?php echo (int) $i; ?>][url]"
 									value="<?php echo esc_attr( $row['url'] ?? '' ); ?>"
 									placeholder="https://facebook.com/yourpage"
-									class="flex-1 min-w-[12rem] rounded-md border border-solid border-gray-300 px-3 py-2 text-sm focus:border-sabay-blue focus:outline-none">
-								<button type="button" data-sabay-remove
-									class="cursor-pointer shrink-0 text-gray-400 hover:text-sabay-red bg-transparent border-0 p-1" aria-label="<?php esc_attr_e( 'Remove', 'sabay-clone' ); ?>">
-									<?php echo sabay_icon( 'trash-2', [ 'width' => 18, 'height' => 18 ] ); ?>
+									class="flex-1 min-w-[12rem] rounded-md border border-solid border-gray-300 px-3 py-2 text-sm focus:border-sbek-blue focus:outline-none">
+								<button type="button" data-sbek-remove
+									class="cursor-pointer shrink-0 text-gray-400 hover:text-sbek-red bg-transparent border-0 p-1" aria-label="<?php esc_attr_e( 'Remove', 'sbek-clone' ); ?>">
+									<?php echo sbek_icon( 'trash-2', [ 'width' => 18, 'height' => 18 ] ); ?>
 								</button>
 							</div>
 						<?php endforeach; ?>
 					</div>
-				<?php sabay_section_close(); ?>
+				<?php sbek_section_close(); ?>
 
 				<!-- Analytics & Scripts -->
-				<?php sabay_section_open( 'trending-up', __( 'Analytics & Scripts', 'sabay-clone' ), __( 'Tracking IDs and custom code injected site-wide.', 'sabay-clone' ) ); ?>
+				<?php sbek_section_open( 'trending-up', __( 'Analytics & Scripts', 'sbek-clone' ), __( 'Tracking IDs and custom code injected site-wide.', 'sbek-clone' ) ); ?>
 					<div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-5">
 						<label class="block">
-							<span class="block text-sm font-semibold mb-1"><?php esc_html_e( 'Google Analytics 4 ID', 'sabay-clone' ); ?></span>
+							<span class="block text-sm font-semibold mb-1"><?php esc_html_e( 'Google Analytics 4 ID', 'sbek-clone' ); ?></span>
 							<input type="text" name="<?php echo esc_attr( $opt ); ?>[ga4_id]"
 								value="<?php echo esc_attr( $settings['ga4_id'] ); ?>" placeholder="G-XXXXXXXXXX"
-								class="w-full rounded-md border border-solid border-gray-300 px-3 py-2 text-sm focus:border-sabay-blue focus:outline-none">
+								class="w-full rounded-md border border-solid border-gray-300 px-3 py-2 text-sm focus:border-sbek-blue focus:outline-none">
 						</label>
 						<label class="block">
-							<span class="block text-sm font-semibold mb-1"><?php esc_html_e( 'Google Tag Manager ID', 'sabay-clone' ); ?></span>
+							<span class="block text-sm font-semibold mb-1"><?php esc_html_e( 'Google Tag Manager ID', 'sbek-clone' ); ?></span>
 							<input type="text" name="<?php echo esc_attr( $opt ); ?>[gtm_id]"
 								value="<?php echo esc_attr( $settings['gtm_id'] ); ?>" placeholder="GTM-XXXXXXX"
-								class="w-full rounded-md border border-solid border-gray-300 px-3 py-2 text-sm focus:border-sabay-blue focus:outline-none">
+								class="w-full rounded-md border border-solid border-gray-300 px-3 py-2 text-sm focus:border-sbek-blue focus:outline-none">
 						</label>
 					</div>
 					<label class="block mb-5">
-						<span class="block text-sm font-semibold mb-1"><?php esc_html_e( 'Header Scripts', 'sabay-clone' ); ?></span>
-						<p class="text-xs text-gray-500 mb-2"><?php esc_html_e( 'Raw HTML/JS injected into <head> on every page.', 'sabay-clone' ); ?></p>
+						<span class="block text-sm font-semibold mb-1"><?php esc_html_e( 'Header Scripts', 'sbek-clone' ); ?></span>
+						<p class="text-xs text-gray-500 mb-2"><?php esc_html_e( 'Raw HTML/JS injected into <head> on every page.', 'sbek-clone' ); ?></p>
 						<textarea name="<?php echo esc_attr( $opt ); ?>[header_scripts]" rows="4"
-							class="w-full font-mono text-xs rounded-md border border-solid border-gray-300 px-3 py-2 focus:border-sabay-blue focus:outline-none"><?php echo esc_textarea( $settings['header_scripts'] ); ?></textarea>
+							class="w-full font-mono text-xs rounded-md border border-solid border-gray-300 px-3 py-2 focus:border-sbek-blue focus:outline-none"><?php echo esc_textarea( $settings['header_scripts'] ); ?></textarea>
 					</label>
 					<label class="block">
-						<span class="block text-sm font-semibold mb-1"><?php esc_html_e( 'Footer Scripts', 'sabay-clone' ); ?></span>
-						<p class="text-xs text-gray-500 mb-2"><?php esc_html_e( 'Raw HTML/JS injected before the closing </body> tag.', 'sabay-clone' ); ?></p>
+						<span class="block text-sm font-semibold mb-1"><?php esc_html_e( 'Footer Scripts', 'sbek-clone' ); ?></span>
+						<p class="text-xs text-gray-500 mb-2"><?php esc_html_e( 'Raw HTML/JS injected before the closing </body> tag.', 'sbek-clone' ); ?></p>
 						<textarea name="<?php echo esc_attr( $opt ); ?>[footer_scripts]" rows="4"
-							class="w-full font-mono text-xs rounded-md border border-solid border-gray-300 px-3 py-2 focus:border-sabay-blue focus:outline-none"><?php echo esc_textarea( $settings['footer_scripts'] ); ?></textarea>
+							class="w-full font-mono text-xs rounded-md border border-solid border-gray-300 px-3 py-2 focus:border-sbek-blue focus:outline-none"><?php echo esc_textarea( $settings['footer_scripts'] ); ?></textarea>
 						<?php if ( ! current_user_can( 'unfiltered_html' ) ) : ?>
-							<p class="text-xs text-amber-600 mt-2"><?php esc_html_e( 'Your role cannot save raw scripts; unsafe markup will be stripped on save.', 'sabay-clone' ); ?></p>
+							<p class="text-xs text-amber-600 mt-2"><?php esc_html_e( 'Your role cannot save raw scripts; unsafe markup will be stripped on save.', 'sbek-clone' ); ?></p>
 						<?php endif; ?>
 					</label>
-				<?php sabay_section_close(); ?>
+				<?php sbek_section_close(); ?>
 
 				<div>
 					<button type="submit"
-						class="cursor-pointer text-sm font-bold text-white bg-sabay-red hover:opacity-90 border-0 rounded-md px-5 py-2.5">
-						<?php esc_html_e( 'Save Settings', 'sabay-clone' ); ?>
+						class="cursor-pointer text-sm font-bold text-white bg-sbek-red hover:opacity-90 border-0 rounded-md px-5 py-2.5">
+						<?php esc_html_e( 'Save Settings', 'sbek-clone' ); ?>
 					</button>
 				</div>
 			</form>
@@ -448,32 +448,32 @@ function sabay_render_site_settings_page(): void {
 	</div>
 
 	<?php // Row templates for the JS repeater (rendered once, hidden). ?>
-	<template id="sabay-tmpl-phones">
-		<div class="flex flex-wrap items-center gap-2" data-sabay-row>
+	<template id="sbek-tmpl-phones">
+		<div class="flex flex-wrap items-center gap-2" data-sbek-row>
 			<input type="text" data-name="<?php echo esc_attr( $opt ); ?>[phones][__i__][label]"
-				placeholder="<?php esc_attr_e( 'Label (e.g. Sales)', 'sabay-clone' ); ?>"
-				class="flex-1 min-w-[8rem] rounded-md border border-solid border-gray-300 px-3 py-2 text-sm focus:border-sabay-blue focus:outline-none">
+				placeholder="<?php esc_attr_e( 'Label (e.g. Sales)', 'sbek-clone' ); ?>"
+				class="flex-1 min-w-[8rem] rounded-md border border-solid border-gray-300 px-3 py-2 text-sm focus:border-sbek-blue focus:outline-none">
 			<input type="text" data-name="<?php echo esc_attr( $opt ); ?>[phones][__i__][number]"
 				placeholder="+855 12 345 678"
-				class="flex-1 min-w-[10rem] rounded-md border border-solid border-gray-300 px-3 py-2 text-sm focus:border-sabay-blue focus:outline-none">
-			<button type="button" data-sabay-remove
-				class="cursor-pointer shrink-0 text-gray-400 hover:text-sabay-red bg-transparent border-0 p-1" aria-label="<?php esc_attr_e( 'Remove', 'sabay-clone' ); ?>">
-				<?php echo sabay_icon( 'trash-2', [ 'width' => 18, 'height' => 18 ] ); ?>
+				class="flex-1 min-w-[10rem] rounded-md border border-solid border-gray-300 px-3 py-2 text-sm focus:border-sbek-blue focus:outline-none">
+			<button type="button" data-sbek-remove
+				class="cursor-pointer shrink-0 text-gray-400 hover:text-sbek-red bg-transparent border-0 p-1" aria-label="<?php esc_attr_e( 'Remove', 'sbek-clone' ); ?>">
+				<?php echo sbek_icon( 'trash-2', [ 'width' => 18, 'height' => 18 ] ); ?>
 			</button>
 		</div>
 	</template>
 
-	<template id="sabay-tmpl-socials">
-		<div class="flex flex-wrap items-center gap-2" data-sabay-row>
+	<template id="sbek-tmpl-socials">
+		<div class="flex flex-wrap items-center gap-2" data-sbek-row>
 			<input type="text" data-name="<?php echo esc_attr( $opt ); ?>[socials][__i__][platform]"
-				placeholder="<?php esc_attr_e( 'Platform (e.g. Facebook)', 'sabay-clone' ); ?>"
-				class="flex-1 min-w-[8rem] rounded-md border border-solid border-gray-300 px-3 py-2 text-sm focus:border-sabay-blue focus:outline-none">
+				placeholder="<?php esc_attr_e( 'Platform (e.g. Facebook)', 'sbek-clone' ); ?>"
+				class="flex-1 min-w-[8rem] rounded-md border border-solid border-gray-300 px-3 py-2 text-sm focus:border-sbek-blue focus:outline-none">
 			<input type="url" data-name="<?php echo esc_attr( $opt ); ?>[socials][__i__][url]"
 				placeholder="https://facebook.com/yourpage"
-				class="flex-1 min-w-[12rem] rounded-md border border-solid border-gray-300 px-3 py-2 text-sm focus:border-sabay-blue focus:outline-none">
-			<button type="button" data-sabay-remove
-				class="cursor-pointer shrink-0 text-gray-400 hover:text-sabay-red bg-transparent border-0 p-1" aria-label="<?php esc_attr_e( 'Remove', 'sabay-clone' ); ?>">
-				<?php echo sabay_icon( 'trash-2', [ 'width' => 18, 'height' => 18 ] ); ?>
+				class="flex-1 min-w-[12rem] rounded-md border border-solid border-gray-300 px-3 py-2 text-sm focus:border-sbek-blue focus:outline-none">
+			<button type="button" data-sbek-remove
+				class="cursor-pointer shrink-0 text-gray-400 hover:text-sbek-red bg-transparent border-0 p-1" aria-label="<?php esc_attr_e( 'Remove', 'sbek-clone' ); ?>">
+				<?php echo sbek_icon( 'trash-2', [ 'width' => 18, 'height' => 18 ] ); ?>
 			</button>
 		</div>
 	</template>
