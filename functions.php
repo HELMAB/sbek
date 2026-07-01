@@ -36,47 +36,47 @@ require get_template_directory() . '/inc/i18n.php';
 /**
  * Multilingual Admin UI
  */
-require get_template_directory() . '/inc/i18n-admin.php';
+require get_template_directory() . '/inc/admin/i18n-admin.php';
 
 /**
- * Inline SVG icons (Lucide)
+ * Inline SVG icons (Lucide) — shared by admin screens and frontend templates
  */
 require get_template_directory() . '/inc/icons.php';
 
 /**
  * Custom Fields
  */
-require get_template_directory() . '/inc/custom-fields.php';
+require get_template_directory() . '/inc/admin/custom-fields.php';
 
 /**
  * Mega Menu Walker
  */
-require get_template_directory() . '/inc/class-mega-menu-walker.php';
+require get_template_directory() . '/inc/frontend/class-mega-menu-walker.php';
 
 /**
  * Performance & Caching
  */
-require get_template_directory() . '/inc/performance.php';
+require get_template_directory() . '/inc/frontend/performance.php';
 
 /**
  * SEO
  */
-require get_template_directory() . '/inc/seo.php';
+require get_template_directory() . '/inc/frontend/seo.php';
 
 /**
  * Site Settings admin page
  */
-require get_template_directory() . '/inc/site-settings.php';
+require get_template_directory() . '/inc/admin/site-settings.php';
 
 /**
  * Third-party integrations (GA4, GTM, custom scripts)
  */
-require get_template_directory() . '/inc/integrations.php';
+require get_template_directory() . '/inc/frontend/integrations.php';
 
 /**
  * Admin dashboard setup widget
  */
-require get_template_directory() . '/inc/dashboard-widget.php';
+require get_template_directory() . '/inc/admin/dashboard-widget.php';
 
 /**
  * Enqueue scripts and styles.
