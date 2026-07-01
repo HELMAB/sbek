@@ -1,6 +1,16 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+/* Admin-only build. Preflight is intentionally omitted (import theme +
+   utilities only, not the full "tailwindcss" bundle) so Tailwind's base
+   reset does not fight wp-admin's own styles. */
+@import 'tailwindcss/theme.css';
+@import 'tailwindcss/utilities.css' source(none);
+@source '../../../inc/admin/site-settings.php';
+@source '../../../inc/admin/dashboard-widget.php';
+@source '../../../assets/js/admin-site-settings.js';
+
+@theme {
+  --color-sbek-red: #e31e24;
+  --color-sbek-blue: #0056b3;
+}
 
 /* ─────────────────────────────────────────────────────────────────────────
    Settings card — two layers: header (icon + title + description) and body.

@@ -259,7 +259,7 @@ function sbek_language_switcher(): string {
         $is_active  = $lang === $current_lang;
         $label      = strtoupper( $lang );
         $active_cls = $is_active
-            ? 'bg-sbek-red text-white px-2 py-0.5 rounded'
+            ? 'bg-sbek-red text-white px-2 py-0.5 rounded-sm'
             : 'text-gray-600 hover:text-sbek-red px-2 py-0.5 transition-colors';
 
         $html .= sprintf(

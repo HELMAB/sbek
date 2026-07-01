@@ -1,4 +1,4 @@
-<article id="post-<?php the_ID(); ?>" <?php post_class( 'bg-white rounded shadow-sm overflow-hidden p-6 mb-6' ); ?>>
+<article id="post-<?php the_ID(); ?>" <?php post_class( 'bg-white rounded-sm shadow-xs overflow-hidden p-6 mb-6' ); ?>>
     <header class="entry-header mb-4">
         <?php
         $categories = get_the_category();
@@ -13,7 +13,7 @@
     </header>
 
     <?php if ( has_post_thumbnail() ) : ?>
-        <a href="<?php echo esc_url( sbek_localize_url( get_permalink() ) ); ?>" class="block mb-4 rounded overflow-hidden">
+        <a href="<?php echo esc_url( sbek_localize_url( get_permalink() ) ); ?>" class="block mb-4 rounded-sm overflow-hidden">
             <?php the_post_thumbnail( 'medium', [ 'class' => 'w-full h-auto' ] ); ?>
         </a>
     <?php endif; ?>

@@ -33,7 +33,7 @@ function sbek_widgets_init() {
         'name'          => esc_html__( 'Sbek Sidebar', 'sbek' ),
         'id'            => 'sbek-sidebar',
         'description'   => esc_html__( 'Displayed on single post pages, below the Trending panel.', 'sbek' ),
-        'before_widget' => '<div id="%1$s" class="widget %2$s bg-white p-6 rounded shadow-sm mb-8">',
+        'before_widget' => '<div id="%1$s" class="widget %2$s bg-white p-6 rounded-sm shadow-xs mb-8">',
         'after_widget'  => '</div>',
         'before_title'  => '<h3 class="text-lg font-bold border-b-2 border-sbek-red pb-2 mb-4 uppercase">',
         'after_title'   => '</h3>',

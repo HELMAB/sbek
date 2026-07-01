@@ -3,7 +3,7 @@
 <main id="primary" class="site-main container mx-auto px-4 py-8">
     <div class="grid grid-cols-12 gap-8">
         <!-- Main Content -->
-        <article id="post-<?php the_ID(); ?>" class="col-span-12 lg:col-span-8 bg-white p-6 lg:p-10 rounded shadow-sm">
+        <article id="post-<?php the_ID(); ?>" class="col-span-12 lg:col-span-8 bg-white p-6 lg:p-10 rounded-sm shadow-xs">
             <?php while ( have_posts() ) : the_post(); ?>
                 <header class="entry-header mb-8">
                     <?php
@@ -31,7 +31,7 @@
                             </a>
                             <button type="button" class="sbek-copy-link relative text-gray-500 hover:text-sbek-red" data-url="<?php echo esc_attr( $sbek_share_url ); ?>" aria-label="<?php echo esc_attr( t( 'copy_link' ) ); ?>">
                                 <?php echo sbek_icon( 'link', [ 'width' => 18, 'height' => 18 ] ); ?>
-                                <span class="sbek-copy-feedback absolute -top-8 left-1/2 -translate-x-1/2 whitespace-nowrap bg-gray-900 text-white text-xs px-2 py-1 rounded opacity-0 pointer-events-none transition-opacity"><?php echo esc_html( t( 'link_copied' ) ); ?></span>
+                                <span class="sbek-copy-feedback absolute -top-8 left-1/2 -translate-x-1/2 whitespace-nowrap bg-gray-900 text-white text-xs px-2 py-1 rounded-sm opacity-0 pointer-events-none transition-opacity"><?php echo esc_html( t( 'link_copied' ) ); ?></span>
                             </button>
                         </span>
                     </div>
@@ -58,7 +58,7 @@
                 $sbek_author_bio = get_the_author_meta( 'description', $sbek_author_id );
                 ?>
                 <div class="author-bio flex items-start gap-4 mt-12 pt-8 border-t border-gray-100">
-                    <?php echo get_avatar( $sbek_author_id, 64, '', '', array( 'class' => 'rounded-full flex-shrink-0' ) ); ?>
+                    <?php echo get_avatar( $sbek_author_id, 64, '', '', array( 'class' => 'rounded-full shrink-0' ) ); ?>
                     <div>
                         <p class="text-xs text-gray-400 uppercase font-bold mb-1"><?php echo esc_html( t( 'about_author' ) ); ?></p>
                         <a href="<?php echo esc_url( sbek_localize_url( get_author_posts_url( $sbek_author_id ) ) ); ?>" class="font-bold text-gray-900 hover:text-sbek-red transition-colors">
@@ -106,7 +106,7 @@
 
         <!-- Sidebar -->
         <aside class="col-span-12 lg:col-span-4 space-y-8">
-            <div class="bg-white p-6 rounded shadow-sm">
+            <div class="bg-white p-6 rounded-sm shadow-xs">
                 <h3 class="text-lg font-bold border-b-2 border-sbek-red pb-2 mb-4 uppercase"><?php echo esc_html( t( 'trending' ) ); ?></h3>
                 <div class="space-y-4">
                     <?php
@@ -120,7 +120,7 @@
                     if ( $trending->have_posts() ) : while ( $trending->have_posts() ) : $trending->the_post();
                     ?>
                         <div class="flex space-x-3 group">
-                            <div class="flex-shrink-0 w-20 h-16 bg-gray-200 rounded overflow-hidden relative">
+                            <div class="shrink-0 w-20 h-16 bg-gray-200 rounded-sm overflow-hidden relative">
                                 <?php if ( has_post_thumbnail() ) the_post_thumbnail('thumbnail', ['class' => 'w-full h-full object-cover', 'loading' => 'lazy', 'decoding' => 'async']); ?>
                                 <?php if ( get_post_meta( get_the_ID(), '_sbek_video_url', true ) ) : ?>
                                     <div class="absolute inset-0 flex items-center justify-center bg-black/30">
@@ -141,7 +141,7 @@
             <?php get_sidebar(); ?>
 
             <!-- Ad Placeholder -->
-            <div class="bg-gray-200 h-[600px] flex items-center justify-center text-gray-400 font-bold italic rounded">
+            <div class="bg-gray-200 h-[600px] flex items-center justify-center text-gray-400 font-bold italic rounded-sm">
                 <?php echo esc_html( t( 'advertisement' ) ); ?>
             </div>
         </aside>

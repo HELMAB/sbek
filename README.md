@@ -4,7 +4,7 @@ A custom-built WordPress theme designed for high-traffic news portals. Built wit
 
 ## 🚀 Key Features
 
-- **Tailwind CSS v3 Framework:** Minimal CSS footprint with a utility-first approach.
+- **Tailwind CSS v4 Framework:** Minimal CSS footprint with a utility-first approach.
 - **Khmer Font Integration:** Pre-configured with *Kantumruy Pro* and *Battambang*.
 - **Editorial Metadata:** Native custom fields for:
     - `Trending Score` (0-100) for manual sidebar curation.
@@ -22,9 +22,9 @@ A custom-built WordPress theme designed for high-traffic news portals. Built wit
 ## 🛠 Tech Stack
 
 - **PHP:** WordPress 6.x+
-- **Styling:** Tailwind CSS v3
+- **Styling:** Tailwind CSS v4
 - **JS:** Vanilla JavaScript (ES6+) for AJAX and interactions.
-- **Build Tool:** Node.js (PostCSS & Tailwind CLI)
+- **Build Tool:** Node.js (`@tailwindcss/cli`, Node 20+ required — see `.nvmrc`)
 
 ## 📦 Installation
 

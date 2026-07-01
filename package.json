@@ -4,17 +4,16 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build": "npx tailwindcss -i ./assets/css/src/input.css -o ./assets/css/main.css --minify",
-    "watch": "npx tailwindcss -i ./assets/css/src/input.css -o ./assets/css/main.css --watch",
-    "build:admin": "npx tailwindcss -c ./tailwind.admin.config.js -i ./assets/css/src/admin.css -o ./assets/css/admin.css --minify",
-    "watch:admin": "npx tailwindcss -c ./tailwind.admin.config.js -i ./assets/css/src/admin.css -o ./assets/css/admin.css --watch"
+    "build": "npx @tailwindcss/cli -i ./assets/css/src/input.css -o ./assets/css/main.css --minify",
+    "watch": "npx @tailwindcss/cli -i ./assets/css/src/input.css -o ./assets/css/main.css --watch",
+    "build:admin": "npx @tailwindcss/cli -i ./assets/css/src/admin.css -o ./assets/css/admin.css --minify",
+    "watch:admin": "npx @tailwindcss/cli -i ./assets/css/src/admin.css -o ./assets/css/admin.css --watch"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "autoprefixer": "^10.4.24",
-    "postcss": "^8.5.6",
-    "tailwindcss": "^3.4.19"
+    "@tailwindcss/cli": "^4.3.2",
+    "tailwindcss": "^4.3.2"
   }
 }

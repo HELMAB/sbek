@@ -5,7 +5,7 @@
     <section class="container mx-auto px-4 py-8">
         <div class="grid grid-cols-12 gap-4">
             <!-- Large Featured Post -->
-            <div class="col-span-12 lg:col-span-6 bg-white rounded shadow-sm overflow-hidden group">
+            <div class="col-span-12 lg:col-span-6 bg-white rounded-sm shadow-xs overflow-hidden group">
                 <?php
                 $hero_query = new WP_Query( array( 'posts_per_page' => 1 ) );
                 if ( $hero_query->have_posts() ) : while ( $hero_query->have_posts() ) : $hero_query->the_post();
@@ -16,7 +16,7 @@
                         <?php else : ?>
                             <div class="w-full h-full bg-gray-200"></div>
                         <?php endif; ?>
-                        <div class="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-black/80 to-transparent">
+                        <div class="absolute bottom-0 left-0 right-0 p-6 bg-linear-to-t from-black/80 to-transparent">
                             <span class="bg-sbek-red text-white text-xs font-bold px-2 py-1 uppercase mb-2 inline-block"><?php echo esc_html( t( 'featured' ) ); ?></span>
                             <h2 class="text-white text-2xl lg:text-4xl font-bold leading-tight">
                                 <a href="<?php echo esc_url( sbek_localize_url( get_permalink() ) ); ?>"><?php the_title(); ?></a>
@@ -32,7 +32,7 @@
                 $side_query = new WP_Query( array( 'posts_per_page' => 4, 'offset' => 1 ) );
                 if ( $side_query->have_posts() ) : while ( $side_query->have_posts() ) : $side_query->the_post();
                 ?>
-                    <div class="bg-white rounded shadow-sm overflow-hidden group">
+                    <div class="bg-white rounded-sm shadow-xs overflow-hidden group">
                         <div class="relative h-32 lg:h-44 overflow-hidden">
                             <?php if ( has_post_thumbnail() ) : ?>
                                 <?php the_post_thumbnail('medium', ['class' => 'w-full h-full object-cover group-hover:scale-105 transition-transform duration-500']); ?>

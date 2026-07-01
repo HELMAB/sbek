@@ -9,9 +9,9 @@
 <body <?php body_class('bg-gray-50 font-khmer opacity-0 animate-fade-in'); ?>>
 <?php wp_body_open(); ?>
 
-<a class="skip-link sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-[100] focus:bg-white focus:text-sbek-red focus:px-4 focus:py-2 focus:rounded focus:shadow-lg" href="#primary"><?php echo esc_html( t( 'skip_to_content' ) ); ?></a>
+<a class="skip-link sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-100 focus:bg-white focus:text-sbek-red focus:px-4 focus:py-2 focus:rounded-sm focus:shadow-lg" href="#primary"><?php echo esc_html( t( 'skip_to_content' ) ); ?></a>
 
-<header id="masthead" class="site-header bg-white shadow-sm sticky top-0 z-50">
+<header id="masthead" class="site-header bg-white shadow-xs sticky top-0 z-50">
     <div class="container mx-auto px-4 py-3 flex justify-between items-center">
         <div class="site-branding">
             <a href="<?php echo esc_url( sbek_localize_url( home_url( '/' ) ) ); ?>" class="inline-flex items-center text-sbek-red text-3xl font-bold uppercase">
@@ -46,8 +46,8 @@
     <!-- Breaking News Ticker -->
     <div class="bg-gray-100 border-t border-b border-gray-200 py-1 overflow-hidden">
         <div class="container mx-auto px-4 flex items-center">
-            <span class="bg-sbek-red text-white text-[10px] font-bold px-2 py-0.5 rounded uppercase mr-4 whitespace-nowrap flex-shrink-0"><?php echo esc_html( t( 'breaking_news' ) ); ?></span>
-            <div class="flex-grow overflow-hidden whitespace-nowrap">
+            <span class="bg-sbek-red text-white text-[10px] font-bold px-2 py-0.5 rounded-sm uppercase mr-4 whitespace-nowrap shrink-0"><?php echo esc_html( t( 'breaking_news' ) ); ?></span>
+            <div class="grow overflow-hidden whitespace-nowrap">
                 <div class="inline-block animate-marquee hover:pause whitespace-nowrap">
                     <?php
                     $breaking = sbek_get_cached_query( array(

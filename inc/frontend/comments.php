@@ -12,10 +12,10 @@ function sbek_comment_list_item( $comment, $args, $depth ) {
     $tag = ( 'div' === $args['style'] ) ? 'div' : 'li';
     ?>
     <<?php echo $tag; ?> <?php comment_class( 'flex gap-3 py-4' . ( $depth > 1 ? ' ml-8 md:ml-12' : '' ), $comment ); ?> id="comment-<?php comment_ID(); ?>">
-        <div class="flex-shrink-0">
+        <div class="shrink-0">
             <?php echo get_avatar( $comment, 48, '', '', [ 'class' => 'rounded-full' ] ); ?>
         </div>
-        <div class="flex-grow min-w-0">
+        <div class="grow min-w-0">
             <div class="flex items-center gap-2 text-sm">
                 <span class="font-bold text-gray-900"><?php comment_author(); ?></span>
                 <span class="text-gray-400">•</span>
@@ -54,7 +54,7 @@ function sbek_comment_form_args(): array {
     $commenter    = wp_get_current_commenter();
     $req          = get_option( 'require_name_email' );
     $html_req     = ( $req ? " required" : '' );
-    $input_class  = 'w-full border border-gray-200 rounded px-3 py-2 text-sm focus:outline-none focus:border-sbek-red';
+    $input_class  = 'w-full border border-gray-200 rounded-sm px-3 py-2 text-sm focus:outline-hidden focus:border-sbek-red';
 
     $required_notice = $req
         ? ' <span class="required-field-message">' . esc_html( t( 'comment_required_notice' ) ) . ' <span class="required">*</span></span>'

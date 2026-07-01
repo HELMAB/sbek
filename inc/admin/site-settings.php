@@ -336,13 +336,13 @@ function sbek_render_site_settings_page(): void {
 							<span class="block text-sm font-semibold mb-1"><?php esc_html_e( 'Latitude', 'sbek' ); ?></span>
 							<input type="text" inputmode="decimal" name="<?php echo esc_attr( $opt ); ?>[lat]"
 								value="<?php echo esc_attr( $settings['lat'] ); ?>" placeholder="11.5564"
-								class="w-full rounded-md border border-solid border-gray-300 px-3 py-2 text-sm focus:border-sbek-blue focus:outline-none">
+								class="w-full rounded-md border border-solid border-gray-300 px-3 py-2 text-sm focus:border-sbek-blue focus:outline-hidden">
 						</label>
 						<label class="block">
 							<span class="block text-sm font-semibold mb-1"><?php esc_html_e( 'Longitude', 'sbek' ); ?></span>
 							<input type="text" inputmode="decimal" name="<?php echo esc_attr( $opt ); ?>[lng]"
 								value="<?php echo esc_attr( $settings['lng'] ); ?>" placeholder="104.9282"
-								class="w-full rounded-md border border-solid border-gray-300 px-3 py-2 text-sm focus:border-sbek-blue focus:outline-none">
+								class="w-full rounded-md border border-solid border-gray-300 px-3 py-2 text-sm focus:border-sbek-blue focus:outline-hidden">
 						</label>
 					</div>
 				<?php sbek_section_close(); ?>
@@ -350,7 +350,7 @@ function sbek_render_site_settings_page(): void {
 				<!-- Description -->
 				<?php sbek_section_open( 'info', __( 'Company Description', 'sbek' ), __( 'A short summary of your organization for SEO and structured data.', 'sbek' ) ); ?>
 					<textarea name="<?php echo esc_attr( $opt ); ?>[description]" rows="4"
-						class="w-full rounded-md border border-solid border-gray-300 px-3 py-2 text-sm focus:border-sbek-blue focus:outline-none"
+						class="w-full rounded-md border border-solid border-gray-300 px-3 py-2 text-sm focus:border-sbek-blue focus:outline-hidden"
 						placeholder="<?php esc_attr_e( 'A short description of the company…', 'sbek' ); ?>"><?php echo esc_textarea( $settings['description'] ); ?></textarea>
 				<?php sbek_section_close(); ?>
 
@@ -365,11 +365,11 @@ function sbek_render_site_settings_page(): void {
 								<input type="text" name="<?php echo esc_attr( $opt ); ?>[phones][<?php echo (int) $i; ?>][label]"
 									value="<?php echo esc_attr( $row['label'] ?? '' ); ?>"
 									placeholder="<?php esc_attr_e( 'Label (e.g. Sales)', 'sbek' ); ?>"
-									class="flex-1 min-w-[8rem] rounded-md border border-solid border-gray-300 px-3 py-2 text-sm focus:border-sbek-blue focus:outline-none">
+									class="flex-1 min-w-32 rounded-md border border-solid border-gray-300 px-3 py-2 text-sm focus:border-sbek-blue focus:outline-hidden">
 								<input type="text" name="<?php echo esc_attr( $opt ); ?>[phones][<?php echo (int) $i; ?>][number]"
 									value="<?php echo esc_attr( $row['number'] ?? '' ); ?>"
 									placeholder="+855 12 345 678"
-									class="flex-1 min-w-[10rem] rounded-md border border-solid border-gray-300 px-3 py-2 text-sm focus:border-sbek-blue focus:outline-none">
+									class="flex-1 min-w-40 rounded-md border border-solid border-gray-300 px-3 py-2 text-sm focus:border-sbek-blue focus:outline-hidden">
 								<button type="button" data-sbek-remove
 									class="cursor-pointer shrink-0 text-gray-400 hover:text-sbek-red bg-transparent border-0 p-1" aria-label="<?php esc_attr_e( 'Remove', 'sbek' ); ?>">
 									<?php echo sbek_icon( 'trash-2', [ 'width' => 18, 'height' => 18 ] ); ?>
@@ -390,11 +390,11 @@ function sbek_render_site_settings_page(): void {
 								<input type="text" name="<?php echo esc_attr( $opt ); ?>[socials][<?php echo (int) $i; ?>][platform]"
 									value="<?php echo esc_attr( $row['platform'] ?? '' ); ?>"
 									placeholder="<?php esc_attr_e( 'Platform (e.g. Facebook)', 'sbek' ); ?>"
-									class="flex-1 min-w-[8rem] rounded-md border border-solid border-gray-300 px-3 py-2 text-sm focus:border-sbek-blue focus:outline-none">
+									class="flex-1 min-w-32 rounded-md border border-solid border-gray-300 px-3 py-2 text-sm focus:border-sbek-blue focus:outline-hidden">
 								<input type="url" name="<?php echo esc_attr( $opt ); ?>[socials][<?php echo (int) $i; ?>][url]"
 									value="<?php echo esc_attr( $row['url'] ?? '' ); ?>"
 									placeholder="https://facebook.com/yourpage"
-									class="flex-1 min-w-[12rem] rounded-md border border-solid border-gray-300 px-3 py-2 text-sm focus:border-sbek-blue focus:outline-none">
+									class="flex-1 min-w-48 rounded-md border border-solid border-gray-300 px-3 py-2 text-sm focus:border-sbek-blue focus:outline-hidden">
 								<button type="button" data-sbek-remove
 									class="cursor-pointer shrink-0 text-gray-400 hover:text-sbek-red bg-transparent border-0 p-1" aria-label="<?php esc_attr_e( 'Remove', 'sbek' ); ?>">
 									<?php echo sbek_icon( 'trash-2', [ 'width' => 18, 'height' => 18 ] ); ?>
@@ -411,26 +411,26 @@ function sbek_render_site_settings_page(): void {
 							<span class="block text-sm font-semibold mb-1"><?php esc_html_e( 'Google Analytics 4 ID', 'sbek' ); ?></span>
 							<input type="text" name="<?php echo esc_attr( $opt ); ?>[ga4_id]"
 								value="<?php echo esc_attr( $settings['ga4_id'] ); ?>" placeholder="G-XXXXXXXXXX"
-								class="w-full rounded-md border border-solid border-gray-300 px-3 py-2 text-sm focus:border-sbek-blue focus:outline-none">
+								class="w-full rounded-md border border-solid border-gray-300 px-3 py-2 text-sm focus:border-sbek-blue focus:outline-hidden">
 						</label>
 						<label class="block">
 							<span class="block text-sm font-semibold mb-1"><?php esc_html_e( 'Google Tag Manager ID', 'sbek' ); ?></span>
 							<input type="text" name="<?php echo esc_attr( $opt ); ?>[gtm_id]"
 								value="<?php echo esc_attr( $settings['gtm_id'] ); ?>" placeholder="GTM-XXXXXXX"
-								class="w-full rounded-md border border-solid border-gray-300 px-3 py-2 text-sm focus:border-sbek-blue focus:outline-none">
+								class="w-full rounded-md border border-solid border-gray-300 px-3 py-2 text-sm focus:border-sbek-blue focus:outline-hidden">
 						</label>
 					</div>
 					<label class="block mb-5">
 						<span class="block text-sm font-semibold mb-1"><?php esc_html_e( 'Header Scripts', 'sbek' ); ?></span>
 						<p class="text-xs text-gray-500 mb-2"><?php esc_html_e( 'Raw HTML/JS injected into <head> on every page.', 'sbek' ); ?></p>
 						<textarea name="<?php echo esc_attr( $opt ); ?>[header_scripts]" rows="4"
-							class="w-full font-mono text-xs rounded-md border border-solid border-gray-300 px-3 py-2 focus:border-sbek-blue focus:outline-none"><?php echo esc_textarea( $settings['header_scripts'] ); ?></textarea>
+							class="w-full font-mono text-xs rounded-md border border-solid border-gray-300 px-3 py-2 focus:border-sbek-blue focus:outline-hidden"><?php echo esc_textarea( $settings['header_scripts'] ); ?></textarea>
 					</label>
 					<label class="block">
 						<span class="block text-sm font-semibold mb-1"><?php esc_html_e( 'Footer Scripts', 'sbek' ); ?></span>
 						<p class="text-xs text-gray-500 mb-2"><?php esc_html_e( 'Raw HTML/JS injected before the closing </body> tag.', 'sbek' ); ?></p>
 						<textarea name="<?php echo esc_attr( $opt ); ?>[footer_scripts]" rows="4"
-							class="w-full font-mono text-xs rounded-md border border-solid border-gray-300 px-3 py-2 focus:border-sbek-blue focus:outline-none"><?php echo esc_textarea( $settings['footer_scripts'] ); ?></textarea>
+							class="w-full font-mono text-xs rounded-md border border-solid border-gray-300 px-3 py-2 focus:border-sbek-blue focus:outline-hidden"><?php echo esc_textarea( $settings['footer_scripts'] ); ?></textarea>
 						<?php if ( ! current_user_can( 'unfiltered_html' ) ) : ?>
 							<p class="text-xs text-amber-600 mt-2"><?php esc_html_e( 'Your role cannot save raw scripts; unsafe markup will be stripped on save.', 'sbek' ); ?></p>
 						<?php endif; ?>
@@ -452,10 +452,10 @@ function sbek_render_site_settings_page(): void {
 		<div class="flex flex-wrap items-center gap-2" data-sbek-row>
 			<input type="text" data-name="<?php echo esc_attr( $opt ); ?>[phones][__i__][label]"
 				placeholder="<?php esc_attr_e( 'Label (e.g. Sales)', 'sbek' ); ?>"
-				class="flex-1 min-w-[8rem] rounded-md border border-solid border-gray-300 px-3 py-2 text-sm focus:border-sbek-blue focus:outline-none">
+				class="flex-1 min-w-32 rounded-md border border-solid border-gray-300 px-3 py-2 text-sm focus:border-sbek-blue focus:outline-hidden">
 			<input type="text" data-name="<?php echo esc_attr( $opt ); ?>[phones][__i__][number]"
 				placeholder="+855 12 345 678"
-				class="flex-1 min-w-[10rem] rounded-md border border-solid border-gray-300 px-3 py-2 text-sm focus:border-sbek-blue focus:outline-none">
+				class="flex-1 min-w-40 rounded-md border border-solid border-gray-300 px-3 py-2 text-sm focus:border-sbek-blue focus:outline-hidden">
 			<button type="button" data-sbek-remove
 				class="cursor-pointer shrink-0 text-gray-400 hover:text-sbek-red bg-transparent border-0 p-1" aria-label="<?php esc_attr_e( 'Remove', 'sbek' ); ?>">
 				<?php echo sbek_icon( 'trash-2', [ 'width' => 18, 'height' => 18 ] ); ?>
@@ -467,10 +467,10 @@ function sbek_render_site_settings_page(): void {
 		<div class="flex flex-wrap items-center gap-2" data-sbek-row>
 			<input type="text" data-name="<?php echo esc_attr( $opt ); ?>[socials][__i__][platform]"
 				placeholder="<?php esc_attr_e( 'Platform (e.g. Facebook)', 'sbek' ); ?>"
-				class="flex-1 min-w-[8rem] rounded-md border border-solid border-gray-300 px-3 py-2 text-sm focus:border-sbek-blue focus:outline-none">
+				class="flex-1 min-w-32 rounded-md border border-solid border-gray-300 px-3 py-2 text-sm focus:border-sbek-blue focus:outline-hidden">
 			<input type="url" data-name="<?php echo esc_attr( $opt ); ?>[socials][__i__][url]"
 				placeholder="https://facebook.com/yourpage"
-				class="flex-1 min-w-[12rem] rounded-md border border-solid border-gray-300 px-3 py-2 text-sm focus:border-sbek-blue focus:outline-none">
+				class="flex-1 min-w-48 rounded-md border border-solid border-gray-300 px-3 py-2 text-sm focus:border-sbek-blue focus:outline-hidden">
 			<button type="button" data-sbek-remove
 				class="cursor-pointer shrink-0 text-gray-400 hover:text-sbek-red bg-transparent border-0 p-1" aria-label="<?php esc_attr_e( 'Remove', 'sbek' ); ?>">
 				<?php echo sbek_icon( 'trash-2', [ 'width' => 18, 'height' => 18 ] ); ?>
