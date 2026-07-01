@@ -16,12 +16,13 @@ function sabay_login_enqueue(): void {
 add_action( 'login_enqueue_scripts', 'sabay_login_enqueue' );
 
 /**
- * Language for the login screen only. WordPress core's own field labels and
- * buttons stay in the site's install locale — this drives just the t()-based
- * copy this file adds (headline, intro, placeholders, switcher). The
- * front-end's /jp/ URL-prefix scheme doesn't apply to a literal wp-login.php
- * request, so a `?lang=` query var is used instead, persisted in a cookie
- * for the rest of the login flow (lostpassword, register, …).
+ * Language for the login screen only. This drives the t()-based copy this
+ * file adds (headline, intro, placeholders, switcher) — see
+ * sabay_login_translate_core_strings() below for WordPress core's own field
+ * labels/buttons, which are a separate mechanism since they don't go through
+ * t() at all. The front-end's /jp/ URL-prefix scheme doesn't apply to a
+ * literal wp-login.php request, so a `?lang=` query var is used instead,
+ * persisted in a cookie for the rest of the login flow (lostpassword, …).
  *
  * `login_init` fires after `init` — where inc/i18n.php already defaulted
  * $GLOBALS['sabay_lang'] to 'en' — so this safely overrides it.
@@ -32,16 +33,59 @@ function sabay_login_set_language(): void {
     if ( $requested && in_array( $requested, SABAY_LANGUAGES, true ) ) {
         $GLOBALS['sabay_lang'] = $requested;
         setcookie( 'sabay_login_lang', $requested, time() + DAY_IN_SECONDS, '/', '', is_ssl(), true );
-        return;
+    } else {
+        $cookie = isset( $_COOKIE['sabay_login_lang'] ) ? sanitize_key( wp_unslash( $_COOKIE['sabay_login_lang'] ) ) : '';
+
+        if ( $cookie && in_array( $cookie, SABAY_LANGUAGES, true ) ) {
+            $GLOBALS['sabay_lang'] = $cookie;
+        }
     }
 
-    $cookie = isset( $_COOKIE['sabay_login_lang'] ) ? sanitize_key( wp_unslash( $_COOKIE['sabay_login_lang'] ) ) : '';
-
-    if ( $cookie && in_array( $cookie, SABAY_LANGUAGES, true ) ) {
-        $GLOBALS['sabay_lang'] = $cookie;
+    if ( 'jp' === sabay_lang() ) {
+        add_filter( 'gettext', 'sabay_login_translate_core_strings', 10, 3 );
+        add_filter( 'gettext_with_context', 'sabay_login_translate_core_strings_with_context', 10, 4 );
     }
 }
 add_action( 'login_init', 'sabay_login_set_language' );
+
+/**
+ * WordPress core hardcodes the login screen's field labels/buttons with
+ * plain __()/_e() calls against its own 'default' textdomain — they never go
+ * through this theme's t() system, so switching sabay_lang() alone doesn't
+ * touch them. This swaps the known login/lostpassword/register-screen
+ * strings when Japanese is active, scoped to the 'default' domain only so
+ * nothing outside wp-login.php is affected.
+ */
+function sabay_login_translate_core_strings( string $translation, string $text, string $domain ): string {
+    if ( 'default' !== $domain ) {
+        return $translation;
+    }
+
+    $map = array(
+        'Username or Email Address' => 'ユーザー名またはメールアドレス',
+        'Password'                  => 'パスワード',
+        'Remember Me'               => 'ログイン状態を保存する',
+        'Log In'                    => 'ログイン',
+        'Show password'             => 'パスワードを表示',
+        'Hide password'             => 'パスワードを隠す',
+        'Lost your password?'       => 'パスワードをお忘れですか?',
+        'Lost Password'             => 'パスワードの再設定',
+        'Get New Password'          => '新しいパスワードを取得',
+        'Register'                  => '登録',
+        'Register For This Site'    => 'このサイトに登録',
+        'Please enter your username or email address. You will receive an email message with instructions on how to reset your password.' => 'ユーザー名またはメールアドレスを入力してください。パスワード再設定の手順を記載したメールをお送りします。',
+    );
+
+    return $map[ $text ] ?? $translation;
+}
+
+function sabay_login_translate_core_strings_with_context( string $translation, string $text, string $context, string $domain ): string {
+    if ( 'default' === $domain && 'site' === $context && '&larr; Go to %s' === $text ) {
+        return '&larr; %s に戻る';
+    }
+
+    return $translation;
+}
 
 /**
  * Top-right EN / JP switcher. Preserves the current screen (login,

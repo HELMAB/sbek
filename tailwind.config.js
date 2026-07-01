@@ -7,7 +7,7 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        'sabay-red': '#e31e24',
+        'sabay-red': '#d77655',
         'sabay-blue': '#0056b3',
       },
       fontFamily: {
