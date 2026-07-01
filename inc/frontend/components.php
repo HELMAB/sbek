@@ -30,6 +30,22 @@ function sbek_ad_slot( string $variant = 'leaderboard' ): string {
 }
 
 /**
+ * Estimated reading time in whole minutes (~200 words/min).
+ *
+ * Note: word counting is space-based, so Khmer/Japanese (which don't space
+ * between words) will read low — acceptable for a rough "min read" badge.
+ *
+ * @param int|null $post_id Defaults to the current post.
+ * @return int Minutes, minimum 1.
+ */
+function sbek_reading_time( ?int $post_id = null ): int {
+	$content = get_post_field( 'post_content', $post_id ?: get_the_ID() );
+	$words   = str_word_count( wp_strip_all_tags( (string) $content ) );
+
+	return max( 1, (int) ceil( $words / 200 ) );
+}
+
+/**
  * A section heading bar: a red tick, the section name in the display face,
  * and an optional "View all" link. Used to open homepage section modules.
  *

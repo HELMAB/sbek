@@ -70,6 +70,8 @@ return [
         'open_menu'            => 'Open menu',
         'close_menu'           => 'Close menu',
         'toggle_submenu'       => 'Toggle %s submenu',
+        'min_read'             => '%d min read',
+        'more_from'            => 'More from %s',
     ],
     'jp' => [
         'breaking_news'    => 'ブレイキングニュース',
@@ -135,5 +137,7 @@ return [
         'open_menu'            => 'メニューを開く',
         'close_menu'           => 'メニューを閉じる',
         'toggle_submenu'       => '%s のサブメニューを開閉',
+        'min_read'             => '約%d分',
+        'more_from'            => '%s の記事をもっと見る',
     ],
 ];
