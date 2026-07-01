@@ -84,6 +84,11 @@ require get_template_directory() . '/inc/frontend/integrations.php';
 require get_template_directory() . '/inc/admin/dashboard-widget.php';
 
 /**
+ * Branded wp-login.php
+ */
+require get_template_directory() . '/inc/admin/login.php';
+
+/**
  * Enqueue scripts and styles.
  */
 function sabay_clone_scripts() {

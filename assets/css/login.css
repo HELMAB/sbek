@@ -1,0 +1,282 @@
+/*
+ * Sabay Clone — wp-login.php branding.
+ * Hand-authored plain CSS (not part of the Tailwind build): this page lives
+ * outside the theme's template scan and renders before any app CSS exists.
+ */
+
+body.login {
+    display: flex;
+    min-height: 100vh;
+    margin: 0;
+    background: #f9fafb;
+    font-family: 'Kantumruy Pro', 'Battambang', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    overflow-x: hidden;
+}
+
+/* WP's own logo mark — the brand panel carries the identity instead */
+body.login #login h1.wp-login-logo {
+    display: none;
+}
+
+/* ---------- Left brand panel ---------- */
+.sabay-login-panel {
+    position: relative;
+    display: none; /* shown from the tablet breakpoint up */
+    flex: 1 1 50%;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    background: linear-gradient(135deg, #e31e24 0%, #a8151a 100%);
+    color: #fff;
+}
+
+.sabay-login-panel__content {
+    position: relative;
+    z-index: 2;
+    max-width: 420px;
+    padding: 3rem;
+}
+
+.sabay-login-panel__logo {
+    max-height: 48px;
+    margin-bottom: 2rem;
+    animation: sabayFadeUp 0.8s ease-out both;
+}
+
+.sabay-login-panel__brand {
+    display: inline-block;
+    font-size: 1.75rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+    margin-bottom: 2rem;
+    animation: sabayFadeUp 0.8s ease-out both;
+}
+
+.sabay-login-panel__title {
+    font-size: 2.25rem;
+    font-weight: 800;
+    line-height: 1.2;
+    margin: 0 0 1rem;
+    animation: sabayFadeUp 0.8s ease-out 0.15s both;
+}
+
+.sabay-login-panel__subtitle {
+    font-size: 1rem;
+    line-height: 1.6;
+    color: rgba(255, 255, 255, 0.85);
+    margin: 0;
+    animation: sabayFadeUp 0.8s ease-out 0.3s both;
+}
+
+/* Floating decorative shapes */
+.sabay-login-shape {
+    position: absolute;
+    display: block;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.08);
+    animation: sabayFloat 9s ease-in-out infinite;
+}
+
+.sabay-login-shape--1 { width: 220px; height: 220px; top: -60px; left: -60px; animation-duration: 9s; }
+.sabay-login-shape--2 { width: 160px; height: 160px; bottom: -40px; right: 10%; animation-duration: 11s; animation-delay: 1s; }
+.sabay-login-shape--3 { width: 90px; height: 90px; top: 42%; right: -30px; animation-duration: 7s; animation-delay: 0.5s; }
+
+@keyframes sabayFloat {
+    0%, 100% { transform: translateY(0) translateX(0) scale(1); }
+    50%      { transform: translateY(-24px) translateX(12px) scale(1.06); }
+}
+
+@keyframes sabayFadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+@media (min-width: 900px) {
+    .sabay-login-panel {
+        display: flex;
+    }
+}
+
+/* ---------- Right form column ---------- */
+#login {
+    position: relative;
+    z-index: 1;
+    flex: 1 1 50%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 2rem 1.5rem;
+    width: auto;
+    animation: sabayFadeUp 0.6s ease-out both;
+}
+
+#login {
+    /* shadcn/ui-style design tokens, scoped to the form column and mapped
+       onto the theme's brand red instead of shadcn's default zinc/slate. */
+    --sabay-radius: 0.75rem;
+    --sabay-radius-sm: 0.5rem;
+    --sabay-border: #e2e8f0;
+    --sabay-ring: 227 30 36;
+    --sabay-muted-fg: #64748b;
+    --sabay-fg: #0f172a;
+    --sabay-primary: #e31e24;
+    --sabay-primary-hover: #c8181d;
+}
+
+#loginform {
+    width: 100%;
+    max-width: 360px;
+    background: #fff;
+    border: 1px solid var(--sabay-border);
+    border-radius: var(--sabay-radius);
+    box-shadow: 0 1px 2px rgba(15, 23, 42, 0.05);
+    padding: 2rem;
+}
+
+#login label {
+    font-size: 0.8125rem;
+    font-weight: 500;
+    color: var(--sabay-fg);
+    margin-bottom: 0.375rem;
+}
+
+/* ---------- Text / password inputs ---------- */
+#login input[type="text"],
+#login input[type="password"],
+#login input[type="email"] {
+    display: block;
+    width: 100%;
+    height: 2.5rem;
+    background: #fff;
+    border: 1px solid var(--sabay-border);
+    border-radius: var(--sabay-radius-sm);
+    padding: 0.5rem 0.75rem;
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+    color: var(--sabay-fg);
+    box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
+    outline: none;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+/* room for WordPress's absolutely-positioned show/hide-password button */
+#login input[type="password"] {
+    padding-right: 2.5rem;
+}
+
+#login input[type="text"]::placeholder,
+#login input[type="password"]::placeholder,
+#login input[type="email"]::placeholder {
+    color: var(--sabay-muted-fg);
+}
+
+#login input[type="text"]:focus,
+#login input[type="password"]:focus,
+#login input[type="email"]:focus {
+    border-color: var(--sabay-primary);
+    box-shadow: 0 0 0 3px rgb(var(--sabay-ring) / 0.18);
+}
+
+/* ---------- Checkbox ("Remember Me") ---------- */
+#login .forgetmenot {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+#login .forgetmenot label {
+    margin: 0;
+    font-weight: 400;
+    color: var(--sabay-muted-fg);
+    cursor: pointer;
+}
+
+#login input[type="checkbox"] {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 1rem;
+    height: 1rem;
+    margin: 0;
+    flex-shrink: 0;
+    display: inline-block;
+    vertical-align: middle;
+    position: relative;
+    background-color: #fff;
+    border: 1px solid var(--sabay-border);
+    border-radius: 0.25rem;
+    cursor: pointer;
+    transition: background-color 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+#login input[type="checkbox"]:checked {
+    background-color: var(--sabay-primary);
+    border-color: var(--sabay-primary);
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='20 6 9 17 4 12'/%3E%3C/svg%3E");
+    background-size: 0.7rem;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+#login input[type="checkbox"]:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 3px rgb(var(--sabay-ring) / 0.25);
+}
+
+/* ---------- Button ---------- */
+#login .button-primary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 2.5rem;
+    padding: 0 1rem;
+    background: var(--sabay-primary);
+    border: 1px solid var(--sabay-primary);
+    border-radius: var(--sabay-radius-sm);
+    text-shadow: none;
+    box-shadow: 0 1px 2px rgba(15, 23, 42, 0.05);
+    font-size: 0.875rem;
+    font-weight: 500;
+    line-height: 1;
+    transition: background-color 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+#login .button-primary:hover {
+    background: var(--sabay-primary-hover);
+    border-color: var(--sabay-primary-hover);
+}
+
+#login .button-primary:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 3px rgb(var(--sabay-ring) / 0.35);
+}
+
+/* ---------- Links ---------- */
+#nav,
+#backtoblog {
+    text-align: center;
+}
+
+#nav a,
+#backtoblog a {
+    font-size: 0.8125rem;
+    color: var(--sabay-muted-fg);
+    text-decoration: none;
+    text-underline-offset: 4px;
+    transition: color 0.15s ease;
+}
+
+#nav a:hover,
+#backtoblog a:hover {
+    color: var(--sabay-fg);
+    text-decoration: underline;
+}
+
+.login .message,
+.login #login_error {
+    max-width: 360px;
+    border-left-color: var(--sabay-primary, #e31e24);
+    border-radius: var(--sabay-radius-sm, 0.5rem);
+    animation: sabayFadeUp 0.5s ease-out both;
+}
