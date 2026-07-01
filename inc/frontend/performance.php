@@ -40,11 +40,40 @@ function sbek_get_cached_query( $args, $transient_name, $expiration = 900 ) {
 }
 
 /**
+ * Latest post in a top-level category, shown in that section's mega-menu
+ * dropdown. Relies on WordPress' default behavior of including descendant
+ * categories in a `cat` query, so a post tagged only with a subcategory
+ * (e.g. "Asia") still surfaces under its parent ("World").
+ *
+ * @param int $term_id Category term ID.
+ * @return WP_Query
+ */
+function sbek_get_megamenu_latest_post( int $term_id ): WP_Query {
+    return sbek_get_cached_query(
+        array(
+            'posts_per_page' => 1,
+            'cat'            => $term_id,
+        ),
+        "sbek_megamenu_latest_{$term_id}_" . sbek_lang(),
+        900
+    );
+}
+
+/**
  * Clear transients on save to ensure fresh content.
  * Clears per-language cache variants.
  */
 function sbek_clear_transients_on_save( $post_id = 0 ): void {
     $languages = defined( 'SBEK_LANGUAGES' ) ? SBEK_LANGUAGES : [ 'en', 'jp' ];
+
+    // Small, fixed set of top-level categories — cheap to clear all of them
+    // on every save rather than working out which one(s) this post belongs to.
+    $section_ids = get_terms( array(
+        'taxonomy'   => 'category',
+        'parent'     => 0,
+        'fields'     => 'ids',
+        'hide_empty' => false,
+    ) );
 
     foreach ( $languages as $lang ) {
         delete_transient( "sbek_breaking_news_{$lang}" );
@@ -56,6 +85,12 @@ function sbek_clear_transients_on_save( $post_id = 0 ): void {
             // Related-posts cache is keyed per post; only this post's own key is known here —
             // other posts sharing its category will pick up changes once their 1-hour TTL expires.
             delete_transient( "sbek_related_{$post_id}_{$lang}" );
+        }
+
+        if ( ! is_wp_error( $section_ids ) ) {
+            foreach ( $section_ids as $section_id ) {
+                delete_transient( "sbek_megamenu_latest_{$section_id}_{$lang}" );
+            }
         }
     }
 }

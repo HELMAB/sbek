@@ -64,6 +64,8 @@ return [
         'link_copied'          => 'Link copied!',
         'about_author'         => 'About the Author',
         'posts_by_author'      => 'Posts by %s',
+        'edition'              => 'Edition',
+        'latest_in'            => 'Latest in %s',
     ],
     'jp' => [
         'breaking_news'    => 'ブレイキングニュース',
@@ -123,5 +125,7 @@ return [
         'link_copied'          => 'リンクをコピーしました!',
         'about_author'         => '著者について',
         'posts_by_author'      => '%s の記事一覧',
+        'edition'              => '版',
+        'latest_in'            => '%s の最新記事',
     ],
 ];

@@ -11,9 +11,20 @@
 
 <a class="skip-link sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-100 focus:bg-white focus:text-sbek-red focus:px-4 focus:py-2 focus:rounded-sm focus:shadow-lg" href="#primary"><?php echo esc_html( t( 'skip_to_content' ) ); ?></a>
 
+<!-- Dateline bar: scrolls away with the page; the masthead below stays sticky. -->
+<div class="bg-gray-950 text-gray-300">
+    <div class="container mx-auto flex h-8 items-center justify-between px-4 text-xs">
+        <span class="font-semibold tracking-wide"><?php echo esc_html( date_i18n( 'l, j F Y' ) ); ?></span>
+        <span class="inline-flex items-center gap-1.5 font-bold text-white">
+            <span class="h-1.5 w-1.5 rounded-full bg-sbek-red"></span>
+            <?php echo esc_html( strtoupper( sbek_lang() ) ) . ' ' . esc_html( t( 'edition' ) ); ?>
+        </span>
+    </div>
+</div>
+
 <header id="masthead" class="site-header bg-white shadow-xs sticky top-0 z-50">
-    <div class="container mx-auto px-4 py-3 flex justify-between items-center relative">
-        <div class="site-branding">
+    <div class="container mx-auto h-20 px-4 flex justify-between items-stretch relative">
+        <div class="site-branding flex items-center">
             <a href="<?php echo esc_url( sbek_localize_url( home_url( '/' ) ) ); ?>" class="inline-flex items-center text-sbek-red text-3xl font-bold uppercase">
                 <?php
                 $sbek_logo = function_exists( 'sbek_site_setting_image_url' ) ? sbek_site_setting_image_url( 'logo', 'medium' ) : '';
@@ -25,24 +36,31 @@
                 <?php endif; ?>
             </a>
         </div>
-        <nav id="site-navigation" class="main-navigation hidden md:flex space-x-6 font-medium h-full" aria-label="<?php echo esc_attr( t( 'primary_navigation' ) ); ?>">
+        <!--
+            items-stretch above (instead of items-center) + h-full on nav/li/a below
+            makes each top-level link span the header row's FULL height, not just
+            its own text — otherwise there's a dead strip between the link and the
+            dropdown where the mouse loses :hover mid-travel and can never reach
+            (let alone click) the mega-menu panel.
+        -->
+        <nav id="site-navigation" class="main-navigation hidden md:flex h-full items-center gap-x-8" aria-label="<?php echo esc_attr( t( 'primary_navigation' ) ); ?>">
             <?php
             $menu_location = sbek_is_default_lang() ? 'menu-1' : 'menu-1-' . sbek_lang();
             wp_nav_menu( array(
                 'theme_location' => $menu_location,
                 'menu_id'        => 'primary-menu',
                 'container'      => false,
-                'menu_class'     => 'flex space-x-6 h-full items-center',
+                'menu_class'     => 'flex h-full items-stretch gap-x-8',
                 'walker'         => new Sbek_Mega_Menu_Walker(),
                 'fallback_cb'    => false,
             ) );
             ?>
         </nav>
-        <div class="ml-4">
+        <div class="ml-4 flex items-center">
             <?php echo sbek_language_switcher(); ?>
         </div>
     </div>
-    
+
     <!-- Breaking News Ticker -->
     <div class="bg-gray-100 border-t border-b border-gray-200 py-1 overflow-hidden">
         <div class="container mx-auto px-4 flex items-center">
