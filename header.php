@@ -24,8 +24,12 @@
 
 <header id="masthead" class="site-header bg-white shadow-xs sticky top-0 z-50">
     <div class="container mx-auto h-20 px-4 flex justify-between items-stretch relative">
-        <div class="site-branding flex items-center">
-            <a href="<?php echo esc_url( sbek_localize_url( home_url( '/' ) ) ); ?>" class="inline-flex items-center text-sbek-red text-3xl font-bold uppercase">
+        <div class="site-branding flex items-center gap-1">
+            <button type="button" class="mobile-nav-open md:hidden -ml-2 flex h-11 w-11 shrink-0 items-center justify-center text-ink" aria-controls="mobile-nav" aria-expanded="false">
+                <span class="sr-only"><?php echo esc_attr( t( 'open_menu' ) ); ?></span>
+                <?php echo sbek_icon( 'menu', [ 'class' => 'h-6 w-6' ] ); ?>
+            </button>
+            <a href="<?php echo esc_url( sbek_localize_url( home_url( '/' ) ) ); ?>" class="inline-flex items-center font-display text-sbek-red text-2xl sm:text-3xl font-extrabold uppercase tracking-tight">
                 <?php
                 $sbek_logo = function_exists( 'sbek_site_setting_image_url' ) ? sbek_site_setting_image_url( 'logo', 'medium' ) : '';
                 if ( $sbek_logo ) :
@@ -87,3 +91,32 @@
         </div>
     </div>
 </header>
+
+<!-- Mobile navigation drawer (md:hidden). Behavior in assets/js/mobile-nav.js. -->
+<div id="mobile-nav" class="mobile-nav fixed inset-0 z-[60] md:hidden" aria-hidden="true">
+    <div class="mobile-nav-backdrop absolute inset-0 bg-black/50"></div>
+    <div class="mobile-nav-panel absolute inset-y-0 left-0 flex w-[85%] max-w-sm flex-col bg-white shadow-2xl" role="dialog" aria-modal="true" aria-label="<?php echo esc_attr( t( 'primary_navigation' ) ); ?>">
+        <div class="flex h-16 shrink-0 items-center justify-between border-b border-gray-200 px-5">
+            <span class="font-display text-lg font-extrabold uppercase tracking-tight text-sbek-red"><?php echo esc_html( t( 'menu_label' ) ); ?></span>
+            <button type="button" class="mobile-nav-close -mr-2 flex h-11 w-11 items-center justify-center text-gray-500 hover:text-sbek-red">
+                <span class="sr-only"><?php echo esc_attr( t( 'close_menu' ) ); ?></span>
+                <?php echo sbek_icon( 'x-close', [ 'class' => 'h-6 w-6' ] ); ?>
+            </button>
+        </div>
+        <nav class="flex-1 overflow-y-auto" aria-label="<?php echo esc_attr( t( 'primary_navigation' ) ); ?>">
+            <?php
+            wp_nav_menu( array(
+                'theme_location' => $menu_location,
+                'menu_id'        => 'mobile-menu',
+                'container'      => false,
+                'menu_class'     => 'flex flex-col',
+                'walker'         => new Sbek_Mobile_Menu_Walker(),
+                'fallback_cb'    => false,
+            ) );
+            ?>
+        </nav>
+        <div class="shrink-0 border-t border-gray-200 px-5 py-4">
+            <?php echo sbek_language_switcher(); ?>
+        </div>
+    </div>
+</div>

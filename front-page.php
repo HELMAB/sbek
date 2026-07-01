@@ -1,100 +1,127 @@
 <?php get_header(); ?>
 
-<main id="primary" class="site-main">
-    <!-- Hero Section -->
-    <section class="container mx-auto px-4 py-8">
-        <div class="grid grid-cols-12 gap-4">
-            <!-- Large Featured Post -->
-            <div class="col-span-12 lg:col-span-6 bg-white rounded-sm shadow-xs overflow-hidden group">
+<main id="primary" class="site-main pb-12">
+
+    <!-- Top leaderboard ad -->
+    <div class="container mx-auto px-4 pt-6">
+        <?php echo sbek_ad_slot( 'leaderboard' ); // phpcs:ignore WordPress.Security.EscapeOutput ?>
+    </div>
+
+    <!-- Top stories: lead hero + secondaries, with a Trending rail -->
+    <section class="container mx-auto px-4 py-6">
+        <div class="grid grid-cols-12 gap-x-8 gap-y-8">
+            <div class="col-span-12 lg:col-span-8">
                 <?php
-                $hero_query = new WP_Query( array( 'posts_per_page' => 1 ) );
-                if ( $hero_query->have_posts() ) : while ( $hero_query->have_posts() ) : $hero_query->the_post();
+                $sbek_hero = new WP_Query( array( 'posts_per_page' => 1, 'ignore_sticky_posts' => true ) );
+                if ( $sbek_hero->have_posts() ) : while ( $sbek_hero->have_posts() ) : $sbek_hero->the_post();
+                    $sbek_hero_cats = get_the_category();
                 ?>
-                    <div class="relative h-64 lg:h-96 overflow-hidden">
-                        <?php if ( has_post_thumbnail() ) : ?>
-                            <?php the_post_thumbnail('large', ['loading' => 'eager', 'class' => 'w-full h-full object-cover group-hover:scale-105 transition-transform duration-500']); ?>
-                        <?php else : ?>
-                            <div class="w-full h-full bg-gray-200"></div>
-                        <?php endif; ?>
-                        <div class="absolute bottom-0 left-0 right-0 p-6 bg-linear-to-t from-black/80 to-transparent">
-                            <span class="bg-sbek-red text-white text-xs font-bold px-2 py-1 uppercase mb-2 inline-block"><?php echo esc_html( t( 'featured' ) ); ?></span>
-                            <h2 class="text-white text-2xl lg:text-4xl font-bold leading-tight">
-                                <a href="<?php echo esc_url( sbek_localize_url( get_permalink() ) ); ?>"><?php the_title(); ?></a>
-                            </h2>
-                        </div>
-                    </div>
+                    <article class="group relative mb-6 overflow-hidden rounded-sm bg-gray-900">
+                        <a href="<?php echo esc_url( sbek_localize_url( get_permalink() ) ); ?>" class="block">
+                            <div class="relative aspect-[16/10] overflow-hidden sm:aspect-[16/9] lg:aspect-[16/8]">
+                                <?php if ( has_post_thumbnail() ) : ?>
+                                    <?php the_post_thumbnail( 'large', [ 'class' => 'h-full w-full object-cover transition-transform duration-500 group-hover:scale-105', 'loading' => 'eager', 'fetchpriority' => 'high' ] ); ?>
+                                <?php else : ?>
+                                    <div class="h-full w-full bg-gray-300"></div>
+                                <?php endif; ?>
+                                <div class="absolute inset-0 bg-linear-to-t from-black/85 via-black/25 to-transparent"></div>
+                            </div>
+                            <div class="absolute inset-x-0 bottom-0 p-5 sm:p-6">
+                                <span class="mb-3 inline-block bg-sbek-red px-2.5 py-1 text-[11px] font-bold uppercase tracking-wider text-white"><?php echo esc_html( t( 'featured' ) ); ?></span>
+                                <h2 class="font-display text-2xl font-extrabold leading-tight text-white sm:text-3xl lg:text-4xl">
+                                    <span class="transition-colors group-hover:text-sbek-red/90"><?php the_title(); ?></span>
+                                </h2>
+                                <p class="mt-3 hidden max-w-2xl text-sm leading-relaxed text-gray-200 sm:line-clamp-2"><?php echo esc_html( wp_trim_words( get_the_excerpt(), 30 ) ); ?></p>
+                            </div>
+                        </a>
+                    </article>
                 <?php endwhile; wp_reset_postdata(); endif; ?>
+
+                <div class="grid grid-cols-1 gap-6 sm:grid-cols-3">
+                    <?php
+                    $sbek_secondary = new WP_Query( array( 'posts_per_page' => 3, 'offset' => 1, 'ignore_sticky_posts' => true ) );
+                    if ( $sbek_secondary->have_posts() ) : while ( $sbek_secondary->have_posts() ) : $sbek_secondary->the_post();
+                        get_template_part( 'template-parts/content-grid' );
+                    endwhile; wp_reset_postdata(); endif;
+                    ?>
+                </div>
             </div>
 
-            <!-- Side Featured Posts -->
-            <div class="col-span-12 lg:col-span-6 grid grid-cols-2 gap-4">
-                <?php
-                $side_query = new WP_Query( array( 'posts_per_page' => 4, 'offset' => 1 ) );
-                if ( $side_query->have_posts() ) : while ( $side_query->have_posts() ) : $side_query->the_post();
-                ?>
-                    <div class="bg-white rounded-sm shadow-xs overflow-hidden group">
-                        <div class="relative h-32 lg:h-44 overflow-hidden">
-                            <?php if ( has_post_thumbnail() ) : ?>
-                                <?php the_post_thumbnail('medium', ['class' => 'w-full h-full object-cover group-hover:scale-105 transition-transform duration-500']); ?>
-                            <?php else : ?>
-                                <div class="w-full h-full bg-gray-200"></div>
-                            <?php endif; ?>
-                        </div>
-                        <div class="p-3">
-                            <h3 class="text-sm lg:text-base font-bold line-clamp-2 leading-snug">
-                                <a href="<?php echo esc_url( sbek_localize_url( get_permalink() ) ); ?>" class="hover:text-sbek-red transition-colors"><?php the_title(); ?></a>
-                            </h3>
-                        </div>
-                    </div>
-                <?php endwhile; wp_reset_postdata(); endif; ?>
-            </div>
+            <aside class="col-span-12 space-y-6 lg:col-span-4">
+                <div class="rounded-sm border border-gray-200 bg-white">
+                    <h2 class="flex items-center gap-2 border-b border-gray-200 px-4 py-3 font-display text-lg font-extrabold uppercase tracking-tight text-ink">
+                        <span class="inline-block h-4 w-1.5 shrink-0 bg-sbek-red"></span><?php echo esc_html( t( 'trending' ) ); ?>
+                    </h2>
+                    <ol class="divide-y divide-gray-200">
+                        <?php
+                        $sbek_trending = sbek_get_trending_posts( 6 );
+                        $sbek_rank     = 0;
+                        if ( $sbek_trending->have_posts() ) : while ( $sbek_trending->have_posts() ) : $sbek_trending->the_post();
+                            $sbek_rank++;
+                        ?>
+                            <li>
+                                <a href="<?php echo esc_url( sbek_localize_url( get_permalink() ) ); ?>" class="group flex gap-3 px-4 py-3">
+                                    <span class="w-6 shrink-0 font-display text-2xl font-extrabold leading-none text-gray-300 transition-colors group-hover:text-sbek-red"><?php echo esc_html( $sbek_rank ); ?></span>
+                                    <span class="font-display text-[15px] font-bold leading-snug text-ink transition-colors group-hover:text-sbek-red"><?php the_title(); ?></span>
+                                </a>
+                            </li>
+                        <?php endwhile; wp_reset_postdata(); endif; ?>
+                    </ol>
+                </div>
+
+                <?php echo sbek_ad_slot( 'rectangle' ); // phpcs:ignore WordPress.Security.EscapeOutput ?>
+            </aside>
         </div>
     </section>
 
-    <!-- News Sections by Category -->
+    <!-- Category section modules (top-level sections with posts) -->
     <?php
-    $categories = get_categories( array('number' => 3) );
-    foreach ( $categories as $category ) :
+    // Ordered by term_id (their creation order), which mirrors the primary
+    // nav order (World, Politics, Business, Technology, Sports, …) so the
+    // homepage modules lead with the same sections as the menu.
+    $sbek_sections = get_terms( array(
+        'taxonomy'   => 'category',
+        'parent'     => 0,
+        'hide_empty' => true,
+        'exclude'    => array( (int) get_option( 'default_category' ) ),
+        'number'     => 5,
+        'orderby'    => 'term_id',
+        'order'      => 'ASC',
+    ) );
+
+    $sbek_module_i = 0;
+    if ( ! is_wp_error( $sbek_sections ) ) :
+        foreach ( $sbek_sections as $sbek_section_cat ) :
+            get_template_part( 'template-parts/section-module', null, array( 'category' => $sbek_section_cat ) );
+            $sbek_module_i++;
+
+            // Drop an in-feed ad partway down the section stack.
+            if ( 2 === $sbek_module_i ) :
+                ?>
+                <div class="container mx-auto px-4 py-2">
+                    <?php echo sbek_ad_slot( 'in-feed' ); // phpcs:ignore WordPress.Security.EscapeOutput ?>
+                </div>
+                <?php
+            endif;
+        endforeach;
+    endif;
     ?>
-    <section class="scroll-reveal container mx-auto px-4 py-8">
-        <div class="flex items-center justify-between border-b-2 border-sbek-red mb-6">
-            <h2 class="bg-sbek-red text-white px-4 py-1 text-lg font-bold uppercase"><?php echo esc_html( sbek_term_name( $category ) ); ?></h2>
-            <a href="<?php echo esc_url( sbek_localize_url( get_category_link( $category->term_id ) ) ); ?>" class="text-sbek-red text-sm font-bold hover:underline"><?php echo esc_html( t( 'view_all' ) ); ?></a>
-        </div>
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            <?php
-            $cat_posts = new WP_Query( array(
-                'cat'            => $category->term_id,
-                'posts_per_page' => 4,
-            ) );
-            if ( $cat_posts->have_posts() ) : while ( $cat_posts->have_posts() ) : $cat_posts->the_post();
-                get_template_part( 'template-parts/content-grid' );
-            endwhile; wp_reset_postdata(); endif;
-            ?>
-        </div>
-    </section>
-    <?php endforeach; ?>
 
-    <!-- Latest News (Infinite Scroll) -->
-    <section class="container mx-auto px-4 py-8 mb-12">
-        <div class="flex items-center justify-between border-b-2 border-gray-900 mb-6">
-            <h2 class="bg-gray-900 text-white px-4 py-1 text-lg font-bold uppercase"><?php echo esc_html( t( 'latest_news' ) ); ?></h2>
-        </div>
+    <!-- Latest News (infinite scroll). Grid size (4) must match the AJAX handler's per-page. -->
+    <section class="container mx-auto px-4 py-6">
+        <?php echo sbek_section_heading( t( 'latest_news' ) ); // phpcs:ignore WordPress.Security.EscapeOutput ?>
 
-        <div id="news-grid-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div id="news-grid-container" class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
             <?php
-            $latest = new WP_Query( array(
-                'posts_per_page' => 4,
-                'paged'          => 1,
-            ) );
-            if ( $latest->have_posts() ) : while ( $latest->have_posts() ) : $latest->the_post();
+            $sbek_latest = new WP_Query( array( 'posts_per_page' => 4, 'paged' => 1, 'ignore_sticky_posts' => true ) );
+            if ( $sbek_latest->have_posts() ) : while ( $sbek_latest->have_posts() ) : $sbek_latest->the_post();
                 get_template_part( 'template-parts/content-grid' );
             endwhile; wp_reset_postdata(); endif;
             ?>
         </div>
 
-        <div class="text-center mt-12">
-            <button id="load-more-posts" class="bg-gray-200 hover:bg-sbek-red hover:text-white text-gray-800 font-bold py-3 px-8 rounded-full transition-colors duration-300">
+        <div class="mt-10 text-center">
+            <button id="load-more-posts" class="rounded-full bg-ink px-8 py-3 font-bold text-white transition-colors duration-200 hover:bg-sbek-red">
                 <?php echo esc_html( t( 'load_more' ) ); ?>
             </button>
         </div>

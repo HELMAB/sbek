@@ -66,6 +66,10 @@ return [
         'posts_by_author'      => 'Posts by %s',
         'edition'              => 'Edition',
         'latest_in'            => 'Latest in %s',
+        'menu_label'           => 'Menu',
+        'open_menu'            => 'Open menu',
+        'close_menu'           => 'Close menu',
+        'toggle_submenu'       => 'Toggle %s submenu',
     ],
     'jp' => [
         'breaking_news'    => 'ブレイキングニュース',
@@ -127,5 +131,9 @@ return [
         'posts_by_author'      => '%s の記事一覧',
         'edition'              => '版',
         'latest_in'            => '%s の最新記事',
+        'menu_label'           => 'メニュー',
+        'open_menu'            => 'メニューを開く',
+        'close_menu'           => 'メニューを閉じる',
+        'toggle_submenu'       => '%s のサブメニューを開閉',
     ],
 ];

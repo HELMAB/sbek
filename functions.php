@@ -67,9 +67,15 @@ require get_template_directory() . '/inc/icons.php';
 require get_template_directory() . '/inc/admin/custom-fields.php';
 
 /**
- * Mega Menu Walker
+ * Mega Menu Walker (desktop) + Mobile drawer walker
  */
 require get_template_directory() . '/inc/frontend/class-mega-menu-walker.php';
+require get_template_directory() . '/inc/frontend/class-mobile-menu-walker.php';
+
+/**
+ * Reusable front-end components (ad slots, section headings)
+ */
+require get_template_directory() . '/inc/frontend/components.php';
 
 /**
  * Performance & Caching
@@ -115,8 +121,8 @@ require get_template_directory() . '/inc/admin/login.php';
  * Enqueue scripts and styles.
  */
 function sbek_scripts() {
-    // Google Fonts for Khmer
-    wp_enqueue_style( 'sbek-fonts', 'https://fonts.googleapis.com/css2?family=Battambang:wght@400;700&family=Kantumruy+Pro:wght@400;700&display=swap', array(), null );
+    // Google Fonts: Khmer body (Kantumruy Pro / Battambang) + Libre Franklin display headlines.
+    wp_enqueue_style( 'sbek-fonts', 'https://fonts.googleapis.com/css2?family=Battambang:wght@400;700&family=Kantumruy+Pro:wght@400;500;600;700&family=Libre+Franklin:wght@400;500;600;700;800;900&display=swap', array(), null );
     
     // Main Tailwind CSS
     wp_enqueue_style( 'sbek-style', get_template_directory_uri() . '/assets/css/main.css', array(), '1.0.0' );
@@ -134,6 +140,9 @@ function sbek_scripts() {
 
     // Motion Effects JS
     wp_enqueue_script( 'sbek-motion', get_template_directory_uri() . '/assets/js/motion.js', array(), '1.0.0', true );
+
+    // Mobile navigation drawer
+    wp_enqueue_script( 'sbek-mobile-nav', get_template_directory_uri() . '/assets/js/mobile-nav.js', array(), '1.0.0', true );
 
     // Threaded comment reply script
     if ( is_singular() && comments_open() && get_option( 'thread_comments' ) ) {

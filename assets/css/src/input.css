@@ -4,7 +4,18 @@
   --color-sbek-red: #d77655;
   --color-sbek-blue: #d77655;
 
+  /* Ink = the near-black used for headlines and primary text. Sits warmer
+     and softer than pure #000 so the dense front page doesn't feel harsh. */
+  --color-ink: #17140f;
+
+  /* Body / UI text keeps the Khmer- & JP-safe Kantumruy Pro. Headlines use
+     Libre Franklin (a Franklin Gothic–lineage news grotesque) and fall back
+     to the Khmer stack per-glyph so non-Latin headlines still render. */
   --font-khmer: Kantumruy Pro, Battambang, system-ui, sans-serif;
+  --font-display: 'Libre Franklin', 'Kantumruy Pro', Battambang, system-ui, sans-serif;
+
+  /* Tightened, editorial line-heights for large display headlines. */
+  --leading-display: 1.05;
 
   --animate-marquee: marquee 25s linear infinite;
   --animate-fade-in: fadeIn 0.8s ease-out forwards;
@@ -42,5 +53,44 @@
   ::backdrop,
   ::file-selector-button {
     border-color: var(--color-gray-200, currentcolor);
+  }
+
+  /* Headlines and the masthead wordmark move to the Libre Franklin display
+     stack. Latin renders in Franklin Gothic's news grotesque; Khmer/JP fall
+     back per-glyph to Kantumruy Pro, so multilingual headlines stay intact. */
+  h1, h2, h3, h4, h5, h6,
+  .font-display {
+    font-family: var(--font-display);
+    letter-spacing: -0.011em;
+  }
+}
+
+/*
+  Mobile navigation drawer. Kept in the DOM at all times so the open/close
+  slide can animate; `.is-open` (toggled by assets/js/mobile-nav.js) drives
+  the backdrop fade and the panel slide-in. When closed the container ignores
+  pointer events so the page behind stays fully interactive.
+*/
+@layer components {
+  .mobile-nav {
+    pointer-events: none;
+  }
+  .mobile-nav.is-open {
+    pointer-events: auto;
+  }
+  .mobile-nav-backdrop {
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+  .mobile-nav.is-open .mobile-nav-backdrop {
+    opacity: 1;
+  }
+  .mobile-nav-panel {
+    transform: translateX(-100%);
+    transition: transform 0.3s cubic-bezier(0, 0, 0.2, 1);
+    will-change: transform;
+  }
+  .mobile-nav.is-open .mobile-nav-panel {
+    transform: translateX(0);
   }
 }
