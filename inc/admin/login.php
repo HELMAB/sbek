@@ -5,7 +5,7 @@
  */
 
 function sbek_login_enqueue(): void {
-    wp_enqueue_style( 'sbek-clone-fonts', 'https://fonts.googleapis.com/css2?family=Battambang:wght@400;700&family=Kantumruy+Pro:wght@400;700&display=swap', array(), null );
+    wp_enqueue_style( 'sbek-fonts', 'https://fonts.googleapis.com/css2?family=Battambang:wght@400;700&family=Kantumruy+Pro:wght@400;700&display=swap', array(), null );
     wp_enqueue_style(
         'sbek-login',
         get_template_directory_uri() . '/assets/css/login.css',

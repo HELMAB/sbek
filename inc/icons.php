@@ -9,7 +9,7 @@
  *
  * Usage:  echo sbek_icon( 'map-pin', [ 'width' => 20, 'class' => 'text-sbek-red' ] );
  *
- * @package sbek-clone
+ * @package sbek
  */
 
 defined( 'ABSPATH' ) || exit;

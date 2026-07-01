@@ -5,7 +5,7 @@
  * Shows, at a glance, which Options page fields are still empty so the user
  * knows what is left to configure (logo, share image, location, etc.).
  *
- * @package sbek-clone
+ * @package sbek
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -20,31 +20,31 @@ function sbek_setup_checklist(): array {
 
 	return [
 		[
-			'label' => __( 'Upload a site logo', 'sbek-clone' ),
+			'label' => __( 'Upload a site logo', 'sbek' ),
 			'done'  => ! empty( $s['logo'] ),
 		],
 		[
-			'label' => __( 'Add a default share image', 'sbek-clone' ),
+			'label' => __( 'Add a default share image', 'sbek' ),
 			'done'  => ! empty( $s['og_image'] ),
 		],
 		[
-			'label' => __( 'Set the company location', 'sbek-clone' ),
+			'label' => __( 'Set the company location', 'sbek' ),
 			'done'  => '' !== ( $s['lat'] ?? '' ) && '' !== ( $s['lng'] ?? '' ),
 		],
 		[
-			'label' => __( 'Write a company description', 'sbek-clone' ),
+			'label' => __( 'Write a company description', 'sbek' ),
 			'done'  => '' !== trim( (string) ( $s['description'] ?? '' ) ),
 		],
 		[
-			'label' => __( 'Add a contact phone number', 'sbek-clone' ),
+			'label' => __( 'Add a contact phone number', 'sbek' ),
 			'done'  => ! empty( $s['phones'] ),
 		],
 		[
-			'label' => __( 'Link a social profile', 'sbek-clone' ),
+			'label' => __( 'Link a social profile', 'sbek' ),
 			'done'  => ! empty( $s['socials'] ),
 		],
 		[
-			'label' => __( 'Connect analytics (GA4 or GTM)', 'sbek-clone' ),
+			'label' => __( 'Connect analytics (GA4 or GTM)', 'sbek' ),
 			'done'  => '' !== ( $s['ga4_id'] ?? '' ) || '' !== ( $s['gtm_id'] ?? '' ),
 		],
 	];
@@ -60,7 +60,7 @@ add_action( 'wp_dashboard_setup', function (): void {
 
 	wp_add_dashboard_widget(
 		'sbek_setup_widget',
-		__( 'Theme Setup', 'sbek-clone' ),
+		__( 'Theme Setup', 'sbek' ),
 		'sbek_render_setup_widget'
 	);
 } );
@@ -99,7 +99,7 @@ function sbek_render_setup_widget(): void {
 	?>
 	<div class="sbek-setup">
 		<p class="sbek-setup__intro">
-			<?php esc_html_e( 'Finish setting up your site identity. These details power your header, SEO tags, structured data, and footer.', 'sbek-clone' ); ?>
+			<?php esc_html_e( 'Finish setting up your site identity. These details power your header, SEO tags, structured data, and footer.', 'sbek' ); ?>
 		</p>
 
 		<div class="sbek-setup__summary">
@@ -109,7 +109,7 @@ function sbek_render_setup_widget(): void {
 			<span class="sbek-setup__count">
 				<?php
 				/* translators: 1: completed count, 2: total count. */
-				echo esc_html( sprintf( __( '%1$d of %2$d complete', 'sbek-clone' ), $done, $total ) );
+				echo esc_html( sprintf( __( '%1$d of %2$d complete', 'sbek' ), $done, $total ) );
 				?>
 			</span>
 		</div>
@@ -117,7 +117,7 @@ function sbek_render_setup_widget(): void {
 		<?php if ( $all ) : ?>
 			<p class="sbek-setup__done">
 				<?php echo sbek_icon( 'rocket', [ 'width' => 18, 'height' => 18 ] ); ?>
-				<?php esc_html_e( 'All set — your site identity is fully configured!', 'sbek-clone' ); ?>
+				<?php esc_html_e( 'All set — your site identity is fully configured!', 'sbek' ); ?>
 			</p>
 		<?php endif; ?>
 
@@ -133,7 +133,7 @@ function sbek_render_setup_widget(): void {
 		</ul>
 
 		<a class="sbek-setup__cta" href="<?php echo esc_url( $settings_url ); ?>">
-			<?php echo $all ? esc_html__( 'Review settings', 'sbek-clone' ) : esc_html__( 'Go to Options page', 'sbek-clone' ); ?>
+			<?php echo $all ? esc_html__( 'Review settings', 'sbek' ) : esc_html__( 'Go to Options page', 'sbek' ); ?>
 			<?php echo sbek_icon( 'arrow-right', [ 'width' => 15, 'height' => 15 ] ); ?>
 		</a>
 	</div>

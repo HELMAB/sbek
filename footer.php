@@ -4,7 +4,7 @@
             <!-- Brand & About -->
             <div class="space-y-6">
                 <a href="<?php echo esc_url( home_url( '/' ) ); ?>" class="text-3xl font-bold text-sbek-red uppercase tracking-tighter">
-                    Sbek Clone
+                    Sbek
                 </a>
                 <p class="text-gray-400 text-sm leading-relaxed">
                     The leading digital news source in Cambodia, providing the latest in Entertainment, Technology, Life, and Sport since 2026.
@@ -73,7 +73,7 @@
         </div>
 
         <div class="border-t border-gray-800 pt-8 flex flex-col md:flex-row justify-between items-center text-gray-500 text-xs">
-            <p>&copy; <?php echo date('Y'); ?> Sbek Clone. Built for speed and performance.</p>
+            <p>&copy; <?php echo date('Y'); ?> Sbek. Built for speed and performance.</p>
             <div class="mt-4 md:mt-0">
                 <?php echo sbek_language_switcher(); ?>
             </div>

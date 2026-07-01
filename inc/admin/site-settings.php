@@ -11,7 +11,7 @@
  *
  * Read anywhere in the theme with sbek_site_setting( 'key' ).
  *
- * @package sbek-clone
+ * @package sbek
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -159,8 +159,8 @@ function sbek_site_setting_image_url( string $key, string $size = 'full' ): stri
 
 add_action( 'admin_menu', function (): void {
 	$hook = add_options_page(
-		__( 'Options page', 'sbek-clone' ),
-		__( 'Options page', 'sbek-clone' ),
+		__( 'Options page', 'sbek' ),
+		__( 'Options page', 'sbek' ),
 		'manage_options',
 		SBEK_SETTINGS_SLUG,
 		'sbek_render_site_settings_page'
@@ -234,11 +234,11 @@ function sbek_render_media_field( string $opt, string $key, int $attachment_id, 
 			<div class="sbek-media-preview__actions">
 				<button type="button" class="sbek-media-btn sbek-media-btn--change" data-sbek-media-select>
 					<?php echo sbek_icon( 'image-up', [ 'width' => 15, 'height' => 15 ] ); ?>
-					<?php esc_html_e( 'Replace', 'sbek-clone' ); ?>
+					<?php esc_html_e( 'Replace', 'sbek' ); ?>
 				</button>
 				<button type="button" class="sbek-media-btn sbek-media-btn--remove" data-sbek-media-remove>
 					<?php echo sbek_icon( 'trash-2', [ 'width' => 15, 'height' => 15 ] ); ?>
-					<?php esc_html_e( 'Remove', 'sbek-clone' ); ?>
+					<?php esc_html_e( 'Remove', 'sbek' ); ?>
 				</button>
 			</div>
 		</div>
@@ -293,13 +293,13 @@ function sbek_add_button( string $group ): string {
 		'<button type="button" class="sbek-card__add" data-sbek-add="%s">%s<span>%s</span></button>',
 		esc_attr( $group ),
 		sbek_icon( 'plus', [ 'width' => 15, 'height' => 15 ] ),
-		esc_html__( 'Add', 'sbek-clone' )
+		esc_html__( 'Add', 'sbek' )
 	);
 }
 
 function sbek_render_site_settings_page(): void {
 	if ( ! current_user_can( 'manage_options' ) ) {
-		wp_die( esc_html__( 'You do not have permission to access this page.', 'sbek-clone' ) );
+		wp_die( esc_html__( 'You do not have permission to access this page.', 'sbek' ) );
 	}
 
 	$settings = sbek_site_setting();
@@ -307,39 +307,39 @@ function sbek_render_site_settings_page(): void {
 	?>
 	<div class="wrap">
 		<div class="sbek-admin max-w-3xl mx-auto font-sans text-gray-800">
-			<h1 class="text-2xl font-bold mb-1"><?php esc_html_e( 'Options page', 'sbek-clone' ); ?></h1>
-			<p class="text-sm text-gray-500 mb-6"><?php esc_html_e( 'Global company information used across the site.', 'sbek-clone' ); ?></p>
+			<h1 class="text-2xl font-bold mb-1"><?php esc_html_e( 'Options page', 'sbek' ); ?></h1>
+			<p class="text-sm text-gray-500 mb-6"><?php esc_html_e( 'Global company information used across the site.', 'sbek' ); ?></p>
 
 			<form method="post" action="options.php" class="space-y-6">
 				<?php settings_fields( SBEK_SETTINGS_GROUP ); ?>
 
 				<!-- Branding -->
-				<?php sbek_section_open( 'image', __( 'Branding', 'sbek-clone' ), __( 'Your logo and the default image shown when pages are shared on social media.', 'sbek-clone' ) ); ?>
+				<?php sbek_section_open( 'image', __( 'Branding', 'sbek' ), __( 'Your logo and the default image shown when pages are shared on social media.', 'sbek' ) ); ?>
 					<div class="space-y-5">
 						<div>
-							<span class="block text-sm font-semibold mb-1"><?php esc_html_e( 'Site Logo', 'sbek-clone' ); ?></span>
-							<p class="text-xs text-gray-500 mb-2"><?php esc_html_e( 'Shown in the site header and used in structured data.', 'sbek-clone' ); ?></p>
-							<?php sbek_render_media_field( $opt, 'logo', (int) $settings['logo'], __( 'Upload or choose a logo', 'sbek-clone' ), __( 'PNG, JPG or SVG · transparent background recommended', 'sbek-clone' ) ); ?>
+							<span class="block text-sm font-semibold mb-1"><?php esc_html_e( 'Site Logo', 'sbek' ); ?></span>
+							<p class="text-xs text-gray-500 mb-2"><?php esc_html_e( 'Shown in the site header and used in structured data.', 'sbek' ); ?></p>
+							<?php sbek_render_media_field( $opt, 'logo', (int) $settings['logo'], __( 'Upload or choose a logo', 'sbek' ), __( 'PNG, JPG or SVG · transparent background recommended', 'sbek' ) ); ?>
 						</div>
 						<div class="border-t border-solid border-gray-100 pt-5">
-							<span class="block text-sm font-semibold mb-1"><?php esc_html_e( 'Default Share Image', 'sbek-clone' ); ?></span>
-							<p class="text-xs text-gray-500 mb-2"><?php esc_html_e( 'Fallback Open Graph image for pages with no featured image.', 'sbek-clone' ); ?></p>
-							<?php sbek_render_media_field( $opt, 'og_image', (int) $settings['og_image'], __( 'Upload or choose an image', 'sbek-clone' ), __( 'JPG or PNG · 1200×630px recommended', 'sbek-clone' ) ); ?>
+							<span class="block text-sm font-semibold mb-1"><?php esc_html_e( 'Default Share Image', 'sbek' ); ?></span>
+							<p class="text-xs text-gray-500 mb-2"><?php esc_html_e( 'Fallback Open Graph image for pages with no featured image.', 'sbek' ); ?></p>
+							<?php sbek_render_media_field( $opt, 'og_image', (int) $settings['og_image'], __( 'Upload or choose an image', 'sbek' ), __( 'JPG or PNG · 1200×630px recommended', 'sbek' ) ); ?>
 						</div>
 					</div>
 				<?php sbek_section_close(); ?>
 
 				<!-- Location -->
-				<?php sbek_section_open( 'map-pin', __( 'Company Location', 'sbek-clone' ), __( 'Coordinates of your office, used in maps and structured data.', 'sbek-clone' ) ); ?>
+				<?php sbek_section_open( 'map-pin', __( 'Company Location', 'sbek' ), __( 'Coordinates of your office, used in maps and structured data.', 'sbek' ) ); ?>
 					<div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
 						<label class="block">
-							<span class="block text-sm font-semibold mb-1"><?php esc_html_e( 'Latitude', 'sbek-clone' ); ?></span>
+							<span class="block text-sm font-semibold mb-1"><?php esc_html_e( 'Latitude', 'sbek' ); ?></span>
 							<input type="text" inputmode="decimal" name="<?php echo esc_attr( $opt ); ?>[lat]"
 								value="<?php echo esc_attr( $settings['lat'] ); ?>" placeholder="11.5564"
 								class="w-full rounded-md border border-solid border-gray-300 px-3 py-2 text-sm focus:border-sbek-blue focus:outline-none">
 						</label>
 						<label class="block">
-							<span class="block text-sm font-semibold mb-1"><?php esc_html_e( 'Longitude', 'sbek-clone' ); ?></span>
+							<span class="block text-sm font-semibold mb-1"><?php esc_html_e( 'Longitude', 'sbek' ); ?></span>
 							<input type="text" inputmode="decimal" name="<?php echo esc_attr( $opt ); ?>[lng]"
 								value="<?php echo esc_attr( $settings['lng'] ); ?>" placeholder="104.9282"
 								class="w-full rounded-md border border-solid border-gray-300 px-3 py-2 text-sm focus:border-sbek-blue focus:outline-none">
@@ -348,14 +348,14 @@ function sbek_render_site_settings_page(): void {
 				<?php sbek_section_close(); ?>
 
 				<!-- Description -->
-				<?php sbek_section_open( 'info', __( 'Company Description', 'sbek-clone' ), __( 'A short summary of your organization for SEO and structured data.', 'sbek-clone' ) ); ?>
+				<?php sbek_section_open( 'info', __( 'Company Description', 'sbek' ), __( 'A short summary of your organization for SEO and structured data.', 'sbek' ) ); ?>
 					<textarea name="<?php echo esc_attr( $opt ); ?>[description]" rows="4"
 						class="w-full rounded-md border border-solid border-gray-300 px-3 py-2 text-sm focus:border-sbek-blue focus:outline-none"
-						placeholder="<?php esc_attr_e( 'A short description of the company…', 'sbek-clone' ); ?>"><?php echo esc_textarea( $settings['description'] ); ?></textarea>
+						placeholder="<?php esc_attr_e( 'A short description of the company…', 'sbek' ); ?>"><?php echo esc_textarea( $settings['description'] ); ?></textarea>
 				<?php sbek_section_close(); ?>
 
 				<!-- Phone numbers (repeatable) -->
-				<?php sbek_section_open( 'phone', __( 'Contact Phone Numbers', 'sbek-clone' ), __( 'Public contact numbers shown across the site. Add as many as you need.', 'sbek-clone' ), sbek_add_button( 'phones' ) ); ?>
+				<?php sbek_section_open( 'phone', __( 'Contact Phone Numbers', 'sbek' ), __( 'Public contact numbers shown across the site. Add as many as you need.', 'sbek' ), sbek_add_button( 'phones' ) ); ?>
 					<div data-sbek-rows="phones" class="space-y-3">
 						<?php
 						$phones = ! empty( $settings['phones'] ) ? $settings['phones'] : [ [ 'label' => '', 'number' => '' ] ];
@@ -364,14 +364,14 @@ function sbek_render_site_settings_page(): void {
 							<div class="flex flex-wrap items-center gap-2" data-sbek-row>
 								<input type="text" name="<?php echo esc_attr( $opt ); ?>[phones][<?php echo (int) $i; ?>][label]"
 									value="<?php echo esc_attr( $row['label'] ?? '' ); ?>"
-									placeholder="<?php esc_attr_e( 'Label (e.g. Sales)', 'sbek-clone' ); ?>"
+									placeholder="<?php esc_attr_e( 'Label (e.g. Sales)', 'sbek' ); ?>"
 									class="flex-1 min-w-[8rem] rounded-md border border-solid border-gray-300 px-3 py-2 text-sm focus:border-sbek-blue focus:outline-none">
 								<input type="text" name="<?php echo esc_attr( $opt ); ?>[phones][<?php echo (int) $i; ?>][number]"
 									value="<?php echo esc_attr( $row['number'] ?? '' ); ?>"
 									placeholder="+855 12 345 678"
 									class="flex-1 min-w-[10rem] rounded-md border border-solid border-gray-300 px-3 py-2 text-sm focus:border-sbek-blue focus:outline-none">
 								<button type="button" data-sbek-remove
-									class="cursor-pointer shrink-0 text-gray-400 hover:text-sbek-red bg-transparent border-0 p-1" aria-label="<?php esc_attr_e( 'Remove', 'sbek-clone' ); ?>">
+									class="cursor-pointer shrink-0 text-gray-400 hover:text-sbek-red bg-transparent border-0 p-1" aria-label="<?php esc_attr_e( 'Remove', 'sbek' ); ?>">
 									<?php echo sbek_icon( 'trash-2', [ 'width' => 18, 'height' => 18 ] ); ?>
 								</button>
 							</div>
@@ -380,7 +380,7 @@ function sbek_render_site_settings_page(): void {
 				<?php sbek_section_close(); ?>
 
 				<!-- Social links (repeatable) -->
-				<?php sbek_section_open( 'share-2', __( 'Social Links', 'sbek-clone' ), __( 'Links to your social profiles, displayed in the site footer.', 'sbek-clone' ), sbek_add_button( 'socials' ) ); ?>
+				<?php sbek_section_open( 'share-2', __( 'Social Links', 'sbek' ), __( 'Links to your social profiles, displayed in the site footer.', 'sbek' ), sbek_add_button( 'socials' ) ); ?>
 					<div data-sbek-rows="socials" class="space-y-3">
 						<?php
 						$socials = ! empty( $settings['socials'] ) ? $settings['socials'] : [ [ 'platform' => '', 'url' => '' ] ];
@@ -389,14 +389,14 @@ function sbek_render_site_settings_page(): void {
 							<div class="flex flex-wrap items-center gap-2" data-sbek-row>
 								<input type="text" name="<?php echo esc_attr( $opt ); ?>[socials][<?php echo (int) $i; ?>][platform]"
 									value="<?php echo esc_attr( $row['platform'] ?? '' ); ?>"
-									placeholder="<?php esc_attr_e( 'Platform (e.g. Facebook)', 'sbek-clone' ); ?>"
+									placeholder="<?php esc_attr_e( 'Platform (e.g. Facebook)', 'sbek' ); ?>"
 									class="flex-1 min-w-[8rem] rounded-md border border-solid border-gray-300 px-3 py-2 text-sm focus:border-sbek-blue focus:outline-none">
 								<input type="url" name="<?php echo esc_attr( $opt ); ?>[socials][<?php echo (int) $i; ?>][url]"
 									value="<?php echo esc_attr( $row['url'] ?? '' ); ?>"
 									placeholder="https://facebook.com/yourpage"
 									class="flex-1 min-w-[12rem] rounded-md border border-solid border-gray-300 px-3 py-2 text-sm focus:border-sbek-blue focus:outline-none">
 								<button type="button" data-sbek-remove
-									class="cursor-pointer shrink-0 text-gray-400 hover:text-sbek-red bg-transparent border-0 p-1" aria-label="<?php esc_attr_e( 'Remove', 'sbek-clone' ); ?>">
+									class="cursor-pointer shrink-0 text-gray-400 hover:text-sbek-red bg-transparent border-0 p-1" aria-label="<?php esc_attr_e( 'Remove', 'sbek' ); ?>">
 									<?php echo sbek_icon( 'trash-2', [ 'width' => 18, 'height' => 18 ] ); ?>
 								</button>
 							</div>
@@ -405,34 +405,34 @@ function sbek_render_site_settings_page(): void {
 				<?php sbek_section_close(); ?>
 
 				<!-- Analytics & Scripts -->
-				<?php sbek_section_open( 'trending-up', __( 'Analytics & Scripts', 'sbek-clone' ), __( 'Tracking IDs and custom code injected site-wide.', 'sbek-clone' ) ); ?>
+				<?php sbek_section_open( 'trending-up', __( 'Analytics & Scripts', 'sbek' ), __( 'Tracking IDs and custom code injected site-wide.', 'sbek' ) ); ?>
 					<div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-5">
 						<label class="block">
-							<span class="block text-sm font-semibold mb-1"><?php esc_html_e( 'Google Analytics 4 ID', 'sbek-clone' ); ?></span>
+							<span class="block text-sm font-semibold mb-1"><?php esc_html_e( 'Google Analytics 4 ID', 'sbek' ); ?></span>
 							<input type="text" name="<?php echo esc_attr( $opt ); ?>[ga4_id]"
 								value="<?php echo esc_attr( $settings['ga4_id'] ); ?>" placeholder="G-XXXXXXXXXX"
 								class="w-full rounded-md border border-solid border-gray-300 px-3 py-2 text-sm focus:border-sbek-blue focus:outline-none">
 						</label>
 						<label class="block">
-							<span class="block text-sm font-semibold mb-1"><?php esc_html_e( 'Google Tag Manager ID', 'sbek-clone' ); ?></span>
+							<span class="block text-sm font-semibold mb-1"><?php esc_html_e( 'Google Tag Manager ID', 'sbek' ); ?></span>
 							<input type="text" name="<?php echo esc_attr( $opt ); ?>[gtm_id]"
 								value="<?php echo esc_attr( $settings['gtm_id'] ); ?>" placeholder="GTM-XXXXXXX"
 								class="w-full rounded-md border border-solid border-gray-300 px-3 py-2 text-sm focus:border-sbek-blue focus:outline-none">
 						</label>
 					</div>
 					<label class="block mb-5">
-						<span class="block text-sm font-semibold mb-1"><?php esc_html_e( 'Header Scripts', 'sbek-clone' ); ?></span>
-						<p class="text-xs text-gray-500 mb-2"><?php esc_html_e( 'Raw HTML/JS injected into <head> on every page.', 'sbek-clone' ); ?></p>
+						<span class="block text-sm font-semibold mb-1"><?php esc_html_e( 'Header Scripts', 'sbek' ); ?></span>
+						<p class="text-xs text-gray-500 mb-2"><?php esc_html_e( 'Raw HTML/JS injected into <head> on every page.', 'sbek' ); ?></p>
 						<textarea name="<?php echo esc_attr( $opt ); ?>[header_scripts]" rows="4"
 							class="w-full font-mono text-xs rounded-md border border-solid border-gray-300 px-3 py-2 focus:border-sbek-blue focus:outline-none"><?php echo esc_textarea( $settings['header_scripts'] ); ?></textarea>
 					</label>
 					<label class="block">
-						<span class="block text-sm font-semibold mb-1"><?php esc_html_e( 'Footer Scripts', 'sbek-clone' ); ?></span>
-						<p class="text-xs text-gray-500 mb-2"><?php esc_html_e( 'Raw HTML/JS injected before the closing </body> tag.', 'sbek-clone' ); ?></p>
+						<span class="block text-sm font-semibold mb-1"><?php esc_html_e( 'Footer Scripts', 'sbek' ); ?></span>
+						<p class="text-xs text-gray-500 mb-2"><?php esc_html_e( 'Raw HTML/JS injected before the closing </body> tag.', 'sbek' ); ?></p>
 						<textarea name="<?php echo esc_attr( $opt ); ?>[footer_scripts]" rows="4"
 							class="w-full font-mono text-xs rounded-md border border-solid border-gray-300 px-3 py-2 focus:border-sbek-blue focus:outline-none"><?php echo esc_textarea( $settings['footer_scripts'] ); ?></textarea>
 						<?php if ( ! current_user_can( 'unfiltered_html' ) ) : ?>
-							<p class="text-xs text-amber-600 mt-2"><?php esc_html_e( 'Your role cannot save raw scripts; unsafe markup will be stripped on save.', 'sbek-clone' ); ?></p>
+							<p class="text-xs text-amber-600 mt-2"><?php esc_html_e( 'Your role cannot save raw scripts; unsafe markup will be stripped on save.', 'sbek' ); ?></p>
 						<?php endif; ?>
 					</label>
 				<?php sbek_section_close(); ?>
@@ -440,7 +440,7 @@ function sbek_render_site_settings_page(): void {
 				<div>
 					<button type="submit"
 						class="cursor-pointer text-sm font-bold text-white bg-sbek-red hover:opacity-90 border-0 rounded-md px-5 py-2.5">
-						<?php esc_html_e( 'Save Settings', 'sbek-clone' ); ?>
+						<?php esc_html_e( 'Save Settings', 'sbek' ); ?>
 					</button>
 				</div>
 			</form>
@@ -451,13 +451,13 @@ function sbek_render_site_settings_page(): void {
 	<template id="sbek-tmpl-phones">
 		<div class="flex flex-wrap items-center gap-2" data-sbek-row>
 			<input type="text" data-name="<?php echo esc_attr( $opt ); ?>[phones][__i__][label]"
-				placeholder="<?php esc_attr_e( 'Label (e.g. Sales)', 'sbek-clone' ); ?>"
+				placeholder="<?php esc_attr_e( 'Label (e.g. Sales)', 'sbek' ); ?>"
 				class="flex-1 min-w-[8rem] rounded-md border border-solid border-gray-300 px-3 py-2 text-sm focus:border-sbek-blue focus:outline-none">
 			<input type="text" data-name="<?php echo esc_attr( $opt ); ?>[phones][__i__][number]"
 				placeholder="+855 12 345 678"
 				class="flex-1 min-w-[10rem] rounded-md border border-solid border-gray-300 px-3 py-2 text-sm focus:border-sbek-blue focus:outline-none">
 			<button type="button" data-sbek-remove
-				class="cursor-pointer shrink-0 text-gray-400 hover:text-sbek-red bg-transparent border-0 p-1" aria-label="<?php esc_attr_e( 'Remove', 'sbek-clone' ); ?>">
+				class="cursor-pointer shrink-0 text-gray-400 hover:text-sbek-red bg-transparent border-0 p-1" aria-label="<?php esc_attr_e( 'Remove', 'sbek' ); ?>">
 				<?php echo sbek_icon( 'trash-2', [ 'width' => 18, 'height' => 18 ] ); ?>
 			</button>
 		</div>
@@ -466,13 +466,13 @@ function sbek_render_site_settings_page(): void {
 	<template id="sbek-tmpl-socials">
 		<div class="flex flex-wrap items-center gap-2" data-sbek-row>
 			<input type="text" data-name="<?php echo esc_attr( $opt ); ?>[socials][__i__][platform]"
-				placeholder="<?php esc_attr_e( 'Platform (e.g. Facebook)', 'sbek-clone' ); ?>"
+				placeholder="<?php esc_attr_e( 'Platform (e.g. Facebook)', 'sbek' ); ?>"
 				class="flex-1 min-w-[8rem] rounded-md border border-solid border-gray-300 px-3 py-2 text-sm focus:border-sbek-blue focus:outline-none">
 			<input type="url" data-name="<?php echo esc_attr( $opt ); ?>[socials][__i__][url]"
 				placeholder="https://facebook.com/yourpage"
 				class="flex-1 min-w-[12rem] rounded-md border border-solid border-gray-300 px-3 py-2 text-sm focus:border-sbek-blue focus:outline-none">
 			<button type="button" data-sbek-remove
-				class="cursor-pointer shrink-0 text-gray-400 hover:text-sbek-red bg-transparent border-0 p-1" aria-label="<?php esc_attr_e( 'Remove', 'sbek-clone' ); ?>">
+				class="cursor-pointer shrink-0 text-gray-400 hover:text-sbek-red bg-transparent border-0 p-1" aria-label="<?php esc_attr_e( 'Remove', 'sbek' ); ?>">
 				<?php echo sbek_icon( 'trash-2', [ 'width' => 18, 'height' => 18 ] ); ?>
 			</button>
 		</div>

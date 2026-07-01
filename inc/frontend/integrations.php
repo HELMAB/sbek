@@ -3,7 +3,7 @@
  * Third-party integrations: Google Analytics 4, Google Tag Manager, and
  * custom header/footer scripts — all driven by the Options page.
  *
- * @package sbek-clone
+ * @package sbek
  */
 
 defined( 'ABSPATH' ) || exit;

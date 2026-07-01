@@ -1,6 +1,6 @@
 <?php
 /**
- * Performance optimizations for Sbek Clone
+ * Performance optimizations for Sbek
  * Handles Transients and Caching logic.
  */
 

@@ -1,6 +1,6 @@
 <?php
 /**
- * Custom Meta Fields for Sbek Clone
+ * Custom Meta Fields for Sbek
  * Handles Trending Score, Sponsored Status, and Video URL.
  */
 
