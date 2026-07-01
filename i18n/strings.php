@@ -48,6 +48,11 @@ return [
         'comment_email_notice'    => 'Your email address will not be published.',
         'comment_required_notice' => 'Required fields are marked',
         'comment_save_info'       => 'Save my name, email, and website in this browser for the next time I comment.',
+        'login_headline'      => 'Stay ahead of the story.',
+        'login_subheadline'   => 'Sign in to publish, edit, and manage the news your readers trust.',
+        'login_welcome'       => 'Welcome back! Sign in to manage your site.',
+        'login_user_placeholder' => 'you@example.com',
+        'login_pass_placeholder' => 'Enter your password',
     ],
     'jp' => [
         'breaking_news'    => 'ブレイキングニュース',
@@ -91,5 +96,10 @@ return [
         'comment_email_notice'    => 'メールアドレスは公開されません。',
         'comment_required_notice' => '必須項目には印がついています',
         'comment_save_info'       => '次回コメント時のために、名前・メールアドレス・ウェブサイトをこのブラウザに保存する',
+        'login_headline'      => '最新情報を、いち早く。',
+        'login_subheadline'   => '読者に信頼されるニュースを公開・編集・管理するにはログインしてください。',
+        'login_welcome'       => 'おかえりなさい!サイトを管理するにはログインしてください。',
+        'login_user_placeholder' => 'you@example.com',
+        'login_pass_placeholder' => 'パスワードを入力',
     ],
 ];

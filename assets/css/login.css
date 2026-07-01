@@ -13,6 +13,40 @@ body.login {
     overflow-x: hidden;
 }
 
+/* Top-right EN / JP switcher, fixed to the viewport so it sits above either
+   the brand panel or the form column regardless of breakpoint. */
+.sabay-login-lang-switch {
+    position: fixed;
+    top: 1.5rem;
+    right: 1.5rem;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    animation: sabayFadeUp 0.6s ease-out both;
+}
+
+.sabay-login-lang-switch__link {
+    color: #94a3b8;
+    text-decoration: none;
+    transition: color 0.15s ease;
+}
+
+.sabay-login-lang-switch__link:hover {
+    color: #e31e24;
+}
+
+.sabay-login-lang-switch__link.is-active {
+    color: #0f172a;
+    cursor: default;
+}
+
+.sabay-login-lang-switch__divider {
+    color: #cbd5e1;
+}
+
 /* WP's own logo mark, repurposed to show the site logo above the form card.
    The actual background-image URL is injected inline by sabay_login_logo_styles(). */
 body.login #login h1.wp-login-logo {

@@ -15,6 +15,59 @@ function sabay_login_enqueue(): void {
 }
 add_action( 'login_enqueue_scripts', 'sabay_login_enqueue' );
 
+/**
+ * Language for the login screen only. WordPress core's own field labels and
+ * buttons stay in the site's install locale — this drives just the t()-based
+ * copy this file adds (headline, intro, placeholders, switcher). The
+ * front-end's /jp/ URL-prefix scheme doesn't apply to a literal wp-login.php
+ * request, so a `?lang=` query var is used instead, persisted in a cookie
+ * for the rest of the login flow (lostpassword, register, …).
+ *
+ * `login_init` fires after `init` — where inc/i18n.php already defaulted
+ * $GLOBALS['sabay_lang'] to 'en' — so this safely overrides it.
+ */
+function sabay_login_set_language(): void {
+    $requested = isset( $_GET['lang'] ) ? sanitize_key( wp_unslash( $_GET['lang'] ) ) : '';
+
+    if ( $requested && in_array( $requested, SABAY_LANGUAGES, true ) ) {
+        $GLOBALS['sabay_lang'] = $requested;
+        setcookie( 'sabay_login_lang', $requested, time() + DAY_IN_SECONDS, '/', '', is_ssl(), true );
+        return;
+    }
+
+    $cookie = isset( $_COOKIE['sabay_login_lang'] ) ? sanitize_key( wp_unslash( $_COOKIE['sabay_login_lang'] ) ) : '';
+
+    if ( $cookie && in_array( $cookie, SABAY_LANGUAGES, true ) ) {
+        $GLOBALS['sabay_lang'] = $cookie;
+    }
+}
+add_action( 'login_init', 'sabay_login_set_language' );
+
+/**
+ * Top-right EN / JP switcher. Preserves the current screen (login,
+ * lostpassword, register …) and any other query args already on the URL.
+ */
+function sabay_login_language_switcher(): void {
+    $current = sabay_lang();
+    $links   = [];
+
+    foreach ( SABAY_LANGUAGES as $lang ) {
+        $links[] = sprintf(
+            '<a href="%s" class="sabay-login-lang-switch__link%s"%s>%s</a>',
+            esc_url( add_query_arg( 'lang', $lang ) ),
+            $lang === $current ? ' is-active' : '',
+            $lang === $current ? ' aria-current="true"' : '',
+            esc_html( strtoupper( $lang ) )
+        );
+    }
+    ?>
+    <div class="sabay-login-lang-switch">
+        <?php echo implode( '<span class="sabay-login-lang-switch__divider">/</span>', $links ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- each link built from esc_url()/esc_html() above ?>
+    </div>
+    <?php
+}
+add_action( 'login_header', 'sabay_login_language_switcher' );
+
 function sabay_login_logo_url(): string {
     return home_url( '/' );
 }
@@ -59,7 +112,7 @@ function sabay_login_message( string $message ): string {
     ?>
     <div class="sabay-login-intro text-center">
         <p class="sabay-login-intro__site"><?php echo esc_html( get_bloginfo( 'name' ) ); ?></p>
-        <p class="sabay-login-intro__desc"><?php esc_html_e( 'Welcome back! Sign in to manage your site.', 'sabay-clone' ); ?></p>
+        <p class="sabay-login-intro__desc"><?php echo esc_html( t( 'login_welcome' ) ); ?></p>
     </div>
     <?php
     return ob_get_clean() . $message;
@@ -77,11 +130,11 @@ function sabay_login_footer_script(): void {
     ( function () {
         var user = document.getElementById( 'user_login' );
         if ( user ) {
-            user.setAttribute( 'placeholder', <?php echo wp_json_encode( __( 'you@example.com', 'sabay-clone' ) ); ?> );
+            user.setAttribute( 'placeholder', <?php echo wp_json_encode( t( 'login_user_placeholder' ) ); ?> );
         }
         var pass = document.getElementById( 'user_pass' );
         if ( pass ) {
-            pass.setAttribute( 'placeholder', <?php echo wp_json_encode( __( 'Enter your password', 'sabay-clone' ) ); ?> );
+            pass.setAttribute( 'placeholder', <?php echo wp_json_encode( t( 'login_pass_placeholder' ) ); ?> );
         }
     } )();
     </script>
@@ -102,8 +155,8 @@ function sabay_login_brand_panel(): void {
         <span class="sabay-login-shape sabay-login-shape--3" aria-hidden="true"></span>
 
         <div class="sabay-login-panel__content">
-            <h1 class="sabay-login-panel__title"><?php esc_html_e( 'Stay ahead of the story.', 'sabay-clone' ); ?></h1>
-            <p class="sabay-login-panel__subtitle"><?php esc_html_e( 'Sign in to publish, edit, and manage the news your readers trust.', 'sabay-clone' ); ?></p>
+            <h1 class="sabay-login-panel__title"><?php echo esc_html( t( 'login_headline' ) ); ?></h1>
+            <p class="sabay-login-panel__subtitle"><?php echo esc_html( t( 'login_subheadline' ) ); ?></p>
         </div>
     </div>
     <?php

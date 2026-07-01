@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-07-01T03:59:59+00:00\n"
+"POT-Creation-Date: 2026-07-01T04:08:52+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: sabay-clone\n"
@@ -94,26 +94,6 @@ msgstr ""
 
 #: inc/admin/dashboard-widget.php:136
 msgid "Go to Options page"
-msgstr ""
-
-#: inc/admin/login.php:62
-msgid "Welcome back! Sign in to manage your site."
-msgstr ""
-
-#: inc/admin/login.php:80
-msgid "you@example.com"
-msgstr ""
-
-#: inc/admin/login.php:84
-msgid "Enter your password"
-msgstr ""
-
-#: inc/admin/login.php:105
-msgid "Stay ahead of the story."
-msgstr ""
-
-#: inc/admin/login.php:106
-msgid "Sign in to publish, edit, and manage the news your readers trust."
 msgstr ""
 
 #: inc/admin/site-settings.php:162
