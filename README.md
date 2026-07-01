@@ -55,7 +55,9 @@ npm run watch
 - `inc/class-mega-menu-walker.php`: Custom navigation walker.
 - `inc/performance.php`: Transient caching helper.
 - `inc/seo.php`: Open Graph & SEO tags.
-- `template-parts/`: Reusable UI components.
+- `template-parts/`: Reusable UI components (`content-grid.php` for card layouts, `content.php`/`content-none.php` as the `index.php` fallback).
+- `archive.php`, `search.php`, `404.php`: Standard template-hierarchy fallbacks for category/tag archives, search results, and not-found pages.
+- `languages/`: `.pot` translation template for admin-facing `__()` strings (site content strings use the `t()` system in `i18n/strings.php` instead).
 
 ## ⚖️ License
 GNU General Public License v2 or later.

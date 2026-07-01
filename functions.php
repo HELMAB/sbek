@@ -5,6 +5,8 @@
 
 if ( ! function_exists( 'sabay_clone_setup' ) ) :
     function sabay_clone_setup() {
+        load_theme_textdomain( 'sabay-clone', get_template_directory() . '/languages' );
+
         add_theme_support( 'title-tag' );
         add_theme_support( 'post-thumbnails' );
         add_theme_support( 'customize-selective-refresh-widgets' );

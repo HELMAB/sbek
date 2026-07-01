@@ -40,7 +40,7 @@
                     <div class="tags">
                         <?php the_tags('<span class="text-gray-500 mr-2">Tags:</span>', ' ', ''); ?>
                     </div>
-                </footer content-grid>
+                </footer>
             <?php endwhile; ?>
         </article>
 

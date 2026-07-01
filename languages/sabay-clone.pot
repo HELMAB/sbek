@@ -1,0 +1,261 @@
+# Copyright (C) 2026 Senior WP Developer
+# This file is distributed under the GNU General Public License v2 or later.
+msgid ""
+msgstr ""
+"Project-Id-Version: Sabay Clone 1.0.0\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/theme/sabay-clone\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2026-07-01T03:06:29+00:00\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"X-Generator: WP-CLI 2.12.0\n"
+"X-Domain: sabay-clone\n"
+
+#. Theme Name of the theme
+#: style.css
+msgid "Sabay Clone"
+msgstr ""
+
+#. Theme URI of the theme
+#: style.css
+msgid "https://example.com/sabay-clone"
+msgstr ""
+
+#. Description of the theme
+#: style.css
+msgid "A high-performance news theme built with Tailwind CSS."
+msgstr ""
+
+#. Author of the theme
+#: style.css
+msgid "Senior WP Developer"
+msgstr ""
+
+#: functions.php:24
+msgid "Primary (English)"
+msgstr ""
+
+#: functions.php:25
+msgid "Primary (Japanese)"
+msgstr ""
+
+#: inc/dashboard-widget.php:23
+msgid "Upload a site logo"
+msgstr ""
+
+#: inc/dashboard-widget.php:27
+msgid "Add a default share image"
+msgstr ""
+
+#: inc/dashboard-widget.php:31
+msgid "Set the company location"
+msgstr ""
+
+#: inc/dashboard-widget.php:35
+msgid "Write a company description"
+msgstr ""
+
+#: inc/dashboard-widget.php:39
+msgid "Add a contact phone number"
+msgstr ""
+
+#: inc/dashboard-widget.php:43
+msgid "Link a social profile"
+msgstr ""
+
+#: inc/dashboard-widget.php:47
+msgid "Connect analytics (GA4 or GTM)"
+msgstr ""
+
+#: inc/dashboard-widget.php:63
+msgid "Theme Setup"
+msgstr ""
+
+#: inc/dashboard-widget.php:102
+msgid "Finish setting up your site identity. These details power your header, SEO tags, structured data, and footer."
+msgstr ""
+
+#. translators: 1: completed count, 2: total count.
+#: inc/dashboard-widget.php:112
+#, php-format
+msgid "%1$d of %2$d complete"
+msgstr ""
+
+#: inc/dashboard-widget.php:120
+msgid "All set — your site identity is fully configured!"
+msgstr ""
+
+#: inc/dashboard-widget.php:136
+msgid "Review settings"
+msgstr ""
+
+#: inc/dashboard-widget.php:136
+msgid "Go to Options page"
+msgstr ""
+
+#: inc/site-settings.php:162
+#: inc/site-settings.php:163
+#: inc/site-settings.php:310
+msgid "Options page"
+msgstr ""
+
+#: inc/site-settings.php:237
+msgid "Replace"
+msgstr ""
+
+#: inc/site-settings.php:241
+#: inc/site-settings.php:374
+#: inc/site-settings.php:399
+#: inc/site-settings.php:460
+#: inc/site-settings.php:475
+msgid "Remove"
+msgstr ""
+
+#: inc/site-settings.php:296
+msgid "Add"
+msgstr ""
+
+#: inc/site-settings.php:302
+msgid "You do not have permission to access this page."
+msgstr ""
+
+#: inc/site-settings.php:311
+msgid "Global company information used across the site."
+msgstr ""
+
+#: inc/site-settings.php:317
+msgid "Branding"
+msgstr ""
+
+#: inc/site-settings.php:317
+msgid "Your logo and the default image shown when pages are shared on social media."
+msgstr ""
+
+#: inc/site-settings.php:320
+msgid "Site Logo"
+msgstr ""
+
+#: inc/site-settings.php:321
+msgid "Shown in the site header and used in structured data."
+msgstr ""
+
+#: inc/site-settings.php:322
+msgid "Upload or choose a logo"
+msgstr ""
+
+#: inc/site-settings.php:322
+msgid "PNG, JPG or SVG · transparent background recommended"
+msgstr ""
+
+#: inc/site-settings.php:325
+msgid "Default Share Image"
+msgstr ""
+
+#: inc/site-settings.php:326
+msgid "Fallback Open Graph image for pages with no featured image."
+msgstr ""
+
+#: inc/site-settings.php:327
+msgid "Upload or choose an image"
+msgstr ""
+
+#: inc/site-settings.php:327
+msgid "JPG or PNG · 1200×630px recommended"
+msgstr ""
+
+#: inc/site-settings.php:333
+msgid "Company Location"
+msgstr ""
+
+#: inc/site-settings.php:333
+msgid "Coordinates of your office, used in maps and structured data."
+msgstr ""
+
+#: inc/site-settings.php:336
+msgid "Latitude"
+msgstr ""
+
+#: inc/site-settings.php:342
+msgid "Longitude"
+msgstr ""
+
+#: inc/site-settings.php:351
+msgid "Company Description"
+msgstr ""
+
+#: inc/site-settings.php:351
+msgid "A short summary of your organization for SEO and structured data."
+msgstr ""
+
+#: inc/site-settings.php:354
+msgid "A short description of the company…"
+msgstr ""
+
+#: inc/site-settings.php:358
+msgid "Contact Phone Numbers"
+msgstr ""
+
+#: inc/site-settings.php:358
+msgid "Public contact numbers shown across the site. Add as many as you need."
+msgstr ""
+
+#: inc/site-settings.php:367
+#: inc/site-settings.php:454
+msgid "Label (e.g. Sales)"
+msgstr ""
+
+#: inc/site-settings.php:383
+msgid "Social Links"
+msgstr ""
+
+#: inc/site-settings.php:383
+msgid "Links to your social profiles, displayed in the site footer."
+msgstr ""
+
+#: inc/site-settings.php:392
+#: inc/site-settings.php:469
+msgid "Platform (e.g. Facebook)"
+msgstr ""
+
+#: inc/site-settings.php:408
+msgid "Analytics & Scripts"
+msgstr ""
+
+#: inc/site-settings.php:408
+msgid "Tracking IDs and custom code injected site-wide."
+msgstr ""
+
+#: inc/site-settings.php:411
+msgid "Google Analytics 4 ID"
+msgstr ""
+
+#: inc/site-settings.php:417
+msgid "Google Tag Manager ID"
+msgstr ""
+
+#: inc/site-settings.php:424
+msgid "Header Scripts"
+msgstr ""
+
+#: inc/site-settings.php:425
+msgid "Raw HTML/JS injected into <head> on every page."
+msgstr ""
+
+#: inc/site-settings.php:430
+msgid "Footer Scripts"
+msgstr ""
+
+#: inc/site-settings.php:431
+msgid "Raw HTML/JS injected before the closing </body> tag."
+msgstr ""
+
+#: inc/site-settings.php:435
+msgid "Your role cannot save raw scripts; unsafe markup will be stripped on save."
+msgstr ""
+
+#: inc/site-settings.php:443
+msgid "Save Settings"
+msgstr ""

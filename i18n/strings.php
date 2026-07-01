@@ -32,6 +32,9 @@ return [
         'search_results'   => 'Search results for: %s',
         'sponsored'        => 'Sponsored',
         'time_ago'         => '%s ago',
+        'not_found_title'  => 'Page Not Found',
+        'not_found_desc'   => 'The page you are looking for does not exist or has been moved.',
+        'back_to_home'     => 'Back to Homepage',
     ],
     'jp' => [
         'breaking_news'    => 'ブレイキングニュース',
@@ -59,5 +62,8 @@ return [
         'search_results'   => '「%s」の検索結果',
         'sponsored'        => 'スポンサード',
         'time_ago'         => '%s前',
+        'not_found_title'  => 'ページが見つかりません',
+        'not_found_desc'   => 'お探しのページは存在しないか、移動しました。',
+        'back_to_home'     => 'ホームに戻る',
     ],
 ];
