@@ -63,7 +63,7 @@
                     ?>
                         <div class="flex space-x-3 group">
                             <div class="flex-shrink-0 w-20 h-16 bg-gray-200 rounded overflow-hidden relative">
-                                <?php if ( has_post_thumbnail() ) the_post_thumbnail('thumbnail', ['class' => 'w-full h-full object-cover']); ?>
+                                <?php if ( has_post_thumbnail() ) the_post_thumbnail('thumbnail', ['class' => 'w-full h-full object-cover', 'loading' => 'lazy', 'decoding' => 'async']); ?>
                                 <?php if ( get_post_meta( get_the_ID(), '_sbek_video_url', true ) ) : ?>
                                     <div class="absolute inset-0 flex items-center justify-center bg-black/30">
                                         <div class="w-6 h-6 bg-white/80 rounded-full flex items-center justify-center pl-0.5">
@@ -79,6 +79,8 @@
                     <?php endwhile; wp_reset_postdata(); endif; ?>
                 </div>
             </div>
+
+            <?php get_sidebar(); ?>
 
             <!-- Ad Placeholder -->
             <div class="bg-gray-200 h-[600px] flex items-center justify-center text-gray-400 font-bold italic rounded">

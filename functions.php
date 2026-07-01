@@ -28,10 +28,28 @@ if ( ! function_exists( 'sbek_setup' ) ) :
 endif;
 add_action( 'after_setup_theme', 'sbek_setup' );
 
+function sbek_widgets_init() {
+    register_sidebar( array(
+        'name'          => esc_html__( 'Sbek Sidebar', 'sbek' ),
+        'id'            => 'sbek-sidebar',
+        'description'   => esc_html__( 'Displayed on single post pages, below the Trending panel.', 'sbek' ),
+        'before_widget' => '<div id="%1$s" class="widget %2$s bg-white p-6 rounded shadow-sm mb-8">',
+        'after_widget'  => '</div>',
+        'before_title'  => '<h3 class="text-lg font-bold border-b-2 border-sbek-red pb-2 mb-4 uppercase">',
+        'after_title'   => '</h3>',
+    ) );
+}
+add_action( 'widgets_init', 'sbek_widgets_init' );
+
 /**
  * Multilingual (i18n) — must load first so sbek_lang() is available
  */
 require get_template_directory() . '/inc/i18n.php';
+
+/**
+ * Security hardening — shared by admin and frontend
+ */
+require get_template_directory() . '/inc/security.php';
 
 /**
  * Multilingual Admin UI
@@ -62,6 +80,11 @@ require get_template_directory() . '/inc/frontend/performance.php';
  * SEO
  */
 require get_template_directory() . '/inc/frontend/seo.php';
+
+/**
+ * Search enhancements (category facet)
+ */
+require get_template_directory() . '/inc/frontend/search.php';
 
 /**
  * Comments

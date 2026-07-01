@@ -7,6 +7,22 @@
         </h1>
     </div>
 
+    <form method="get" action="<?php echo esc_url( home_url( '/' ) ); ?>" class="flex flex-wrap items-center gap-2 mb-8">
+        <input type="hidden" name="s" value="<?php echo esc_attr( get_search_query() ); ?>">
+        <label for="sbek-search-cat" class="sr-only"><?php echo esc_html( t( 'filter_by_category' ) ); ?></label>
+        <select id="sbek-search-cat" name="cat" onchange="this.form.submit()" class="border border-gray-300 rounded px-3 py-2 text-sm focus:ring-1 focus:ring-sbek-red">
+            <option value=""><?php echo esc_html( t( 'all_categories' ) ); ?></option>
+            <?php
+            $sbek_search_cat = isset( $_GET['cat'] ) ? absint( $_GET['cat'] ) : 0;
+            foreach ( get_categories( array( 'number' => 20 ) ) as $sbek_search_category ) :
+                ?>
+                <option value="<?php echo esc_attr( $sbek_search_category->term_id ); ?>" <?php selected( $sbek_search_cat, $sbek_search_category->term_id ); ?>>
+                    <?php echo esc_html( sbek_term_name( $sbek_search_category ) ); ?>
+                </option>
+            <?php endforeach; ?>
+        </select>
+    </form>
+
     <?php if ( have_posts() ) : ?>
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
             <?php

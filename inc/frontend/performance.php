@@ -48,7 +48,9 @@ function sbek_clear_transients_on_save(): void {
 
     foreach ( $languages as $lang ) {
         delete_transient( "sbek_breaking_news_{$lang}" );
+        delete_transient( "sbek_breaking_news_fallback_{$lang}" );
         delete_transient( "sbek_trending_sidebar_{$lang}" );
+        delete_transient( "sbek_404_popular_{$lang}" );
     }
 }
 add_action( 'save_post', 'sbek_clear_transients_on_save' );

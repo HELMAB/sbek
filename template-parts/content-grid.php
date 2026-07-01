@@ -5,7 +5,7 @@ $video_url = get_post_meta( get_the_ID(), '_sbek_video_url', true );
 <article id="post-<?php the_ID(); ?>" <?php post_class('scroll-reveal bg-white rounded shadow-sm overflow-hidden group hover:shadow-md transition-shadow ' . ($is_sponsored ? 'border-2 border-yellow-400' : '')); ?>>
     <div class="relative h-48 overflow-hidden">
         <?php if ( has_post_thumbnail() ) : ?>
-            <?php the_post_thumbnail('medium', ['class' => 'w-full h-full object-cover group-hover:scale-105 transition-transform duration-500']); ?>
+            <?php the_post_thumbnail('medium', ['class' => 'w-full h-full object-cover group-hover:scale-105 transition-transform duration-500', 'loading' => 'lazy', 'decoding' => 'async']); ?>
         <?php else : ?>
             <div class="w-full h-full bg-gray-200"></div>
         <?php endif; ?>

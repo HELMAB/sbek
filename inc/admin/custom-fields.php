@@ -22,6 +22,7 @@ function sbek_render_news_meta_box( $post ) {
 
     $trending_score = get_post_meta( $post->ID, '_sbek_trending_score', true );
     $is_sponsored   = get_post_meta( $post->ID, '_sbek_is_sponsored', true );
+    $is_breaking    = get_post_meta( $post->ID, '_sbek_is_breaking', true );
     $video_url      = get_post_meta( $post->ID, '_sbek_video_url', true );
     ?>
     <div style="margin-top: 10px;">
@@ -40,6 +41,14 @@ function sbek_render_news_meta_box( $post ) {
             <input type="checkbox" name="sbek_is_sponsored" value="1" <?php checked( $is_sponsored, 1 ); ?> />
             Mark as Sponsored / Advertorial
         </label>
+    </div>
+
+    <div style="margin-top: 15px; border-top:1px solid #eee; padding-top:10px;">
+        <label style="font-weight:bold;">
+            <input type="checkbox" name="sbek_is_breaking" value="1" <?php checked( $is_breaking, 1 ); ?> />
+            Mark as Breaking News
+        </label>
+        <p class="description">Shown first in the header ticker.</p>
     </div>
     <?php
 }
@@ -68,5 +77,9 @@ function sbek_save_news_meta( $post_id ) {
     // Save Sponsored (Checkbox logic: if missing in POST, it's false)
     $is_sponsored = isset( $_POST['sbek_is_sponsored'] ) ? 1 : 0;
     update_post_meta( $post_id, '_sbek_is_sponsored', $is_sponsored );
+
+    // Save Breaking News flag (Checkbox logic: if missing in POST, it's false)
+    $is_breaking = isset( $_POST['sbek_is_breaking'] ) ? 1 : 0;
+    update_post_meta( $post_id, '_sbek_is_breaking', $is_breaking );
 }
 add_action( 'save_post', 'sbek_save_news_meta' );

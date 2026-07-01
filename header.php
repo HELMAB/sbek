@@ -9,6 +9,8 @@
 <body <?php body_class('bg-gray-50 font-khmer opacity-0 animate-fade-in'); ?>>
 <?php wp_body_open(); ?>
 
+<a class="skip-link sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-[100] focus:bg-white focus:text-sbek-red focus:px-4 focus:py-2 focus:rounded focus:shadow-lg" href="#primary"><?php echo esc_html( t( 'skip_to_content' ) ); ?></a>
+
 <header id="masthead" class="site-header bg-white shadow-sm sticky top-0 z-50">
     <div class="container mx-auto px-4 py-3 flex justify-between items-center">
         <div class="site-branding">
@@ -23,7 +25,7 @@
                 <?php endif; ?>
             </a>
         </div>
-        <nav id="site-navigation" class="main-navigation hidden md:flex space-x-6 font-medium h-full">
+        <nav id="site-navigation" class="main-navigation hidden md:flex space-x-6 font-medium h-full" aria-label="<?php echo esc_attr( t( 'primary_navigation' ) ); ?>">
             <?php
             $menu_location = sbek_is_default_lang() ? 'menu-1' : 'menu-1-' . sbek_lang();
             wp_nav_menu( array(
@@ -48,7 +50,16 @@
             <div class="flex-grow overflow-hidden whitespace-nowrap">
                 <div class="inline-block animate-marquee hover:pause whitespace-nowrap">
                     <?php
-                    $breaking = sbek_get_cached_query( array( 'posts_per_page' => 5 ), 'sbek_breaking_news_' . sbek_lang(), 900 );
+                    $breaking = sbek_get_cached_query( array(
+                        'posts_per_page' => 5,
+                        'meta_key'       => '_sbek_is_breaking',
+                        'meta_value'     => 1,
+                    ), 'sbek_breaking_news_' . sbek_lang(), 900 );
+
+                    if ( ! $breaking->have_posts() ) {
+                        $breaking = sbek_get_cached_query( array( 'posts_per_page' => 5 ), 'sbek_breaking_news_fallback_' . sbek_lang(), 900 );
+                    }
+
                     if ( $breaking->have_posts() ) : while ( $breaking->have_posts() ) : $breaking->the_post();
                     ?>
                         <a href="<?php echo esc_url( sbek_localize_url( get_permalink() ) ); ?>" class="text-sm font-medium mr-8 hover:text-sbek-red inline-block">• <?php the_title(); ?></a>
