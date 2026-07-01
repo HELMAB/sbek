@@ -64,6 +64,51 @@
     font-family: var(--font-display);
     letter-spacing: -0.011em;
   }
+
+  /* Balanced headline wrapping avoids stranded single-word last lines; prose
+     paragraphs use `pretty` for better rag and no orphans. Progressive
+     enhancement — ignored by browsers without text-wrap support. */
+  h1, h2, h3 {
+    text-wrap: balance;
+  }
+  .prose p,
+  .prose li {
+    text-wrap: pretty;
+  }
+
+  /* Consistent keyboard focus ring in the brand accent. Only shows for
+     keyboard/AT navigation (never on mouse click), so it doesn't intrude on
+     pointer users while giving keyboard users a clear, on-brand indicator. */
+  :focus-visible {
+    outline: 2px solid var(--color-sbek-red);
+    outline-offset: 2px;
+    border-radius: 2px;
+  }
+}
+
+/*
+  Respect the OS "reduce motion" setting. Neutralizes the scroll-reveal
+  reveals, hover zoom, back-to-top slide, and — critically — the infinite
+  breaking-news marquee, which is pinned back to its start so the headline
+  stays readable rather than animating off-screen.
+*/
+@media (prefers-reduced-motion: reduce) {
+  *,
+  ::before,
+  ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  .animate-marquee {
+    animation: none !important;
+    transform: none !important;
+  }
+  .scroll-reveal {
+    opacity: 1 !important;
+    transform: none !important;
+  }
 }
 
 /*
@@ -115,13 +160,15 @@
   `.page-numbers` class names, so it's styled here rather than with utilities.
 */
 @layer components {
-  .pagination .nav-links {
+  .pagination .nav-links,
+  .comments-pagination .nav-links {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
     gap: 0.5rem;
   }
-  .pagination .page-numbers {
+  .pagination .page-numbers,
+  .comments-pagination .page-numbers {
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -137,16 +184,19 @@
     color: var(--color-ink);
     transition: color 0.15s, border-color 0.15s, background-color 0.15s;
   }
-  .pagination a.page-numbers:hover {
+  .pagination a.page-numbers:hover,
+  .comments-pagination a.page-numbers:hover {
     border-color: var(--color-sbek-red);
     color: var(--color-sbek-red);
   }
-  .pagination .page-numbers.current {
+  .pagination .page-numbers.current,
+  .comments-pagination .page-numbers.current {
     background: var(--color-sbek-red);
     border-color: var(--color-sbek-red);
     color: #fff;
   }
-  .pagination .page-numbers.dots {
+  .pagination .page-numbers.dots,
+  .comments-pagination .page-numbers.dots {
     border-color: transparent;
     background: transparent;
   }

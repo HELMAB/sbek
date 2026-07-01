@@ -9,14 +9,14 @@ if ( post_password_required() ) {
 }
 ?>
 
-<div id="comments" class="comments-area mt-12 pt-8 border-t border-gray-100">
+<div id="comments" class="comments-area mt-12 border-t-2 border-ink pt-8">
 
     <?php if ( have_comments() ) : ?>
-        <h2 class="comments-title text-lg font-bold border-b-2 border-sbek-red pb-2 mb-4 uppercase">
-            <?php echo esc_html( t( 'comments_heading', get_comments_number() ) ); ?>
+        <h2 class="comments-title mb-6 flex items-center gap-2.5 font-display text-xl font-extrabold uppercase tracking-tight text-ink">
+            <span class="inline-block h-5 w-1.5 shrink-0 bg-sbek-red"></span><?php echo esc_html( t( 'comments_heading', get_comments_number() ) ); ?>
         </h2>
 
-        <ol class="comment-list divide-y divide-gray-100">
+        <ol class="comment-list divide-y divide-gray-200">
             <?php
             wp_list_comments( [
                 'style'       => 'ol',
