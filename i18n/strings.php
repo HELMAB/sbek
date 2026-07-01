@@ -72,6 +72,7 @@ return [
         'toggle_submenu'       => 'Toggle %s submenu',
         'min_read'             => '%d min read',
         'more_from'            => 'More from %s',
+        'search_results_label' => 'Search results for',
     ],
     'jp' => [
         'breaking_news'    => 'ブレイキングニュース',
@@ -139,5 +140,6 @@ return [
         'toggle_submenu'       => '%s のサブメニューを開閉',
         'min_read'             => '約%d分',
         'more_from'            => '%s の記事をもっと見る',
+        'search_results_label' => '検索結果',
     ],
 ];

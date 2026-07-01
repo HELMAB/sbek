@@ -221,3 +221,45 @@
     font-weight: 700;
   }
 }
+
+/*
+  Archive/search pagination. WordPress' the_posts_pagination() emits fixed
+  `.page-numbers` class names, so it's styled here rather than with utilities.
+*/
+@layer components {
+  .pagination .nav-links {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.5rem;
+  }
+  .pagination .page-numbers {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 2.5rem;
+    height: 2.5rem;
+    padding: 0 0.75rem;
+    border: 1px solid var(--color-gray-200);
+    border-radius: 0.25rem;
+    background: #fff;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 0.875rem;
+    color: var(--color-ink);
+    transition: color 0.15s, border-color 0.15s, background-color 0.15s;
+  }
+  .pagination a.page-numbers:hover {
+    border-color: var(--color-sbek-red);
+    color: var(--color-sbek-red);
+  }
+  .pagination .page-numbers.current {
+    background: var(--color-sbek-red);
+    border-color: var(--color-sbek-red);
+    color: #fff;
+  }
+  .pagination .page-numbers.dots {
+    border-color: transparent;
+    background: transparent;
+  }
+}
