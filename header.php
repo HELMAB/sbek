@@ -12,7 +12,7 @@
 <a class="skip-link sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-100 focus:bg-white focus:text-sbek-red focus:px-4 focus:py-2 focus:rounded-sm focus:shadow-lg" href="#primary"><?php echo esc_html( t( 'skip_to_content' ) ); ?></a>
 
 <header id="masthead" class="site-header bg-white shadow-xs sticky top-0 z-50">
-    <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+    <div class="container mx-auto px-4 py-3 flex justify-between items-center relative">
         <div class="site-branding">
             <a href="<?php echo esc_url( sbek_localize_url( home_url( '/' ) ) ); ?>" class="inline-flex items-center text-sbek-red text-3xl font-bold uppercase">
                 <?php

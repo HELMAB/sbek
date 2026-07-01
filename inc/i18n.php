@@ -131,6 +131,23 @@ add_action( 'pre_get_posts', function ( WP_Query $query ) {
         return;
     }
 
+    // Only scope queries for post types that actually carry the `language`
+    // taxonomy (post, page). Otherwise this would wipe out queries for
+    // unrelated post types (e.g. nav_menu_item), which are never tagged
+    // with a language term and would be filtered out entirely.
+    $post_type = $query->get( 'post_type' );
+    if ( empty( $post_type ) ) {
+        $post_type = 'post';
+    }
+
+    if ( 'any' !== $post_type ) {
+        foreach ( (array) $post_type as $queried_post_type ) {
+            if ( ! is_object_in_taxonomy( $queried_post_type, 'language' ) ) {
+                return;
+            }
+        }
+    }
+
     $lang = sbek_lang();
 
     $existing = (array) $query->get( 'tax_query' );

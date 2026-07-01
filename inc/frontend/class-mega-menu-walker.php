@@ -23,9 +23,12 @@ class Sbek_Mega_Menu_Walker extends Walker_Nav_Menu {
         $classes = empty( $item->classes ) ? array() : (array) $item->classes;
         $classes[] = 'menu-item-' . $item->ID;
         
-        // Parent items need 'group' class for hover effects
+        // Parent items need 'group' class for hover effects. Positioning is
+        // anchored to the header row (see header.php), not the <li> itself,
+        // so the mega-menu panel spans the full header width instead of
+        // shrinking to the width of the menu item's own text.
         if ( in_array( 'menu-item-has-children', $classes ) ) {
-            $classes[] = 'group relative';
+            $classes[] = 'group';
         }
 
         $class_names = join( ' ', apply_filters( 'nav_menu_css_class', array_filter( $classes ), $item, $args, $depth ) );
