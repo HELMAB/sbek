@@ -50,6 +50,23 @@ function sabay_login_logo_styles(): void {
 add_action( 'login_head', 'sabay_login_logo_styles' );
 
 /**
+ * Site name + short description, rendered below the logo. `login_message`
+ * fires right after the h1 logo and before the login form/error messages —
+ * the standard hook for content in exactly this spot.
+ */
+function sabay_login_message( string $message ): string {
+    ob_start();
+    ?>
+    <div class="sabay-login-intro text-center">
+        <p class="sabay-login-intro__site"><?php echo esc_html( get_bloginfo( 'name' ) ); ?></p>
+        <p class="sabay-login-intro__desc"><?php esc_html_e( 'Welcome back! Sign in to manage your site.', 'sabay-clone' ); ?></p>
+    </div>
+    <?php
+    return ob_get_clean() . $message;
+}
+add_filter( 'login_message', 'sabay_login_message' );
+
+/**
  * Placeholder text on the username/password fields. WordPress core hardcodes
  * that markup with no filter, so the documented approach is a small inline
  * script (fired on login_footer, after the fields exist in the DOM).

@@ -16,17 +16,38 @@ body.login {
 /* WP's own logo mark, repurposed to show the site logo above the form card.
    The actual background-image URL is injected inline by sabay_login_logo_styles(). */
 body.login #login h1.wp-login-logo {
-    width: 140px;
-    margin: 0 auto 1.75rem;
+    width: 280px;
+    margin: 0 auto 1.25rem;
 }
 
 body.login #login h1.wp-login-logo a {
-    width: 140px;
-    height: 48px;
+    width: 280px;
+    height: 96px;
     margin: 0;
     background-size: contain;
     background-position: center;
     animation: sabayFadeUp 0.6s ease-out both;
+}
+
+/* Site name + short login description, injected below the logo via the
+   core `login_message` filter (sabay_login_message()). */
+.sabay-login-intro {
+    text-align: center;
+    margin: 0 0 1.75rem;
+    animation: sabayFadeUp 0.6s ease-out 0.1s both;
+}
+
+.sabay-login-intro__site {
+    margin: 0 0 0.25rem;
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--sabay-fg, #0f172a);
+}
+
+.sabay-login-intro__desc {
+    margin: 0;
+    font-size: 0.8125rem;
+    color: var(--sabay-muted-fg, #64748b);
 }
 
 /* ---------- Left brand panel ---------- */
@@ -184,6 +205,9 @@ body.login #login h1.wp-login-logo a {
     border: 1px solid var(--sabay-border);
     border-radius: var(--sabay-radius-sm);
     padding: 0.5rem 0.75rem;
+    font-family: inherit; /* WP core forces a monospace font on .password-input;
+                             this keeps its placeholder visually consistent with
+                             the username field's */
     font-size: 0.875rem;
     line-height: 1.25rem;
     color: var(--sabay-fg);
