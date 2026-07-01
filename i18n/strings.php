@@ -62,6 +62,8 @@ return [
         'related_posts'        => 'Related Articles',
         'copy_link'            => 'Copy Link',
         'link_copied'          => 'Link copied!',
+        'about_author'         => 'About the Author',
+        'posts_by_author'      => 'Posts by %s',
     ],
     'jp' => [
         'breaking_news'    => 'ブレイキングニュース',
@@ -119,5 +121,7 @@ return [
         'related_posts'        => '関連記事',
         'copy_link'            => 'リンクをコピー',
         'link_copied'          => 'リンクをコピーしました!',
+        'about_author'         => '著者について',
+        'posts_by_author'      => '%s の記事一覧',
     ],
 ];

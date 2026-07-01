@@ -19,7 +19,7 @@
                     $sbek_share_title = get_the_title();
                     ?>
                     <div class="flex items-center text-gray-500 text-sm mb-6 pb-6 border-b border-gray-100">
-                        <span class="font-bold text-gray-900 mr-2"><?php the_author(); ?></span>
+                        <a href="<?php echo esc_url( sbek_localize_url( get_author_posts_url( get_the_author_meta( 'ID' ) ) ) ); ?>" class="font-bold text-gray-900 mr-2 hover:text-sbek-red transition-colors"><?php the_author(); ?></a>
                         <span class="mr-2">•</span>
                         <span><?php echo get_the_date(); ?></span>
                         <span class="ml-auto flex items-center space-x-4">
@@ -52,6 +52,23 @@
                         <?php the_tags('<span class="text-gray-500 mr-2">Tags:</span>', ' ', ''); ?>
                     </div>
                 </footer>
+
+                <?php
+                $sbek_author_id  = get_the_author_meta( 'ID' );
+                $sbek_author_bio = get_the_author_meta( 'description', $sbek_author_id );
+                ?>
+                <div class="author-bio flex items-start gap-4 mt-12 pt-8 border-t border-gray-100">
+                    <?php echo get_avatar( $sbek_author_id, 64, '', '', array( 'class' => 'rounded-full flex-shrink-0' ) ); ?>
+                    <div>
+                        <p class="text-xs text-gray-400 uppercase font-bold mb-1"><?php echo esc_html( t( 'about_author' ) ); ?></p>
+                        <a href="<?php echo esc_url( sbek_localize_url( get_author_posts_url( $sbek_author_id ) ) ); ?>" class="font-bold text-gray-900 hover:text-sbek-red transition-colors">
+                            <?php echo esc_html( get_the_author_meta( 'display_name', $sbek_author_id ) ); ?>
+                        </a>
+                        <?php if ( $sbek_author_bio ) : ?>
+                            <p class="text-gray-500 text-sm mt-1"><?php echo esc_html( $sbek_author_bio ); ?></p>
+                        <?php endif; ?>
+                    </div>
+                </div>
 
                 <?php
                 $sbek_related_post_id = get_the_ID();

@@ -176,3 +176,26 @@ function sbek_article_jsonld() {
 }
 add_action( 'wp_head', 'sbek_article_jsonld' );
 
+/**
+ * Point crawlers at every language's sitemap. WordPress core already lists
+ * the default (English) sitemap on virtual robots.txt via wp_sitemaps_robots();
+ * this adds the /jp/ variant, which core has no awareness of. The front-end
+ * language pre_get_posts filter in inc/i18n.php (scoped only by is_admin())
+ * already makes wp-sitemap.xml itself language-aware per the active prefix.
+ */
+function sbek_add_localized_sitemaps_to_robots( $output, $public ) {
+    if ( '1' !== (string) $public || ! defined( 'SBEK_LANGUAGES' ) || ! defined( 'SBEK_DEFAULT_LANGUAGE' ) ) {
+        return $output;
+    }
+
+    foreach ( SBEK_LANGUAGES as $lang ) {
+        if ( SBEK_DEFAULT_LANGUAGE === $lang ) {
+            continue; // Already added by WordPress core.
+        }
+        $output .= 'Sitemap: ' . esc_url( home_url( "/{$lang}/wp-sitemap.xml" ) ) . "\n";
+    }
+
+    return $output;
+}
+add_filter( 'robots_txt', 'sbek_add_localized_sitemaps_to_robots', 10, 2 );
+
