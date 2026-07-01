@@ -18,6 +18,7 @@ npm run watch:admin
 
 - Styling is **Tailwind CSS v4** via the standalone `@tailwindcss/cli` (no webpack/PostCSS pipeline). Requires **Node 20+** — `.nvmrc` pins the version to use.
 - There is **no `tailwind.config.js`** — theme customization (colors, fonts, animations) lives directly in `@theme { ... }` blocks inside `assets/css/src/input.css` and `assets/css/src/admin.css`.
+- The **`@tailwindcss/typography`** plugin is loaded via `@plugin "@tailwindcss/typography";` in `input.css` (resolved from `node_modules` by the `npx @tailwindcss/cli` package build). Single-post content uses `prose` (`single.php`), themed to the brand via inline `--tw-prose-*` variable overrides + `prose-*` modifiers; a small unlayered rule in `input.css` strips the plugin's blockquote quote glyphs.
 - `admin.css` deliberately imports `tailwindcss/theme.css` + `tailwindcss/utilities.css` (not the full `tailwindcss` package) so Tailwind's preflight/base reset doesn't fight wp-admin's own styles, and scopes its content scanning with `@source`/`source(none)` to only the admin files it actually styles (`inc/admin/site-settings.php`, `inc/admin/dashboard-widget.php`, `assets/js/admin-site-settings.js`) rather than the whole theme.
 - `assets/css/main.css` and `assets/css/admin.css` are gitignored build output — after editing any `.php` template or adding utility classes, rerun the relevant `npm run build*` or the classes won't exist in the stylesheet.
 - JS is vanilla ES6 (`assets/js/`), no bundler.

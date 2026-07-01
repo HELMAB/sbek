@@ -61,7 +61,7 @@
                         </figure>
                     <?php endif; ?>
 
-                    <div class="sbek-article entry-content mt-8 max-w-[68ch]">
+                    <div class="entry-content prose prose-lg mt-8 max-w-[68ch] [--tw-prose-body:#33302b] [--tw-prose-headings:var(--color-ink)] [--tw-prose-links:var(--color-sbek-red)] [--tw-prose-bold:var(--color-ink)] [--tw-prose-quotes:var(--color-ink)] [--tw-prose-quote-borders:var(--color-sbek-red)] prose-headings:font-display prose-headings:tracking-tight prose-blockquote:font-display prose-blockquote:font-semibold prose-blockquote:not-italic prose-img:rounded-sm">
                         <?php the_content(); ?>
                         <?php
                         wp_link_pages( array(
