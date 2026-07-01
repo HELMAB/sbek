@@ -13,15 +13,26 @@
                     }
                     ?>
                     <h1 class="text-3xl lg:text-5xl font-bold mt-2 mb-4 leading-tight"><?php the_title(); ?></h1>
-                    
+
+                    <?php
+                    $sbek_share_url   = sbek_localize_url( get_permalink() );
+                    $sbek_share_title = get_the_title();
+                    ?>
                     <div class="flex items-center text-gray-500 text-sm mb-6 pb-6 border-b border-gray-100">
                         <span class="font-bold text-gray-900 mr-2"><?php the_author(); ?></span>
                         <span class="mr-2">•</span>
                         <span><?php echo get_the_date(); ?></span>
-                        <span class="ml-auto flex space-x-4">
-                            <!-- Placeholder for Social Share -->
-                            <span class="text-blue-600 font-bold cursor-pointer">Facebook</span>
-                            <span class="text-sky-400 font-bold cursor-pointer">Twitter</span>
+                        <span class="ml-auto flex items-center space-x-4">
+                            <a href="<?php echo esc_url( 'https://www.facebook.com/sharer/sharer.php?u=' . rawurlencode( $sbek_share_url ) ); ?>" target="_blank" rel="noopener noreferrer" aria-label="Facebook" class="text-blue-600 hover:text-blue-800">
+                                <?php echo sbek_icon( 'facebook', [ 'width' => 18, 'height' => 18 ] ); ?>
+                            </a>
+                            <a href="<?php echo esc_url( 'https://twitter.com/intent/tweet?url=' . rawurlencode( $sbek_share_url ) . '&text=' . rawurlencode( $sbek_share_title ) ); ?>" target="_blank" rel="noopener noreferrer" aria-label="X (Twitter)" class="text-gray-900 hover:text-sbek-red">
+                                <?php echo sbek_icon( 'x', [ 'width' => 18, 'height' => 18 ] ); ?>
+                            </a>
+                            <button type="button" class="sbek-copy-link relative text-gray-500 hover:text-sbek-red" data-url="<?php echo esc_attr( $sbek_share_url ); ?>" aria-label="<?php echo esc_attr( t( 'copy_link' ) ); ?>">
+                                <?php echo sbek_icon( 'link', [ 'width' => 18, 'height' => 18 ] ); ?>
+                                <span class="sbek-copy-feedback absolute -top-8 left-1/2 -translate-x-1/2 whitespace-nowrap bg-gray-900 text-white text-xs px-2 py-1 rounded opacity-0 pointer-events-none transition-opacity"><?php echo esc_html( t( 'link_copied' ) ); ?></span>
+                            </button>
                         </span>
                     </div>
 
@@ -41,6 +52,36 @@
                         <?php the_tags('<span class="text-gray-500 mr-2">Tags:</span>', ' ', ''); ?>
                     </div>
                 </footer>
+
+                <?php
+                $sbek_related_post_id = get_the_ID();
+                $sbek_related_cat     = ! empty( $categories ) ? $categories[0]->term_id : 0;
+
+                if ( $sbek_related_cat ) {
+                    $sbek_related = sbek_get_cached_query( array(
+                        'posts_per_page' => 3,
+                        'cat'            => $sbek_related_cat,
+                        'post__not_in'   => array( $sbek_related_post_id ),
+                    ), 'sbek_related_' . $sbek_related_post_id . '_' . sbek_lang(), 3600 );
+
+                    if ( $sbek_related->have_posts() ) :
+                        ?>
+                        <div class="related-posts mt-12 pt-8 border-t border-gray-100">
+                            <h3 class="text-xl font-bold mb-6 uppercase"><?php echo esc_html( t( 'related_posts' ) ); ?></h3>
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                                <?php
+                                while ( $sbek_related->have_posts() ) :
+                                    $sbek_related->the_post();
+                                    get_template_part( 'template-parts/content-grid' );
+                                endwhile;
+                                wp_reset_postdata();
+                                ?>
+                            </div>
+                        </div>
+                        <?php
+                    endif;
+                }
+                ?>
 
                 <?php comments_template(); ?>
             <?php endwhile; ?>

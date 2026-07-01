@@ -59,6 +59,9 @@ return [
         'filter_by_category'   => 'Filter by Category',
         'skip_to_content'      => 'Skip to content',
         'primary_navigation'   => 'Primary Navigation',
+        'related_posts'        => 'Related Articles',
+        'copy_link'            => 'Copy Link',
+        'link_copied'          => 'Link copied!',
     ],
     'jp' => [
         'breaking_news'    => 'ブレイキングニュース',
@@ -113,5 +116,8 @@ return [
         'filter_by_category'   => 'カテゴリーで絞り込む',
         'skip_to_content'      => 'コンテンツへスキップ',
         'primary_navigation'   => 'メインナビゲーション',
+        'related_posts'        => '関連記事',
+        'copy_link'            => 'リンクをコピー',
+        'link_copied'          => 'リンクをコピーしました!',
     ],
 ];

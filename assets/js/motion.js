@@ -53,4 +53,30 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         });
     }
+
+    // Copy-link share button
+    document.addEventListener('click', (e) => {
+        const btn = e.target.closest('.sbek-copy-link');
+        if (!btn || !navigator.clipboard) {
+            return;
+        }
+
+        const url = btn.dataset.url;
+        if (!url) {
+            return;
+        }
+
+        navigator.clipboard.writeText(url).then(() => {
+            const feedback = btn.querySelector('.sbek-copy-feedback');
+            if (!feedback) {
+                return;
+            }
+            feedback.classList.remove('opacity-0');
+            feedback.classList.add('opacity-100');
+            setTimeout(() => {
+                feedback.classList.remove('opacity-100');
+                feedback.classList.add('opacity-0');
+            }, 1500);
+        });
+    });
 });
