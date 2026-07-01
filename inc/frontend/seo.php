@@ -9,11 +9,11 @@ function sabay_seo_meta_tags() {
     if ( ! is_singular() ) return;
 
     echo '<!-- Open Graph Meta Tags -->' . "\n";
-    echo '<meta property="og:title" content="' . get_the_title() . '" />' . "\n";
+    echo '<meta property="og:title" content="' . esc_attr( get_the_title() ) . '" />' . "\n";
     echo '<meta property="og:type" content="article" />' . "\n";
-    echo '<meta property="og:url" content="' . get_permalink() . '" />' . "\n";
-    echo '<meta property="og:site_name" content="' . get_bloginfo('name') . '" />' . "\n";
-    
+    echo '<meta property="og:url" content="' . esc_url( get_permalink() ) . '" />' . "\n";
+    echo '<meta property="og:site_name" content="' . esc_attr( get_bloginfo( 'name' ) ) . '" />' . "\n";
+
     // Featured image, falling back to the site-wide default share image.
     $img_src = has_post_thumbnail( $post->ID )
         ? wp_get_attachment_image_url( get_post_thumbnail_id( $post->ID ), 'large' )
@@ -24,12 +24,17 @@ function sabay_seo_meta_tags() {
     }
 
     echo '<meta name="twitter:card" content="summary_large_image" />' . "\n";
-    
-    // Description from excerpt or content
-    $excerpt = has_excerpt( $post->ID ) ? $post->post_excerpt : wp_trim_words( $post->post_content, 30 );
-    echo '<meta property="og:description" content="' . esc_attr( strip_tags( $excerpt ) ) . '" />' . "\n";
+    echo '<meta property="og:description" content="' . esc_attr( sabay_seo_description( $post ) ) . '" />' . "\n";
 }
 add_action( 'wp_head', 'sabay_seo_meta_tags' );
+
+/**
+ * Shared excerpt/description text for OG tags and NewsArticle JSON-LD.
+ */
+function sabay_seo_description( WP_Post $post ): string {
+    $excerpt = has_excerpt( $post->ID ) ? $post->post_excerpt : wp_trim_words( $post->post_content, 30 );
+    return wp_strip_all_tags( $excerpt );
+}
 
 /**
  * Output NewsMediaOrganization JSON-LD structured data (site-wide).
@@ -106,4 +111,68 @@ function sabay_organization_jsonld() {
         . '</script>' . "\n";
 }
 add_action( 'wp_head', 'sabay_organization_jsonld' );
+
+/**
+ * Output NewsArticle JSON-LD structured data on single posts.
+ *
+ * This is what Google News / Discover crawlers key off — headline, images,
+ * publish/modified dates, author, and a publisher block matching the
+ * NewsMediaOrganization data above.
+ */
+function sabay_article_jsonld() {
+    if ( ! is_singular( 'post' ) ) {
+        return;
+    }
+
+    global $post;
+
+    $data = [
+        '@context'         => 'https://schema.org',
+        '@type'            => 'NewsArticle',
+        'headline'         => get_the_title( $post ),
+        'description'      => sabay_seo_description( $post ),
+        'datePublished'    => get_the_date( 'c', $post ),
+        'dateModified'     => get_the_modified_date( 'c', $post ),
+        'mainEntityOfPage' => [
+            '@type' => 'WebPage',
+            '@id'   => get_permalink( $post ),
+        ],
+        'author'           => [
+            '@type' => 'Person',
+            'name'  => get_the_author_meta( 'display_name', $post->post_author ),
+        ],
+        'publisher'        => [
+            '@type' => 'NewsMediaOrganization',
+            'name'  => get_bloginfo( 'name' ),
+        ],
+    ];
+
+    if ( function_exists( 'sabay_site_setting_image_url' ) ) {
+        $logo = sabay_site_setting_image_url( 'logo', 'full' );
+        if ( $logo ) {
+            $data['publisher']['logo'] = [
+                '@type' => 'ImageObject',
+                'url'   => $logo,
+            ];
+        }
+    }
+
+    $image_src = has_post_thumbnail( $post->ID )
+        ? wp_get_attachment_image_url( get_post_thumbnail_id( $post->ID ), 'full' )
+        : ( function_exists( 'sabay_site_setting_image_url' ) ? sabay_site_setting_image_url( 'og_image', 'full' ) : '' );
+
+    if ( $image_src ) {
+        $data['image'] = [ $image_src ];
+    }
+
+    $categories = get_the_category( $post->ID );
+    if ( ! empty( $categories ) ) {
+        $data['articleSection'] = function_exists( 'sabay_term_name' ) ? sabay_term_name( $categories[0] ) : $categories[0]->name;
+    }
+
+    echo '<script type="application/ld+json">'
+        . wp_json_encode( $data, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE )
+        . '</script>' . "\n";
+}
+add_action( 'wp_head', 'sabay_article_jsonld' );
 
