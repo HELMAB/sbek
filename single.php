@@ -41,6 +41,8 @@
                         <?php the_tags('<span class="text-gray-500 mr-2">Tags:</span>', ' ', ''); ?>
                     </div>
                 </footer>
+
+                <?php comments_template(); ?>
             <?php endwhile; ?>
         </article>
 

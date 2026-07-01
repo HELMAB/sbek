@@ -52,7 +52,7 @@ npm run watch
 
 - `assets/css/src/input.css`: The Tailwind entry point.
 - `inc/admin/`: wp-admin-only code — `custom-fields.php` (metadata meta box), `site-settings.php` (Options page), `dashboard-widget.php`, `i18n-admin.php` (Translation meta box).
-- `inc/frontend/`: code that renders on the public site — `class-mega-menu-walker.php` (custom navigation walker), `performance.php` (transient caching helper), `seo.php` (Open Graph & SEO tags), `integrations.php` (GA4/GTM output).
+- `inc/frontend/`: code that renders on the public site — `class-mega-menu-walker.php` (custom navigation walker), `performance.php` (transient caching helper), `seo.php` (Open Graph, SEO tags & `NewsArticle`/`NewsMediaOrganization` JSON-LD), `integrations.php` (GA4/GTM output), `comments.php` (comment list + form rendering, used by the root `comments.php` template).
 - `inc/i18n.php`, `inc/icons.php`: shared by both admin and frontend, kept at the `inc/` root.
 - `template-parts/`: Reusable UI components (`content-grid.php` for card layouts, `content.php`/`content-none.php` as the `index.php` fallback).
 - `archive.php`, `search.php`, `404.php`: Standard template-hierarchy fallbacks for category/tag archives, search results, and not-found pages.

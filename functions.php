@@ -64,6 +64,11 @@ require get_template_directory() . '/inc/frontend/performance.php';
 require get_template_directory() . '/inc/frontend/seo.php';
 
 /**
+ * Comments
+ */
+require get_template_directory() . '/inc/frontend/comments.php';
+
+/**
  * Site Settings admin page
  */
 require get_template_directory() . '/inc/admin/site-settings.php';
@@ -101,6 +106,11 @@ function sabay_clone_scripts() {
 
     // Motion Effects JS
     wp_enqueue_script( 'sabay-motion', get_template_directory_uri() . '/assets/js/motion.js', array(), '1.0.0', true );
+
+    // Threaded comment reply script
+    if ( is_singular() && comments_open() && get_option( 'thread_comments' ) ) {
+        wp_enqueue_script( 'comment-reply' );
+    }
 }
 add_action( 'wp_enqueue_scripts', 'sabay_clone_scripts' );
 
