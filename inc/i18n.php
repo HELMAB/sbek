@@ -100,6 +100,30 @@ add_action( 'init', function () {
     }
 }, 5 );
 
+/**
+ * Default untagged posts/pages to the site's default language. Without this,
+ * a post saved without ticking a Language box is silently excluded from every
+ * front-end query (see the tax_query filter below) and gets redirected away
+ * from its own permalink — invisible with no error to explain why.
+ */
+add_action( 'save_post', function ( int $post_id, WP_Post $post ): void {
+    if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
+        return;
+    }
+
+    if ( ! in_array( $post->post_type, [ 'post', 'page' ], true ) ) {
+        return;
+    }
+
+    $terms = wp_get_post_terms( $post_id, 'language', [ 'fields' => 'slugs' ] );
+
+    if ( is_wp_error( $terms ) || ! empty( $terms ) ) {
+        return;
+    }
+
+    wp_set_post_terms( $post_id, [ SBEK_DEFAULT_LANGUAGE ], 'language' );
+}, 20, 2 );
+
 // ─── 4. Filter all frontend queries by current language ───────────────────────
 
 add_action( 'pre_get_posts', function ( WP_Query $query ) {
@@ -126,8 +150,8 @@ add_action( 'pre_get_posts', function ( WP_Query $query ) {
 // ─── 5. Redirect when post belongs to wrong language ─────────────────────────
 
 add_action( 'template_redirect', function () {
-    if ( ! is_singular() ) {
-        return;
+    if ( ! is_singular() || is_front_page() ) {
+        return; // Never redirect the front page to itself if it's untagged.
     }
 
     $post_id = get_the_ID();
