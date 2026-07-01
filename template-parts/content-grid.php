@@ -16,7 +16,7 @@ $permalink    = sbek_localize_url( get_permalink() );
         <?php if ( has_post_thumbnail() ) : ?>
             <?php the_post_thumbnail( 'medium', [ 'class' => 'h-full w-full object-cover transition-transform duration-500 group-hover:scale-105', 'loading' => 'lazy', 'decoding' => 'async' ] ); ?>
         <?php else : ?>
-            <div class="h-full w-full bg-gray-200"></div>
+            <?php echo sbek_thumb_placeholder(); // phpcs:ignore WordPress.Security.EscapeOutput ?>
         <?php endif; ?>
 
         <?php if ( $video_url ) : ?>

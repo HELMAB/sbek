@@ -22,7 +22,7 @@
     </div>
 </div>
 
-<header id="masthead" class="site-header bg-white shadow-xs sticky top-0 z-50">
+<header id="masthead" class="site-header sticky top-0 z-50 bg-white">
     <div class="container mx-auto h-20 px-4 flex justify-between items-stretch relative">
         <div class="site-branding flex items-center gap-1">
             <button type="button" class="mobile-nav-open md:hidden -ml-2 flex h-11 w-11 shrink-0 items-center justify-center text-ink" aria-controls="mobile-nav" aria-expanded="false">
@@ -66,30 +66,41 @@
     </div>
 
     <!-- Breaking News Ticker -->
-    <div class="bg-gray-100 border-t border-b border-gray-200 py-1 overflow-hidden">
-        <div class="container mx-auto px-4 flex items-center">
-            <span class="bg-sbek-red text-white text-[10px] font-bold px-2 py-0.5 rounded-sm uppercase mr-4 whitespace-nowrap shrink-0"><?php echo esc_html( t( 'breaking_news' ) ); ?></span>
-            <div class="grow overflow-hidden whitespace-nowrap">
-                <div class="inline-block animate-marquee hover:pause whitespace-nowrap">
-                    <?php
-                    $breaking = sbek_get_cached_query( array(
-                        'posts_per_page' => 5,
-                        'meta_key'       => '_sbek_is_breaking',
-                        'meta_value'     => 1,
-                    ), 'sbek_breaking_news_' . sbek_lang(), 900 );
+    <?php
+    $breaking = sbek_get_cached_query( array(
+        'posts_per_page' => 5,
+        'meta_key'       => '_sbek_is_breaking',
+        'meta_value'     => 1,
+    ), 'sbek_breaking_news_' . sbek_lang(), 900 );
 
-                    if ( ! $breaking->have_posts() ) {
-                        $breaking = sbek_get_cached_query( array( 'posts_per_page' => 5 ), 'sbek_breaking_news_fallback_' . sbek_lang(), 900 );
-                    }
+    if ( ! $breaking->have_posts() ) {
+        $breaking = sbek_get_cached_query( array( 'posts_per_page' => 5 ), 'sbek_breaking_news_fallback_' . sbek_lang(), 900 );
+    }
 
-                    if ( $breaking->have_posts() ) : while ( $breaking->have_posts() ) : $breaking->the_post();
-                    ?>
-                        <a href="<?php echo esc_url( sbek_localize_url( get_permalink() ) ); ?>" class="text-sm font-medium mr-8 hover:text-sbek-red inline-block">• <?php the_title(); ?></a>
-                    <?php endwhile; wp_reset_postdata(); endif; ?>
+    // Build the item run once, then render it twice so the marquee loops with
+    // no empty gap (paired with the -50% keyframe in input.css).
+    $sbek_ticker = '';
+    if ( $breaking->have_posts() ) :
+        while ( $breaking->have_posts() ) : $breaking->the_post();
+            $sbek_ticker .= '<a href="' . esc_url( sbek_localize_url( get_permalink() ) ) . '" class="mr-8 whitespace-nowrap text-sm font-medium hover:text-sbek-red">&bull; ' . esc_html( get_the_title() ) . '</a>';
+        endwhile;
+        wp_reset_postdata();
+    endif;
+
+    if ( $sbek_ticker ) :
+    ?>
+    <div class="overflow-hidden border-t border-b border-gray-200 bg-gray-100 py-1">
+        <div class="container mx-auto flex items-center px-4">
+            <span class="mr-4 shrink-0 whitespace-nowrap rounded-sm bg-sbek-red px-2 py-0.5 text-[10px] font-bold uppercase text-white"><?php echo esc_html( t( 'breaking_news' ) ); ?></span>
+            <div class="grow overflow-hidden">
+                <div class="flex w-max animate-marquee">
+                    <div class="flex shrink-0"><?php echo $sbek_ticker; // phpcs:ignore WordPress.Security.EscapeOutput ?></div>
+                    <div class="flex shrink-0" aria-hidden="true"><?php echo $sbek_ticker; // phpcs:ignore WordPress.Security.EscapeOutput ?></div>
                 </div>
             </div>
         </div>
     </div>
+    <?php endif; ?>
 </header>
 
 <!-- Mobile navigation drawer (md:hidden). Behavior in assets/js/mobile-nav.js. -->

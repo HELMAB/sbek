@@ -1,5 +1,7 @@
 <?php get_header(); ?>
 
+<div id="sbek-reading-progress" class="fixed left-0 top-0 z-[70] h-1 w-full origin-left scale-x-0 bg-sbek-red" aria-hidden="true"></div>
+
 <main id="primary" class="site-main">
     <div class="container mx-auto px-4 py-8">
         <div class="grid grid-cols-12 gap-8 lg:gap-12">

@@ -30,6 +30,23 @@ function sbek_ad_slot( string $variant = 'leaderboard' ): string {
 }
 
 /**
+ * Branded fallback for cards/heros whose post has no featured image.
+ *
+ * Returns a full-size, hatched placeholder (see `.sbek-placeholder`) centered
+ * on a faint brand mark, so image-less posts still read as intentional.
+ *
+ * @param string $classes Extra classes for the placeholder container.
+ * @return string
+ */
+function sbek_thumb_placeholder( string $classes = '' ): string {
+	$classes = trim( 'sbek-placeholder flex h-full w-full items-center justify-center ' . $classes );
+
+	return '<div class="' . esc_attr( $classes ) . '">'
+		. sbek_icon( 'asterisk', [ 'class' => 'h-10 w-10 text-gray-300' ] )
+		. '</div>';
+}
+
+/**
  * Estimated reading time in whole minutes (~200 words/min).
  *
  * Note: word counting is space-based, so Khmer/Japanese (which don't space

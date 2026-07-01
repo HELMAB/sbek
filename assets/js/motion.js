@@ -33,24 +33,42 @@ document.addEventListener('DOMContentLoaded', function() {
         observer.observe(el);
     });
 
-    // Back to Top Logic
+    // Scroll-driven chrome: back-to-top visibility, sticky-masthead elevation,
+    // and the single-post reading-progress bar — all in one passive listener.
     const backToTop = document.getElementById('back-to-top');
-    if (backToTop) {
-        window.addEventListener('scroll', () => {
-            if (window.scrollY > 500) {
-                backToTop.classList.remove('opacity-0', 'translate-y-10', 'pointer-events-none');
-                backToTop.classList.add('opacity-100', 'translate-y-0');
-            } else {
-                backToTop.classList.add('opacity-0', 'translate-y-10', 'pointer-events-none');
-                backToTop.classList.remove('opacity-100', 'translate-y-0');
-            }
-        });
+    const masthead = document.getElementById('masthead');
+    const progress = document.getElementById('sbek-reading-progress');
 
+    const onScroll = () => {
+        const y = window.scrollY;
+
+        if (backToTop) {
+            const show = y > 500;
+            backToTop.classList.toggle('opacity-0', !show);
+            backToTop.classList.toggle('translate-y-10', !show);
+            backToTop.classList.toggle('pointer-events-none', !show);
+            backToTop.classList.toggle('opacity-100', show);
+            backToTop.classList.toggle('translate-y-0', show);
+        }
+
+        if (masthead) {
+            masthead.classList.toggle('is-stuck', y > 32);
+        }
+
+        if (progress) {
+            const h = document.documentElement.scrollHeight - window.innerHeight;
+            const ratio = h > 0 ? Math.min(1, Math.max(0, y / h)) : 0;
+            progress.style.transform = 'scaleX(' + ratio + ')';
+        }
+    };
+
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll);
+    onScroll();
+
+    if (backToTop) {
         backToTop.addEventListener('click', () => {
-            window.scrollTo({
-                top: 0,
-                behavior: 'smooth'
-            });
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         });
     }
 

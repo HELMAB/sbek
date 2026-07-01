@@ -39,6 +39,7 @@ function sbek_icon_paths(): array {
 		'arrow-up'     => [ 'line', '<path d="m5 12 7-7 7 7"/><path d="M12 19V5"/>' ],
 		'mail'         => [ 'line', '<rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>' ],
 		'search'       => [ 'line', '<path d="m21 21-4.34-4.34"/><circle cx="11" cy="11" r="8"/>' ],
+		'asterisk'     => [ 'line', '<path d="M12 6v12"/><path d="M17.196 9 6.804 15"/><path d="m6.804 9 10.392 6"/>' ],
 		'chevron-down' => [ 'line', '<path d="m6 9 6 6 6-6"/>' ],
 		'menu'         => [ 'line', '<path d="M4 6h16"/><path d="M4 12h16"/><path d="M4 18h16"/>' ],
 		'x-close'      => [ 'line', '<path d="M18 6 6 18"/><path d="m6 6 12 12"/>' ],

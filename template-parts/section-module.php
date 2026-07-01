@@ -36,7 +36,7 @@ $sbek_cat_url = sbek_localize_url( get_category_link( $sbek_cat->term_id ) );
                 <?php if ( has_post_thumbnail() ) : ?>
                     <?php the_post_thumbnail( 'large', [ 'class' => 'h-full w-full object-cover transition-transform duration-500 group-hover:scale-105', 'loading' => 'lazy', 'decoding' => 'async' ] ); ?>
                 <?php else : ?>
-                    <div class="h-full w-full bg-gray-200"></div>
+                    <?php echo sbek_thumb_placeholder(); // phpcs:ignore WordPress.Security.EscapeOutput ?>
                 <?php endif; ?>
                 <?php if ( $sbek_lead_video ) : ?>
                     <div class="pointer-events-none absolute inset-0 flex items-center justify-center">

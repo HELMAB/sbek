@@ -22,7 +22,7 @@
                                 <?php if ( has_post_thumbnail() ) : ?>
                                     <?php the_post_thumbnail( 'large', [ 'class' => 'h-full w-full object-cover transition-transform duration-500 group-hover:scale-105', 'loading' => 'eager', 'fetchpriority' => 'high' ] ); ?>
                                 <?php else : ?>
-                                    <div class="h-full w-full bg-gray-300"></div>
+                                    <?php echo sbek_thumb_placeholder(); // phpcs:ignore WordPress.Security.EscapeOutput ?>
                                 <?php endif; ?>
                                 <div class="absolute inset-0 bg-linear-to-t from-black/85 via-black/25 to-transparent"></div>
                             </div>

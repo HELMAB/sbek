@@ -21,12 +21,14 @@
   --animate-marquee: marquee 25s linear infinite;
   --animate-fade-in: fadeIn 0.8s ease-out forwards;
 
+  /* Ticker content is rendered twice; translating -50% scrolls exactly one
+     copy width, so the loop is seamless (no empty gap on repeat). */
   @keyframes marquee {
     0% {
-      transform: translateX(0%);
+      transform: translateX(0);
     }
     100% {
-      transform: translateX(-100%);
+      transform: translateX(-50%);
     }
   }
   @keyframes fadeIn {
@@ -138,6 +140,39 @@
   }
   .mobile-nav.is-open .mobile-nav-panel {
     transform: translateX(0);
+  }
+
+  /* Sticky masthead elevation: flat while pinned at the very top, then lifts
+     with a hairline border + soft shadow once scrolled (`.is-stuck` toggled by
+     assets/js/motion.js). */
+  .site-header {
+    border-bottom: 1px solid transparent;
+    transition: box-shadow 0.2s ease, border-color 0.2s ease;
+  }
+  .site-header.is-stuck {
+    border-bottom-color: var(--color-gray-200);
+    box-shadow: 0 6px 24px -12px rgb(0 0 0 / 0.18);
+  }
+
+  /* Pause the breaking-news ticker on hover or keyboard focus so a headline
+     can actually be read and clicked mid-scroll. */
+  .animate-marquee:hover,
+  .animate-marquee:focus-within {
+    animation-play-state: paused;
+  }
+
+  /* Branded fallback for posts with no featured image: a faintly hatched
+     ground behind a low-contrast brand mark, so empty cards still feel
+     intentional rather than blank. */
+  .sbek-placeholder {
+    background-color: var(--color-gray-100);
+    background-image: repeating-linear-gradient(
+      45deg,
+      rgb(0 0 0 / 0.035) 0,
+      rgb(0 0 0 / 0.035) 1px,
+      transparent 1px,
+      transparent 11px
+    );
   }
 }
 
