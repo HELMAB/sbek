@@ -45,6 +45,9 @@ return [
         'comments_closed'  => 'Comments are closed.',
         'reply'            => 'Reply',
         'comment_pending'  => 'Your comment is awaiting moderation.',
+        'comment_email_notice'    => 'Your email address will not be published.',
+        'comment_required_notice' => 'Required fields are marked',
+        'comment_save_info'       => 'Save my name, email, and website in this browser for the next time I comment.',
     ],
     'jp' => [
         'breaking_news'    => 'ブレイキングニュース',
@@ -85,5 +88,8 @@ return [
         'comments_closed'  => 'コメントは受け付けていません。',
         'reply'            => '返信',
         'comment_pending'  => 'コメントは承認待ちです。',
+        'comment_email_notice'    => 'メールアドレスは公開されません。',
+        'comment_required_notice' => '必須項目には印がついています',
+        'comment_save_info'       => '次回コメント時のために、名前・メールアドレス・ウェブサイトをこのブラウザに保存する',
     ],
 ];

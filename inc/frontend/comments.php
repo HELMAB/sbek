@@ -56,18 +56,34 @@ function sabay_comment_form_args(): array {
     $html_req     = ( $req ? " required" : '' );
     $input_class  = 'w-full border border-gray-200 rounded px-3 py-2 text-sm focus:outline-none focus:border-sabay-red';
 
+    $required_notice = $req
+        ? ' <span class="required-field-message">' . esc_html( t( 'comment_required_notice' ) ) . ' <span class="required">*</span></span>'
+        : '';
+
+    $fields = [
+        'author' => '<div class="comment-form-author mb-4"><label for="author" class="block text-sm font-bold mb-1">' . esc_html( t( 'name' ) ) . '</label><input id="author" name="author" type="text" value="' . esc_attr( $commenter['comment_author'] ) . '" class="' . esc_attr( $input_class ) . '"' . $html_req . '></div>',
+        'email'  => '<div class="comment-form-email mb-4"><label for="email" class="block text-sm font-bold mb-1">' . esc_html( t( 'email' ) ) . '</label><input id="email" name="email" type="email" value="' . esc_attr( $commenter['comment_author_email'] ) . '" class="' . esc_attr( $input_class ) . '"' . $html_req . '></div>',
+        'url'    => '<div class="comment-form-url mb-4"><label for="url" class="block text-sm font-bold mb-1">' . esc_html( t( 'website' ) ) . '</label><input id="url" name="url" type="url" value="' . esc_attr( $commenter['comment_author_url'] ) . '" class="' . esc_attr( $input_class ) . '"></div>',
+    ];
+
+    // WordPress force-injects its own English cookie-consent field onto
+    // $args['fields']['cookies'] unless that key already exists — so we
+    // supply our own localized version whenever the site has consent enabled.
+    if ( has_action( 'set_comment_cookies', 'wp_set_comment_cookies' ) && get_option( 'show_comments_cookies_opt_in' ) ) {
+        $checked = empty( $commenter['comment_author_email'] ) ? '' : ' checked';
+        $fields['cookies'] = '<p class="comment-form-cookies-consent flex items-center gap-2 text-sm text-gray-500"><input id="wp-comment-cookies-consent" name="wp-comment-cookies-consent" type="checkbox" value="yes"' . $checked . '> <label for="wp-comment-cookies-consent">' . esc_html( t( 'comment_save_info' ) ) . '</label></p>';
+    }
+
     return [
         'title_reply'          => esc_html( t( 'leave_a_comment' ) ),
         'title_reply_before'   => '<h3 id="reply-title" class="comment-reply-title text-lg font-bold border-b-2 border-sabay-red pb-2 mb-4 uppercase">',
         'title_reply_after'    => '</h3>',
         'class_form'           => 'comment-form space-y-4',
         'class_submit'         => 'submit',
+        'comment_notes_before' => '<p class="comment-notes text-sm text-gray-500 mb-4"><span id="email-notes">' . esc_html( t( 'comment_email_notice' ) ) . '</span>' . $required_notice . '</p>',
+        'comment_notes_after'  => '',
         'comment_field'        => '<div class="comment-form-comment mb-4"><label for="comment" class="block text-sm font-bold mb-1">' . esc_html( t( 'comment_field' ) ) . '</label><textarea id="comment" name="comment" rows="5" class="' . esc_attr( $input_class ) . '" required></textarea></div>',
-        'fields'               => [
-            'author' => '<div class="comment-form-author mb-4"><label for="author" class="block text-sm font-bold mb-1">' . esc_html( t( 'name' ) ) . '</label><input id="author" name="author" type="text" value="' . esc_attr( $commenter['comment_author'] ) . '" class="' . esc_attr( $input_class ) . '"' . $html_req . '></div>',
-            'email'  => '<div class="comment-form-email mb-4"><label for="email" class="block text-sm font-bold mb-1">' . esc_html( t( 'email' ) ) . '</label><input id="email" name="email" type="email" value="' . esc_attr( $commenter['comment_author_email'] ) . '" class="' . esc_attr( $input_class ) . '"' . $html_req . '></div>',
-            'url'    => '<div class="comment-form-url mb-4"><label for="url" class="block text-sm font-bold mb-1">' . esc_html( t( 'website' ) ) . '</label><input id="url" name="url" type="url" value="' . esc_attr( $commenter['comment_author_url'] ) . '" class="' . esc_attr( $input_class ) . '"></div>',
-        ],
+        'fields'               => $fields,
         'label_submit'         => esc_html( t( 'post_comment' ) ),
         'submit_button'        => '<button name="%1$s" type="submit" id="%2$s" class="%3$s bg-sabay-red text-white font-bold py-2 px-6 rounded-full hover:bg-gray-900 transition-colors duration-300">%4$s</button>',
         'submit_field'         => '<div class="form-submit">%1$s %2$s</div>',
