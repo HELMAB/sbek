@@ -21,6 +21,11 @@
   --animate-marquee: marquee 25s linear infinite;
   --animate-fade-in: fadeIn 0.8s ease-out forwards;
 
+  /* Single-post header entrance: kicker → headline → excerpt → meta → hero,
+     staggered via inline animation-delay in single.php. `both` fill keeps
+     elements hidden through their delay, then holds the final state. */
+  --animate-fade-up: fadeUp 0.7s ease-out both;
+
   /* Ticker content is rendered twice; translating -50% scrolls exactly one
      copy width, so the loop is seamless (no empty gap on repeat). */
   @keyframes marquee {
@@ -37,6 +42,16 @@
     }
     100% {
       opacity: 1;
+    }
+  }
+  @keyframes fadeUp {
+    0% {
+      opacity: 0;
+      transform: translateY(14px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0);
     }
   }
 }
@@ -56,6 +71,12 @@
   ::backdrop,
   ::file-selector-button {
     border-color: var(--color-gray-200, currentcolor);
+  }
+
+  /* Smooth in-page anchor scrolls (sidebar TOC → article headings). The
+     reduced-motion block below resets this to auto. */
+  html {
+    scroll-behavior: smooth;
   }
 
   /* Headlines and the masthead wordmark move to the Libre Franklin display
@@ -99,6 +120,9 @@
   ::before,
   ::after {
     animation-duration: 0.01ms !important;
+    /* Delay must go too: the fade-up entrance uses `both` fill, which would
+       otherwise hold elements invisible through their stagger delay. */
+    animation-delay: 0s !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
@@ -188,6 +212,84 @@
 .prose blockquote p:first-of-type::before,
 .prose blockquote p:last-of-type::after {
   content: "";
+}
+
+/*
+  Single-post editorial details, layered on top of `prose` (see single.php).
+*/
+@layer components {
+  /* Anchored headings clear the sticky masthead when jumped to from the TOC. */
+  .entry-content h2 {
+    scroll-margin-top: 7rem;
+  }
+
+  /* Lede: the opening paragraph reads as a standfirst continuation. */
+  .entry-content > p:first-of-type {
+    font-size: 1.16em;
+    line-height: 1.7;
+  }
+
+  /* Drop cap on the opening paragraph. Applied via .sbek-dropcap only for the
+     default (Latin) language — a drop character reads oddly in Japanese. */
+  .sbek-dropcap > p:first-of-type::first-letter {
+    float: left;
+    padding-right: 0.14em;
+    padding-top: 0.08em;
+    font-family: var(--font-display);
+    font-size: 3.1em;
+    font-weight: 800;
+    line-height: 0.8;
+    color: var(--color-sbek-red);
+  }
+
+  /* Oversized decorative quote mark on blockquotes (the plugin's inline
+     glyphs are stripped above; this replaces them with a single brand mark). */
+  .entry-content blockquote {
+    position: relative;
+  }
+  .entry-content blockquote::before {
+    content: '\201C';
+    position: absolute;
+    top: -0.35em;
+    left: 0.06em;
+    font-family: var(--font-display);
+    font-size: 3.6em;
+    line-height: 1;
+    color: var(--color-sbek-red);
+    opacity: 0.22;
+    pointer-events: none;
+  }
+
+  /* Editorial breakout: on wide screens, figures and pull-quotes exceed the
+     68ch text measure. The article column is comfortably wider than the
+     prose at this breakpoint, so nothing collides with the sidebar. */
+  @media (min-width: 1280px) {
+    .entry-content > figure,
+    .entry-content > .wp-block-image,
+    .entry-content > .wp-block-embed {
+      width: calc(100% + 6rem);
+      max-width: none;
+      margin-left: -3rem;
+    }
+    .entry-content > blockquote {
+      margin-left: -2.5rem;
+    }
+  }
+
+  /* Sidebar TOC scroll-spy state, toggled by assets/js/motion.js. */
+  .sbek-toc a.is-active {
+    border-color: var(--color-sbek-red);
+    color: var(--color-sbek-red);
+  }
+
+  /* Responsive oEmbed video hero (provider iframes ship fixed dimensions). */
+  .sbek-video-embed iframe {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 16 / 9;
+    border: 0;
+  }
 }
 
 /*

@@ -48,26 +48,7 @@
             </div>
 
             <aside class="col-span-12 space-y-6 lg:col-span-4">
-                <div class="rounded-sm border border-gray-200 bg-white">
-                    <h2 class="flex items-center gap-2 border-b border-gray-200 px-4 py-3 font-display text-lg font-extrabold uppercase tracking-tight text-ink">
-                        <span class="inline-block h-4 w-1.5 shrink-0 bg-sbek-red"></span><?php echo esc_html( t( 'trending' ) ); ?>
-                    </h2>
-                    <ol class="divide-y divide-gray-200">
-                        <?php
-                        $sbek_trending = sbek_get_trending_posts( 6 );
-                        $sbek_rank     = 0;
-                        if ( $sbek_trending->have_posts() ) : while ( $sbek_trending->have_posts() ) : $sbek_trending->the_post();
-                            $sbek_rank++;
-                        ?>
-                            <li>
-                                <a href="<?php echo esc_url( sbek_localize_url( get_permalink() ) ); ?>" class="group flex gap-3 px-4 py-3">
-                                    <span class="w-6 shrink-0 font-display text-2xl font-extrabold leading-none text-gray-300 transition-colors group-hover:text-sbek-red"><?php echo esc_html( $sbek_rank ); ?></span>
-                                    <span class="font-display text-[15px] font-bold leading-snug text-ink transition-colors group-hover:text-sbek-red"><?php the_title(); ?></span>
-                                </a>
-                            </li>
-                        <?php endwhile; wp_reset_postdata(); endif; ?>
-                    </ol>
-                </div>
+                <?php get_template_part( 'template-parts/trending', null, array( 'limit' => 6 ) ); ?>
 
                 <?php echo sbek_ad_slot( 'rectangle' ); // phpcs:ignore WordPress.Security.EscapeOutput ?>
             </aside>

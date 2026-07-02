@@ -177,6 +177,55 @@ function sbek_article_jsonld() {
 add_action( 'wp_head', 'sbek_article_jsonld' );
 
 /**
+ * Output BreadcrumbList JSON-LD on single posts (Home → Section → Article),
+ * mirroring the visible breadcrumb trail rendered by single.php.
+ */
+function sbek_breadcrumb_jsonld() {
+    if ( ! is_singular( 'post' ) ) {
+        return;
+    }
+
+    global $post;
+
+    $items = [
+        [
+            '@type'    => 'ListItem',
+            'position' => 1,
+            'name'     => t( 'home' ),
+            'item'     => sbek_localize_url( home_url( '/' ) ),
+        ],
+    ];
+
+    $position   = 2;
+    $categories = get_the_category( $post->ID );
+
+    if ( ! empty( $categories ) ) {
+        $items[] = [
+            '@type'    => 'ListItem',
+            'position' => $position++,
+            'name'     => sbek_term_name( $categories[0] ),
+            'item'     => sbek_localize_url( get_category_link( $categories[0]->term_id ) ),
+        ];
+    }
+
+    $items[] = [
+        '@type'    => 'ListItem',
+        'position' => $position,
+        'name'     => get_the_title( $post ),
+        'item'     => sbek_localize_url( get_permalink( $post ) ),
+    ];
+
+    echo '<script type="application/ld+json">'
+        . wp_json_encode( [
+            '@context'        => 'https://schema.org',
+            '@type'           => 'BreadcrumbList',
+            'itemListElement' => $items,
+        ], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE )
+        . '</script>' . "\n";
+}
+add_action( 'wp_head', 'sbek_breadcrumb_jsonld' );
+
+/**
  * Point crawlers at every language's sitemap. WordPress core already lists
  * the default (English) sitemap on virtual robots.txt via wp_sitemaps_robots();
  * this adds the /jp/ variant, which core has no awareness of. The front-end

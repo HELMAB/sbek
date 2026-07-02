@@ -9,6 +9,13 @@ if ( ! function_exists( 'sbek_setup' ) ) :
 
         add_theme_support( 'title-tag' );
         add_theme_support( 'post-thumbnails' );
+
+        // Capped hero rendition for single posts — the `full` size ships the
+        // original upload, which on a news site can be a multi-MB photo.
+        // Proportional (no crop) so editorial images keep their framing.
+        // Older uploads need a thumbnail regeneration to pick this size up;
+        // until then WordPress falls back to the nearest available size.
+        add_image_size( 'sbek-hero', 1600, 0, false );
         add_theme_support( 'customize-selective-refresh-widgets' );
         add_theme_support( 'html5', array(
             'search-form',
@@ -76,6 +83,11 @@ require get_template_directory() . '/inc/frontend/class-mobile-menu-walker.php';
  * Reusable front-end components (ad slots, section headings)
  */
 require get_template_directory() . '/inc/frontend/components.php';
+
+/**
+ * Single-article enhancements (heading anchors, table of contents)
+ */
+require get_template_directory() . '/inc/frontend/article.php';
 
 /**
  * Performance & Caching
