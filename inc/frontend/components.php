@@ -63,6 +63,50 @@ function sbek_reading_time( ?int $post_id = null ): int {
 }
 
 /**
+ * Fallback footer links, used only when no `footer-menu` is assigned.
+ *
+ * Resolves each conventional page by slug and includes it *only if it exists*,
+ * so the footer never shows dead links — the previous hardcoded list pointed
+ * every item at "#". The privacy link also honors WordPress' configured
+ * privacy policy page when its slug differs. The real path is for an editor
+ * to build the footer menu under Appearance → Menus.
+ *
+ * @return array<int,array{label:string,url:string}>
+ */
+function sbek_footer_fallback_links(): array {
+	// string key => candidate page slug.
+	$map = array(
+		'about_us'       => 'about',
+		'advertise'      => 'advertise',
+		'privacy_policy' => 'privacy-policy',
+		'terms_of_use'   => 'terms',
+		'contact_us'     => 'contact',
+	);
+
+	$links = array();
+
+	foreach ( $map as $string_key => $slug ) {
+		$url  = '';
+		$page = get_page_by_path( $slug );
+
+		if ( $page ) {
+			$url = get_permalink( $page );
+		} elseif ( 'privacy_policy' === $string_key ) {
+			$url = get_privacy_policy_url(); // Empty string if none set.
+		}
+
+		if ( $url ) {
+			$links[] = array(
+				'label' => t( $string_key ),
+				'url'   => sbek_localize_url( $url ),
+			);
+		}
+	}
+
+	return $links;
+}
+
+/**
  * A section heading bar: a red tick, the section name in the display face,
  * and an optional "View all" link. Used to open homepage section modules.
  *

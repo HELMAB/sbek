@@ -171,6 +171,55 @@ function sbek_get_related_posts( int $post_id, int $limit = 3 ): WP_Query {
 }
 
 /**
+ * Top-level categories for the footer column, cached as term IDs.
+ *
+ * Categories are shared across languages (names localized at render via
+ * sbek_term_name()), so the cache is a single global transient, flushed on
+ * save_post (post counts change hide_empty) and on category edits — see
+ * sbek_clear_transients_on_save() and sbek_clear_footer_category_cache().
+ *
+ * @param int $limit How many categories to return.
+ * @return WP_Term[]
+ */
+function sbek_footer_categories( int $limit = 6 ): array {
+	$ids = get_transient( 'sbek_footer_cats' );
+
+	if ( false === $ids ) {
+		$ids = get_terms( array(
+			'taxonomy'   => 'category',
+			'parent'     => 0,
+			'number'     => $limit,
+			'hide_empty' => true,
+			'fields'     => 'ids',
+		) );
+
+		if ( is_wp_error( $ids ) ) {
+			$ids = array();
+		}
+
+		set_transient( 'sbek_footer_cats', $ids, 900 );
+	}
+
+	if ( empty( $ids ) ) {
+		return array();
+	}
+
+	return array_filter( array_map( 'get_term', $ids ) );
+}
+
+/**
+ * Flush the footer category cache when categories themselves change (the
+ * post-driven flush in sbek_clear_transients_on_save() covers hide_empty
+ * shifts from publishing/unpublishing).
+ */
+function sbek_clear_footer_category_cache(): void {
+	delete_transient( 'sbek_footer_cats' );
+}
+add_action( 'created_category', 'sbek_clear_footer_category_cache' );
+add_action( 'edited_category', 'sbek_clear_footer_category_cache' );
+add_action( 'delete_category', 'sbek_clear_footer_category_cache' );
+
+/**
  * Clear transients on save to ensure fresh content.
  * Clears per-language cache variants.
  */
@@ -194,6 +243,7 @@ function sbek_clear_transients_on_save( $post_id = 0 ): void {
         delete_transient( "sbek_trending_fill_{$lang}" );
         delete_transient( "sbek_404_popular_{$lang}" );
         delete_transient( "sbek_related_fill_{$lang}" );
+        delete_transient( 'sbek_footer_cats' );
 
         if ( $post_id ) {
             // Related-posts cache is keyed per post; only this post's own key is known here —

@@ -28,8 +28,10 @@ if ( ! function_exists( 'sbek_setup' ) ) :
         ) );
 
         register_nav_menus( array(
-            'menu-1'    => esc_html__( 'Primary (English)', 'sbek' ),
-            'menu-1-jp' => esc_html__( 'Primary (Japanese)', 'sbek' ),
+            'menu-1'         => esc_html__( 'Primary (English)', 'sbek' ),
+            'menu-1-jp'      => esc_html__( 'Primary (Japanese)', 'sbek' ),
+            'footer-menu'    => esc_html__( 'Footer Links (English)', 'sbek' ),
+            'footer-menu-jp' => esc_html__( 'Footer Links (Japanese)', 'sbek' ),
         ) );
     }
 endif;
@@ -88,6 +90,11 @@ require get_template_directory() . '/inc/frontend/components.php';
  * Single-article enhancements (heading anchors, table of contents)
  */
 require get_template_directory() . '/inc/frontend/article.php';
+
+/**
+ * Newsletter subscription (CPT store + form handler)
+ */
+require get_template_directory() . '/inc/frontend/newsletter.php';
 
 /**
  * Performance & Caching

@@ -198,6 +198,27 @@
       transparent 11px
     );
   }
+
+  /* Faint diagonal hatch over the dark footer, giving the flat ground a bit
+     of atmosphere. Kept very low opacity by the utility on the element. */
+  .sbek-footer-texture {
+    background-image: repeating-linear-gradient(
+      -45deg,
+      #fff 0,
+      #fff 1px,
+      transparent 1px,
+      transparent 9px
+    );
+  }
+
+  /* Footer links menu — wp_nav_menu() emits its own markup, so the link hover
+     is styled here rather than with descendant utilities on the <ul>. */
+  .sbek-footer-menu a {
+    transition: color 0.15s;
+  }
+  .sbek-footer-menu a:hover {
+    color: var(--color-sbek-red);
+  }
 }
 
 /*
