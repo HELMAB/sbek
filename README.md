@@ -9,10 +9,11 @@ A fast classic WordPress theme for a Khmer-first news site, with a Sabay-News-st
 ## Features
 
 - **Khmer primary, English secondary** without a plugin: `/` is Khmer, `/en/` is English. Standard WordPress i18n (`__()`, `.po/.mo`) plus `switch_to_locale()`, so theme strings, dates and core strings all follow the URL. Translations are linked post-to-post (hreflang + language switcher). Category names have an English field.
-- **Editorial controls:** sticky posts → hero; *Video* post format → video block; per-category accent color and homepage position; trending score; breaking-news ticker; sponsored flag; source name/URL.
+- **Editorial controls:** sticky posts → hero; *Video* post format → video block; per-category accent color and homepage position; trending score (recent posts only); breaking-news ticker that expires on its own; sponsored flag (labelled on every card); source name/URL; one-click "create the English version" drafts.
+- **Reader features:** breadcrumb, two-level menu with a "More" overflow, share to Facebook / Telegram / X / email / copy link, infinite scroll that hands over to a "Load more" button, double opt-in newsletter with unsubscribe links.
 - **Performance:** self-hosted Khmer font subsets, one deferred vanilla-JS file, about 8 KB gzipped CSS and 4 KB JS, ID-only transient caching with automatic invalidation, responsive `srcset` images, hero images downloaded once on every viewport.
 - **Security:** nonces, capability checks and registered meta sanitizers on every write; escaped output; login lockout; hardened headers; a throttled newsletter with a honeypot.
-- **Accessible:** skip link, semantic headings, focus-visible styles, carousel hidden-slide handling, reduced-motion support.
+- **Accessible:** skip link, semantic headings, focus-visible styles, carousel hidden-slide handling with pause and slide buttons, a pause button on the ticker, announced pager and feed updates, reduced-motion support.
 
 ## Requirements
 
@@ -30,7 +31,7 @@ wp option update WPLANG km
 
 Then:
 1. Open **Sbek Theme** in the admin menu and work through the tabs: site title/tagline (Khmer + English), logo and icon, brand colors and fonts (Design), homepage sections, category colors / English names / homepage order, contact details, socials, analytics.
-2. Build the menus under **Appearance → Menus** (locations *Primary menu (Khmer)* and *(English)*).
+2. Build the menus under **Appearance → Menus** (locations *Primary menu (Khmer)* / *(English)*, and *Footer links (Khmer)* / *(English)* for About, Contact, Terms…). The newsletter is double opt-in, so make sure the site can send email.
 3. Put ad code into the *Ad:* widget areas, if you use ads.
 
 ### Demo content

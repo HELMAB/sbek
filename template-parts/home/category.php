@@ -68,7 +68,7 @@ $sbek_render_page = static function ( array $page ): void {
 <section class="home-block" style="<?php echo esc_attr( sbek_color_style( $sbek_color ) ); ?>" aria-label="<?php echo esc_attr( $sbek_term->name ); ?>">
 	<?php sbek_section_header( $sbek_term->name, $sbek_color, $sbek_url ); ?>
 	<div class="home-block__body home-block__body--paged">
-		<div class="pager" data-sbek-pager>
+		<div class="pager" data-sbek-pager data-page-label="<?php /* translators: 1: current page, 2: number of pages. */ echo esc_attr__( 'Page %1$s of %2$s', 'sbek' ); ?>">
 			<div class="pager__view" data-pager-view>
 				<?php $sbek_render_page( $sbek_pages[0] ); ?>
 			</div>
@@ -76,6 +76,15 @@ $sbek_render_page = static function ( array $page ): void {
 				<template data-pager-page><?php $sbek_render_page( $sbek_page ); ?></template>
 			<?php endforeach; ?>
 			<?php if ( count( $sbek_pages ) > 1 ) : ?>
+				<button type="button" class="pager__prev pager__prev--side" data-pager-prev>
+					<?php echo sbek_icon( 'chevron-left', array( 'width' => 30, 'height' => 30 ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- static SVG. ?>
+					<span class="screen-reader-text">
+						<?php
+						/* translators: %s: category name. */
+						echo esc_html( sprintf( __( 'Newer stories from %s', 'sbek' ), $sbek_term->name ) );
+						?>
+					</span>
+				</button>
 				<button type="button" class="pager__next pager__next--side" data-pager-next>
 					<?php echo sbek_icon( 'chevron-right', array( 'width' => 30, 'height' => 30 ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- static SVG. ?>
 					<span class="screen-reader-text">
@@ -85,6 +94,8 @@ $sbek_render_page = static function ( array $page ): void {
 						?>
 					</span>
 				</button>
+				<p class="pager__count" aria-hidden="true" data-pager-count>1 / <?php echo esc_html( (string) count( $sbek_pages ) ); ?></p>
+				<p class="screen-reader-text" role="status" data-pager-status></p>
 			<?php endif; ?>
 		</div>
 

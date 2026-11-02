@@ -1,6 +1,8 @@
 <?php
 /**
- * Site footer: brand + legal, about + newsletter, social + contact.
+ * Site footer: brand + legal, about + newsletter, social + contact, then a
+ * row of footer links (menu location `footer` / `footer-{lang}`; until one
+ * is assigned, the privacy policy link shows in the brand column instead).
  *
  * @package sbek
  */
@@ -13,6 +15,9 @@ $sbek_email       = sanitize_email( (string) sbek_site_setting( 'email', '' ) );
 $sbek_address     = sbek_site_text( 'address' );
 $sbek_description = sbek_site_text( 'description' );
 $sbek_privacy_url = get_privacy_policy_url();
+$sbek_footer_menu = sbek_is_default_lang() ? 'footer' : 'footer-' . sbek_lang();
+$sbek_has_links   = has_nav_menu( $sbek_footer_menu );
+$sbek_newsletter  = sbek_section_enabled( 'newsletter' );
 ?>
 <footer id="footer" class="site-footer">
 	<div class="container">
@@ -22,7 +27,7 @@ $sbek_privacy_url = get_privacy_policy_url();
 					<?php echo sbek_get_logo( '', 60 ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped in helper. ?>
 				</a>
 				<p><?php echo esc_html( sbek_copyright_text() ); ?></p>
-				<?php if ( $sbek_privacy_url ) : ?>
+				<?php if ( $sbek_privacy_url && ! $sbek_has_links ) : ?>
 					<p><strong><a href="<?php echo esc_url( $sbek_privacy_url ); ?>"><?php esc_html_e( 'Privacy Policy', 'sbek' ); ?></a></strong></p>
 				<?php endif; ?>
 				<?php if ( '' !== trim( $sbek_address ) ) : ?>
@@ -34,12 +39,12 @@ $sbek_privacy_url = get_privacy_policy_url();
 			</div>
 
 			<div class="site-footer__col site-footer__col--about">
-				<h2 class="site-footer__title"><?php esc_html_e( 'About us', 'sbek' ); ?></h2>
 				<?php if ( '' !== trim( $sbek_description ) ) : ?>
+					<h2 class="site-footer__title"><?php esc_html_e( 'About us', 'sbek' ); ?></h2>
 					<p><?php echo esc_html( $sbek_description ); ?></p>
 				<?php endif; ?>
 				<?php
-				if ( sbek_section_enabled( 'newsletter' ) ) {
+				if ( $sbek_newsletter ) {
 					get_template_part( 'template-parts/newsletter-form' );
 				}
 				?>
@@ -57,7 +62,12 @@ $sbek_privacy_url = get_privacy_policy_url();
 							$sbek_platform = (string) ( $sbek_social['platform'] ?? '' );
 							?>
 							<li>
-								<a href="<?php echo esc_url( $sbek_social['url'] ); ?>" target="_blank" rel="noopener noreferrer me" aria-label="<?php echo esc_attr( $sbek_platform ); ?>">
+								<?php
+								$sbek_social_name = '' !== trim( $sbek_platform ) ? $sbek_platform : (string) wp_parse_url( $sbek_social['url'], PHP_URL_HOST );
+								/* translators: %s: social network name, e.g. "Facebook". */
+								$sbek_social_label = sprintf( __( '%s (opens in a new tab)', 'sbek' ), $sbek_social_name );
+								?>
+								<a href="<?php echo esc_url( $sbek_social['url'] ); ?>" target="_blank" rel="noopener noreferrer me" aria-label="<?php echo esc_attr( $sbek_social_label ); ?>">
 									<?php echo sbek_icon( sbek_social_icon_name( $sbek_platform ), array( 'width' => 24, 'height' => 24 ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- static SVG. ?>
 								</a>
 							</li>
@@ -85,6 +95,21 @@ $sbek_privacy_url = get_privacy_policy_url();
 				<?php endif; ?>
 			</div>
 		</div>
+		<?php if ( $sbek_has_links ) : ?>
+			<nav class="site-footer__links" aria-label="<?php esc_attr_e( 'Footer', 'sbek' ); ?>">
+				<?php
+				wp_nav_menu(
+					array(
+						'theme_location' => $sbek_footer_menu,
+						'container'      => false,
+						'menu_class'     => 'site-footer__menu',
+						'depth'          => 1,
+						'fallback_cb'    => false,
+					)
+				);
+				?>
+			</nav>
+		<?php endif; ?>
 	</div>
 </footer>
 

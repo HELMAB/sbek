@@ -44,6 +44,17 @@ function sbek_register_term_meta(): void {
 		foreach ( array_keys( sbek_term_name_fields() ) as $key ) {
 			register_term_meta(
 				$taxonomy,
+				str_replace( 'sbek_name_', 'sbek_description_', $key ),
+				array(
+					'type'              => 'string',
+					'single'            => true,
+					'sanitize_callback' => 'sanitize_textarea_field',
+					'auth_callback'     => static fn( $allowed, $meta_key, $term_id ): bool => current_user_can( 'edit_term', $term_id ),
+					'show_in_rest'      => true,
+				)
+			);
+			register_term_meta(
+				$taxonomy,
 				$key,
 				array(
 					'type'              => 'string',
@@ -91,6 +102,12 @@ function sbek_term_form_fields( string $taxonomy ): array {
 			'type'        => 'text',
 			'description' => __( 'Shown on pages in that language. Leave empty to use the main name.', 'sbek' ),
 		);
+		$fields[ str_replace( 'sbek_name_', 'sbek_description_', $key ) ] = array(
+			/* translators: %s: language name. */
+			'label'       => sprintf( __( 'Description (%s)', 'sbek' ), $label ),
+			'type'        => 'textarea',
+			'description' => __( 'Shown under the archive title on pages in that language. Leave empty to show no description there.', 'sbek' ),
+		);
 	}
 
 	if ( 'category' === $taxonomy ) {
@@ -129,6 +146,9 @@ function sbek_term_field_input( string $taxonomy, string $key, array $field, $va
 				$value ? '' : ' checked',
 				esc_html__( 'Use the brand color', 'sbek' )
 			);
+			break;
+		case 'textarea':
+			printf( '<textarea %s rows="3" cols="40">%s</textarea>', $attrs, esc_textarea( (string) $value ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $attrs escaped above.
 			break;
 		case 'number':
 			printf( '<input type="number" min="0" step="1" %s value="%s" class="small-text">', $attrs, esc_attr( $value ? (string) $value : '' ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $attrs escaped above.

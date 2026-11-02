@@ -393,7 +393,9 @@ function sbek_get_translation( int $post_id, string $lang ): ?WP_Post {
 }
 
 /**
- * hreflang alternates for singular views (and the home page).
+ * hreflang alternates for the home page, singular views (linked
+ * translations) and category/tag archives (when the term has posts in the
+ * other language too).
  */
 function sbek_hreflang_links(): void {
 	$alternates = array();
@@ -418,6 +420,22 @@ function sbek_hreflang_links(): void {
 		if ( count( $alternates ) < 2 ) {
 			return; // No translation — a lone self-reference adds nothing.
 		}
+	} elseif ( ( is_category() || is_tag() ) && ! is_paged() ) {
+		$term = get_queried_object();
+		$link = $term instanceof WP_Term ? get_term_link( $term ) : '';
+		if ( ! $link || is_wp_error( $link ) ) {
+			return;
+		}
+
+		foreach ( array_keys( sbek_languages() ) as $lang ) {
+			if ( sbek_lang() === $lang || sbek_term_has_posts_in( $term, $lang ) ) {
+				$alternates[ $lang ] = sbek_localize_url( sbek_unlocalize_url( $link ), $lang );
+			}
+		}
+
+		if ( count( $alternates ) < 2 ) {
+			return;
+		}
 	} else {
 		return;
 	}
@@ -435,6 +453,45 @@ function sbek_hreflang_links(): void {
 	}
 }
 add_action( 'wp_head', 'sbek_hreflang_links', 5 );
+
+/**
+ * Whether a category/tag has at least one published post in a language
+ * (cached per term and language; the cache version flips on post saves).
+ */
+function sbek_term_has_posts_in( WP_Term $term, string $lang ): bool {
+	$key    = sprintf( 'sbek_term_lang_%d_%s_v%d', $term->term_id, $lang, function_exists( 'sbek_cache_version' ) ? sbek_cache_version() : 0 );
+	$cached = get_transient( $key );
+
+	if ( false === $cached ) {
+		$query  = new WP_Query(
+			array(
+				'post_type'              => 'post',
+				'post_status'            => 'publish',
+				'posts_per_page'         => 1,
+				'fields'                 => 'ids',
+				'no_found_rows'          => true,
+				'update_post_meta_cache' => false,
+				'update_post_term_cache' => false,
+				'sbek_all_languages'     => true,
+				'tax_query'              => array( // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_tax_query
+					array(
+						'taxonomy' => $term->taxonomy,
+						'terms'    => array( $term->term_id ),
+					),
+					array(
+						'taxonomy' => 'language',
+						'field'    => 'slug',
+						'terms'    => array( $lang ),
+					),
+				),
+			)
+		);
+		$cached = $query->posts ? 'yes' : 'no';
+		set_transient( $key, $cached, DAY_IN_SECONDS );
+	}
+
+	return 'yes' === $cached;
+}
 
 /**
  * Language switcher data: one entry per language with the best target URL —
@@ -511,6 +568,19 @@ function sbek_localize_term_name( $term ) {
 	return $term;
 }
 add_filter( 'get_term', 'sbek_localize_term_name' );
+
+/**
+ * A category/tag description in the current language: the core description
+ * on default-language pages, term meta `sbek_description_{lang}` elsewhere
+ * ('' when that translation is missing, rather than Khmer on English pages).
+ */
+function sbek_term_description( WP_Term $term ): string {
+	if ( sbek_is_default_lang() ) {
+		return (string) $term->description;
+	}
+
+	return (string) get_term_meta( $term->term_id, 'sbek_description_' . sbek_lang(), true );
+}
 
 /**
  * English site title / tagline (Sbek Theme → General) on /en/ pages.

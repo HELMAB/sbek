@@ -39,10 +39,16 @@ $sbek_breaking      = sbek_section_enabled( 'ticker' ) ? sbek_get_breaking_posts
 					<a href="<?php echo esc_url( sbek_home_url() ); ?>" class="menu-bar__brand" rel="home">
 						<?php echo sbek_get_logo( '', 40 ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped in helper. ?>
 					</a>
-					<button type="button" class="menu-toggle" aria-controls="primary-menu" aria-expanded="false" data-sbek-menu-toggle>
-						<span class="screen-reader-text"><?php esc_html_e( 'Toggle navigation', 'sbek' ); ?></span>
-						<span class="menu-toggle__bar"></span><span class="menu-toggle__bar"></span><span class="menu-toggle__bar"></span>
-					</button>
+					<div class="menu-bar__actions">
+						<button type="button" class="menu-bar__search" aria-controls="menu-search" aria-expanded="false" data-sbek-search-toggle>
+							<?php echo sbek_icon( 'search', array( 'width' => 20, 'height' => 20 ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- static SVG. ?>
+							<span class="screen-reader-text"><?php esc_html_e( 'Search', 'sbek' ); ?></span>
+						</button>
+						<button type="button" class="menu-toggle" aria-controls="primary-menu" aria-expanded="false" data-sbek-menu-toggle>
+							<span class="screen-reader-text"><?php esc_html_e( 'Toggle navigation', 'sbek' ); ?></span>
+							<span class="menu-toggle__bar"></span><span class="menu-toggle__bar"></span><span class="menu-toggle__bar"></span>
+						</button>
+					</div>
 				</div>
 
 				<div id="primary-menu" class="menu-bar__panel">
@@ -51,8 +57,8 @@ $sbek_breaking      = sbek_section_enabled( 'ticker' ) ? sbek_get_breaking_posts
 						array(
 							'theme_location' => $sbek_menu_location,
 							'container'      => false,
-							'items_wrap'     => '<ul class="menu-list">%3$s</ul>',
-							'depth'          => 1,
+							'items_wrap'     => '<ul class="menu-list" data-sbek-menu-list>%3$s' . sbek_menu_more_item() . '</ul>',
+							'depth'          => 2,
 							'walker'         => new Sbek_Menu_Walker(),
 							'fallback_cb'    => 'sbek_menu_fallback',
 						)
@@ -89,6 +95,11 @@ $sbek_breaking      = sbek_section_enabled( 'ticker' ) ? sbek_get_breaking_posts
 		<div class="ticker">
 			<div class="container ticker__inner">
 				<span class="ticker__label"><?php echo sbek_icon( 'zap', array( 'width' => 14, 'height' => 14 ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- static SVG. ?><?php esc_html_e( 'Breaking', 'sbek' ); ?></span>
+				<button type="button" class="ticker__pause" aria-pressed="false" data-sbek-ticker-pause>
+					<?php echo sbek_icon( 'pause', array( 'width' => 12, 'height' => 12, 'class' => 'ticker__pause-icon' ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- static SVG. ?>
+					<?php echo sbek_icon( 'play', array( 'width' => 12, 'height' => 12, 'class' => 'ticker__play-icon' ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- static SVG. ?>
+					<span class="screen-reader-text"><?php esc_html_e( 'Pause the breaking-news ticker', 'sbek' ); ?></span>
+				</button>
 				<div class="ticker__viewport">
 					<?php
 					// Rendered twice so the -50% marquee loops seamlessly; the copy is hidden from AT.

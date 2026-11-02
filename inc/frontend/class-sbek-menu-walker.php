@@ -1,6 +1,6 @@
 <?php
 /**
- * Flat walker for the red primary menu bar.
+ * Walker for the red primary menu bar (two levels).
  *
  * - The item linking to the front page (core adds `menu-item-home`) renders
  *   as the house icon.
@@ -8,6 +8,10 @@
  *   item is highlighted on that category's archive *and* on its posts.
  * - Labels without Khmer script (e.g. "AUTO TALK", or the English menu) get
  *   the Latin face instead of Koulen.
+ * - Items with children get a toggle button and a `.sub-menu` dropdown
+ *   (hover/focus on desktop, tap on mobile; theme.js handles the toggles).
+ * - The menu ends with a hidden "More" item; theme.js moves the items that
+ *   don't fit on one desktop row into it (see sbek_menu_more_item()).
  *
  * @package sbek
  */
@@ -25,20 +29,22 @@ class Sbek_Menu_Walker extends Walker_Nav_Menu {
 	);
 
 	/**
-	 * Sub-menus are not part of this design (depth is forced to 1).
-	 *
 	 * @param string   $output Passed by reference.
 	 * @param int      $depth  Depth.
 	 * @param stdClass $args   Menu args.
 	 */
-	public function start_lvl( &$output, $depth = 0, $args = null ) {}
+	public function start_lvl( &$output, $depth = 0, $args = null ) {
+		$output .= '<ul class="sub-menu">';
+	}
 
 	/**
 	 * @param string   $output Passed by reference.
 	 * @param int      $depth  Depth.
 	 * @param stdClass $args   Menu args.
 	 */
-	public function end_lvl( &$output, $depth = 0, $args = null ) {}
+	public function end_lvl( &$output, $depth = 0, $args = null ) {
+		$output .= '</ul>';
+	}
 
 	/**
 	 * @param string   $output            Passed by reference.
@@ -68,7 +74,15 @@ class Sbek_Menu_Walker extends Walker_Nav_Menu {
 
 		$li_classes = array( 'menu-item' );
 		$a_classes  = array( 'menu-link' );
+		$parent     = $this->has_children && 0 === (int) $depth;
 
+		if ( $depth > 0 ) {
+			$li_classes = array( 'sub-menu__item' );
+			$a_classes  = array( 'sub-menu__link' );
+		}
+		if ( $parent ) {
+			$li_classes[] = 'menu-item--parent';
+		}
 		if ( $is_home ) {
 			$li_classes[] = 'menu-item--home';
 		}
@@ -76,7 +90,7 @@ class Sbek_Menu_Walker extends Walker_Nav_Menu {
 			$li_classes[] = 'is-active';
 		}
 		if ( ! preg_match( '/\p{Khmer}/u', $title ) ) {
-			$a_classes[] = 'menu-link--latin';
+			$a_classes[] = $depth > 0 ? 'sub-menu__link--latin' : 'menu-link--latin';
 		}
 
 		$attributes = array(
@@ -99,6 +113,10 @@ class Sbek_Menu_Walker extends Walker_Nav_Menu {
 			? sbek_icon( 'home', array( 'class' => 'menu-link__icon', 'width' => 20, 'height' => 20 ) )
 			: esc_html( wp_strip_all_tags( $title ) );
 		$output .= '</a>';
+
+		if ( $parent ) {
+			$output .= sbek_submenu_toggle( wp_strip_all_tags( $title ) );
+		}
 	}
 
 	/**
@@ -110,6 +128,32 @@ class Sbek_Menu_Walker extends Walker_Nav_Menu {
 	public function end_el( &$output, $data_object, $depth = 0, $args = null ) {
 		$output .= '</li>';
 	}
+}
+
+/**
+ * Button that opens a dropdown.
+ *
+ * @param string $label Parent item label (for the accessible name).
+ */
+function sbek_submenu_toggle( string $label ): string {
+	return sprintf(
+		'<button type="button" class="submenu-toggle" aria-expanded="false" data-sbek-submenu-toggle><span class="screen-reader-text">%s</span>%s</button>',
+		/* translators: %s: menu item label. */
+		esc_html( sprintf( __( 'Show submenu for %s', 'sbek' ), $label ) ),
+		sbek_icon( 'chevron-down', array( 'width' => 14, 'height' => 14 ) )
+	);
+}
+
+/**
+ * Hidden "More" dropdown at the end of the menu; theme.js fills it with the
+ * items that don't fit on one desktop row (without JS the row wraps).
+ */
+function sbek_menu_more_item(): string {
+	return sprintf(
+		'<li class="menu-item menu-item--parent menu-item--more" hidden data-sbek-menu-more><button type="button" class="menu-link menu-more__btn" aria-expanded="false" data-sbek-submenu-toggle>%s%s</button><ul class="sub-menu"></ul></li>',
+		esc_html__( 'More', 'sbek' ),
+		sbek_icon( 'chevron-down', array( 'width' => 14, 'height' => 14 ) )
+	);
 }
 
 /**
@@ -126,7 +170,7 @@ function sbek_menu_fallback(): void {
 		)
 	);
 
-	echo '<ul class="menu-list">';
+	echo '<ul class="menu-list" data-sbek-menu-list>';
 	printf(
 		'<li class="menu-item menu-item--home%1$s"><a class="menu-link" href="%2$s" aria-label="%3$s">%4$s</a></li>',
 		is_front_page() ? ' is-active' : '',
@@ -151,5 +195,24 @@ function sbek_menu_fallback(): void {
 		}
 	}
 
+	echo sbek_menu_more_item(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped in helper.
 	echo '</ul>';
 }
+
+/**
+ * Footer menu: custom links into this site follow the visitor's language,
+ * like the primary menu (page/post/term links are localized by core filters).
+ *
+ * @param array<string,string> $atts Link attributes.
+ * @param WP_Post              $item Menu item.
+ * @param stdClass             $args Menu args.
+ * @return array<string,string>
+ */
+function sbek_localize_footer_links( array $atts, $item, $args ): array {
+	if ( isset( $args->theme_location ) && str_starts_with( (string) $args->theme_location, 'footer' ) && 'custom' === $item->type && ! empty( $atts['href'] ) ) {
+		$atts['href'] = sbek_localize_url( $atts['href'] );
+	}
+
+	return $atts;
+}
+add_filter( 'nav_menu_link_attributes', 'sbek_localize_footer_links', 10, 3 );

@@ -34,6 +34,7 @@ if ( ! $sbek_post instanceof WP_Post ) {
 		<div class="feed-item__body">
 			<h2 class="feed-item__title"><?php echo esc_html( get_the_title( $sbek_post ) ); ?></h2>
 			<p class="feed-item__meta">
+				<?php echo sbek_get_sponsored_label( $sbek_post ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped in helper. ?>
 				<?php echo sbek_icon( 'clock', array( 'width' => 12, 'height' => 12 ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- static SVG. ?>
 				<time datetime="<?php echo esc_attr( get_the_date( DATE_W3C, $sbek_post ) ); ?>"><?php echo esc_html( sbek_post_date( $sbek_post ) ); ?></time>
 			</p>

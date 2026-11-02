@@ -29,6 +29,8 @@ function sbek_setup(): void {
 		array(
 			'primary'    => __( 'Primary menu (Khmer)', 'sbek' ),
 			'primary-en' => __( 'Primary menu (English)', 'sbek' ),
+			'footer'     => __( 'Footer links (Khmer)', 'sbek' ),
+			'footer-en'  => __( 'Footer links (English)', 'sbek' ),
 		)
 	);
 }

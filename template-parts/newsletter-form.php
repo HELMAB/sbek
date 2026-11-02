@@ -20,7 +20,7 @@ $sbek_notice = sbek_subscribe_notice();
 	<form class="newsletter__form" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>" method="post">
 		<input type="hidden" name="action" value="sbek_subscribe">
 		<input type="hidden" name="lang" value="<?php echo esc_attr( sbek_lang() ); ?>">
-		<?php wp_nonce_field( 'sbek_subscribe', 'sbek_newsletter_nonce' ); ?>
+		<?php // No nonce on purpose: it would go stale in page caches (see inc/frontend/newsletter.php). ?>
 		<p class="newsletter__hp" aria-hidden="true">
 			<label>Website <input type="text" name="sbek_website" tabindex="-1" autocomplete="off"></label>
 		</p>
@@ -28,4 +28,10 @@ $sbek_notice = sbek_subscribe_notice();
 		<input type="email" id="sbek-newsletter-email" name="email" required autocomplete="email" placeholder="<?php esc_attr_e( 'Email address', 'sbek' ); ?>" class="newsletter__input">
 		<button type="submit" class="newsletter__submit"><?php esc_html_e( 'Subscribe', 'sbek' ); ?></button>
 	</form>
+	<p class="newsletter__consent">
+		<?php esc_html_e( 'We will email you a link to confirm. You can unsubscribe at any time.', 'sbek' ); ?>
+		<?php if ( get_privacy_policy_url() ) : ?>
+			<a href="<?php echo esc_url( get_privacy_policy_url() ); ?>"><?php esc_html_e( 'Privacy Policy', 'sbek' ); ?></a>
+		<?php endif; ?>
+	</p>
 </div>

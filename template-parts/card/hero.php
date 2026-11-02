@@ -33,6 +33,7 @@ if ( ! empty( $args['lcp'] ) ) {
 	<?php echo sbek_get_post_image( $sbek_post, 'sbek-wide', $sbek_img_attrs ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped in helper. ?>
 	<span class="hero-item__shade" aria-hidden="true"></span>
 	<span class="hero-item__text">
+		<?php echo sbek_get_sponsored_label( $sbek_post, 'sponsored-label--on-image' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped in helper. ?>
 		<span class="hero-item__title"><?php echo esc_html( get_the_title( $sbek_post ) ); ?></span>
 		<?php if ( $args['date'] ?? true ) : ?>
 			<span class="hero-item__date"><?php echo esc_html( sbek_post_date( $sbek_post ) ); ?></span>

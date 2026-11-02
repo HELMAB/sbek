@@ -57,6 +57,9 @@ function sbek_site_settings_defaults(): array {
 		'show_ticker'     => 1,
 		'show_video'      => 1,
 		'show_newsletter' => 1,
+		'show_byline'     => 1,
+		'breaking_hours'  => 48,
+		'popular_days'    => 7,
 		// Contact & footer.
 		'description'     => '',
 		'description_en'  => '',
@@ -145,8 +148,15 @@ function sbek_sanitize_site_settings( $input ): array {
 
 	// Toggles: the form always sends 0/1 (hidden input + checkbox); a missing
 	// key (e.g. a partial update from code) keeps the default "on".
-	foreach ( array( 'show_ticker', 'show_video', 'show_newsletter' ) as $key ) {
+	foreach ( array( 'show_ticker', 'show_video', 'show_newsletter', 'show_byline' ) as $key ) {
 		$clean[ $key ] = array_key_exists( $key, $input ) ? (int) (bool) $input[ $key ] : 1;
+	}
+
+	// Time windows (0 = no limit); a missing key keeps the default.
+	foreach ( array( 'breaking_hours' => 720, 'popular_days' => 365 ) as $key => $max ) {
+		if ( array_key_exists( $key, $input ) && '' !== trim( (string) $input[ $key ] ) ) {
+			$clean[ $key ] = min( $max, absint( $input[ $key ] ) );
+		}
 	}
 
 	$email          = sanitize_email( (string) ( $input['email'] ?? '' ) );
@@ -313,7 +323,7 @@ function sbek_site_setting_image_url( string $key, string $size = 'full' ): stri
 /**
  * Whether a homepage/footer section is switched on in Sbek Theme.
  *
- * @param string $section ticker | video | newsletter.
+ * @param string $section ticker | video | newsletter | byline.
  */
 function sbek_section_enabled( string $section ): bool {
 	return (bool) sbek_site_setting( 'show_' . $section, 1 );
@@ -1019,6 +1029,39 @@ function sbek_render_theme_options_page(): void {
 							</div>
 						<?php sbek_section_close(); ?>
 
+						<?php sbek_section_open( 'clock', __( 'Freshness', 'sbek' ), __( 'Keep the ticker and the "Popular" lists current without editors having to untick old stories. 0 means no limit.', 'sbek' ) ); ?>
+							<div class="sbek-grid sbek-grid--2">
+								<?php
+								sbek_option_input(
+									"{$opt}[breaking_hours]",
+									__( 'Breaking news shows for (hours)', 'sbek' ),
+									(string) $s['breaking_hours'],
+									array(
+										'type'  => 'number',
+										'help'  => __( 'A post marked "Breaking news" leaves the ticker this many hours after it was published.', 'sbek' ),
+										'attrs' => array( 'min' => 0, 'max' => 720, 'step' => 1 ),
+									)
+								);
+								sbek_option_input(
+									"{$opt}[popular_days]",
+									__( 'Popular articles from the last (days)', 'sbek' ),
+									(string) $s['popular_days'],
+									array(
+										'type'  => 'number',
+										'help'  => __( 'Only posts published in this window are ranked by their trending score.', 'sbek' ),
+										'attrs' => array( 'min' => 0, 'max' => 365, 'step' => 1 ),
+									)
+								);
+								?>
+							</div>
+						<?php sbek_section_close(); ?>
+
+						<?php sbek_section_open( 'type', __( 'Article page', 'sbek' ), __( 'What appears around the story itself.', 'sbek' ) ); ?>
+							<div class="sbek-stack">
+								<?php sbek_option_toggle( "{$opt}[show_byline]", __( 'Author byline', 'sbek' ), __( 'Show "By: <author>" under the article, linking to the author\'s archive. Turn off if posts are published from a shared account.', 'sbek' ), (bool) $s['show_byline'] ); ?>
+							</div>
+						<?php sbek_section_close(); ?>
+
 						<?php
 						$home_ids   = wp_list_pluck( sbek_get_home_categories(), 'term_id' );
 						$positioned = false;
@@ -1185,19 +1228,26 @@ function sbek_render_theme_options_page(): void {
 						<?php sbek_section_close(); ?>
 
 						<?php
-						$subscribers = (int) array_sum( (array) wp_count_posts( 'sbek_subscriber' ) );
+						$subscribers = sbek_subscriber_count( 'confirmed' );
+						$pending     = sbek_subscriber_count( 'pending' );
 						sbek_section_open( 'panel-bottom', __( 'Footer', 'sbek' ), __( 'Optional footer sections.', 'sbek' ) );
 						?>
-							<?php sbek_option_toggle( "{$opt}[show_newsletter]", __( 'Newsletter signup', 'sbek' ), __( 'Email signup form in the footer. Addresses are stored on this site, under Subscribers.', 'sbek' ), (bool) $s['show_newsletter'] ); ?>
+							<?php sbek_option_toggle( "{$opt}[show_newsletter]", __( 'Newsletter signup', 'sbek' ), __( 'Email signup form in the footer. Addresses are stored on this site, under Subscribers, and count only after the visitor clicks the link in the confirmation email (double opt-in). Your site must be able to send email.', 'sbek' ), (bool) $s['show_newsletter'] ); ?>
 							<div class="sbek-inline-actions">
 								<span class="sbek-inline-actions__text">
 									<?php
 									/* translators: %s: number of subscribers. */
 									echo esc_html( sprintf( _n( '%s subscriber', '%s subscribers', $subscribers, 'sbek' ), number_format_i18n( $subscribers ) ) );
+									if ( $pending ) {
+										echo ' · ' . esc_html(
+											/* translators: %s: number of unconfirmed signups. */
+											sprintf( _n( '%s waiting for confirmation', '%s waiting for confirmation', $pending, 'sbek' ), number_format_i18n( $pending ) )
+										);
+									}
 									?>
 								</span>
 								<a class="sbek-btn sbek-btn--plain" href="<?php echo esc_url( admin_url( 'edit.php?post_type=sbek_subscriber' ) ); ?>"><?php esc_html_e( 'View subscribers', 'sbek' ); ?></a>
-								<?php if ( $subscribers ) : ?>
+								<?php if ( $subscribers || $pending ) : ?>
 									<a class="sbek-btn sbek-btn--plain" href="<?php echo esc_url( sbek_subscribers_export_url() ); ?>">
 										<?php echo sbek_icon( 'download', array( 'width' => 15, 'height' => 15 ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- static SVG. ?>
 										<?php esc_html_e( 'Export CSV', 'sbek' ); ?>

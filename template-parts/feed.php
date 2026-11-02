@@ -4,7 +4,8 @@
  * colored header with a list/grid switch, two lead stories on the first
  * page, then the list. Works as plain paginated HTML; theme.js upgrades the
  * pagination into infinite scroll by fetching the `rel=next` page and
- * appending its [data-feed-item] cards.
+ * appending its [data-feed-item] cards. After two automatic pages it switches
+ * to a "Load more" button so the footer stays reachable.
  *
  * Runs the main query loop.
  *
@@ -60,6 +61,7 @@ $sbek_switch = (string) ob_get_clean();
 								'size'        => 'sbek-wide',
 								'sizes'       => '(max-width: 767px) 50vw, 370px',
 								'title_class' => 'news-thumb__title--feed-lead',
+								'date'        => true,
 							)
 						);
 					endwhile;
@@ -92,6 +94,12 @@ $sbek_switch = (string) ob_get_clean();
 				<?php echo sbek_icon( 'loader', array( 'width' => 42, 'height' => 42, 'class' => 'spin' ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- static SVG. ?>
 				<span class="screen-reader-text"><?php esc_html_e( 'Loading…', 'sbek' ); ?></span>
 			</div>
+			<div class="feed__more">
+				<button type="button" class="btn" data-feed-more hidden><?php esc_html_e( 'Load more stories', 'sbek' ); ?></button>
+			</div>
+			<p class="feed__end" data-feed-end hidden><?php esc_html_e( 'You have reached the end of the list.', 'sbek' ); ?></p>
+			<?php /* translators: %d: number of stories just added to the list. */ ?>
+			<p class="screen-reader-text" role="status" data-feed-status data-loaded="<?php echo esc_attr__( '%d more stories loaded.', 'sbek' ); ?>"></p>
 		<?php else : ?>
 			<?php get_template_part( 'template-parts/content-none' ); ?>
 		<?php endif; ?>

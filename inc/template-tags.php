@@ -59,6 +59,97 @@ function sbek_color_style( string $hex ): string {
 	return '--cat:' . ( sanitize_hex_color( $hex ) ?: sbek_brand_color() ) . ';';
 }
 
+/**
+ * Whether a post is flagged "Sponsored / advertorial".
+ *
+ * @param WP_Post|int $post Post.
+ */
+function sbek_is_sponsored( $post ): bool {
+	$post = get_post( $post );
+
+	return $post && (bool) get_post_meta( $post->ID, '_sbek_is_sponsored', true );
+}
+
+/**
+ * Small "Sponsored" label for cards (empty for regular posts).
+ *
+ * @param WP_Post $post  Post.
+ * @param string  $class Extra classes.
+ */
+function sbek_get_sponsored_label( WP_Post $post, string $class = '' ): string {
+	if ( ! sbek_is_sponsored( $post ) ) {
+		return '';
+	}
+
+	return '<span class="sponsored-label ' . esc_attr( $class ) . '">' . esc_html__( 'Sponsored', 'sbek' ) . '</span>';
+}
+
+// ─── Breadcrumbs ───────────────────────────────────────────────────────────────
+
+/**
+ * Trail for a single post: Home → parent categories → primary category →
+ * the post. Shared by the visible breadcrumb and the BreadcrumbList JSON-LD.
+ *
+ * @param WP_Post|int|null $post Post.
+ * @return array<int,array{name:string,url:string}>
+ */
+function sbek_breadcrumb_items( $post = null ): array {
+	$post  = get_post( $post );
+	$items = array(
+		array(
+			'name' => __( 'Home', 'sbek' ),
+			'url'  => sbek_home_url(),
+		),
+	);
+
+	if ( ! $post ) {
+		return $items;
+	}
+
+	$category = 'post' === $post->post_type ? sbek_primary_category( $post ) : null;
+
+	if ( $category ) {
+		$ancestors = array_reverse( get_ancestors( $category->term_id, 'category', 'taxonomy' ) );
+		foreach ( array_merge( $ancestors, array( $category->term_id ) ) as $term_id ) {
+			$term = get_term( $term_id, 'category' );
+			$link = $term instanceof WP_Term ? get_term_link( $term ) : '';
+			if ( $term instanceof WP_Term && ! is_wp_error( $link ) ) {
+				$items[] = array(
+					'name' => $term->name,
+					'url'  => $link,
+				);
+			}
+		}
+	}
+
+	$items[] = array(
+		'name' => wp_strip_all_tags( get_the_title( $post ) ),
+		'url'  => (string) get_permalink( $post ),
+	);
+
+	return $items;
+}
+
+/**
+ * Visible breadcrumb above an article headline. The current page is the
+ * headline right below, so the trail stops at the section.
+ *
+ * @param WP_Post|int|null $post Post.
+ */
+function sbek_breadcrumb( $post = null ): void {
+	$items = sbek_breadcrumb_items( $post );
+	array_pop( $items );
+	?>
+	<nav class="breadcrumb" aria-label="<?php esc_attr_e( 'Breadcrumb', 'sbek' ); ?>">
+		<ol class="breadcrumb__list">
+			<?php foreach ( $items as $item ) : ?>
+				<li class="breadcrumb__item"><a href="<?php echo esc_url( $item['url'] ); ?>"><?php echo esc_html( $item['name'] ); ?></a></li>
+			<?php endforeach; ?>
+		</ol>
+	</nav>
+	<?php
+}
+
 // ─── Dates ─────────────────────────────────────────────────────────────────────
 
 /**

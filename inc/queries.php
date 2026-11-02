@@ -224,9 +224,22 @@ function sbek_get_category_posts( int $term_id, int $limit ): array {
  * @return WP_Post[]
  */
 function sbek_get_popular_posts( int $limit = 6 ): array {
+	$days = absint( sbek_site_setting( 'popular_days', 7 ) );
+	$args = array();
+
+	// Only recent stories compete, so a high score doesn't pin an old story forever.
+	if ( $days ) {
+		$args['date_query'] = array(
+			array(
+				'after'     => $days . ' days ago',
+				'inclusive' => true,
+			),
+		);
+	}
+
 	$ids = sbek_cached_post_ids(
-		'popular_' . $limit,
-		array(
+		"popular_{$limit}_{$days}",
+		$args + array(
 			'posts_per_page' => $limit,
 			'meta_query'     => array( // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
 				'score' => array(
@@ -281,21 +294,31 @@ function sbek_get_related_posts( int $post_id, int $limit = 12 ): array {
 }
 
 /**
- * Posts flagged "Breaking" for the header ticker (none → no ticker).
+ * Posts flagged "Breaking" for the header ticker (none → no ticker). A flag
+ * expires `breaking_hours` (Sbek Theme → Homepage) after publication, so
+ * stale stories leave the ticker on their own. The 5-minute cache keeps that
+ * expiry close to on time.
  *
  * @return WP_Post[]
  */
 function sbek_get_breaking_posts( int $limit = 5 ): array {
-	return sbek_posts_by_ids(
-		sbek_cached_post_ids(
-			'breaking_' . $limit,
-			array(
-				'posts_per_page' => $limit,
-				'meta_key'       => '_sbek_is_breaking', // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key
-				'meta_value'     => '1', // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_value
-			)
-		)
+	$hours = absint( sbek_site_setting( 'breaking_hours', 48 ) );
+	$args  = array(
+		'posts_per_page' => $limit,
+		'meta_key'       => '_sbek_is_breaking', // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key
+		'meta_value'     => '1', // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_value
 	);
+
+	if ( $hours ) {
+		$args['date_query'] = array(
+			array(
+				'after'     => $hours . ' hours ago',
+				'inclusive' => true,
+			),
+		);
+	}
+
+	return sbek_posts_by_ids( sbek_cached_post_ids( "breaking_{$limit}_{$hours}", $args, 5 * MINUTE_IN_SECONDS ) );
 }
 
 /**

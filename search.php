@@ -21,7 +21,7 @@ ob_start();
 ?>
 <form role="search" method="get" class="search-filter" action="<?php echo esc_url( sbek_home_url() ); ?>">
 	<label class="screen-reader-text" for="sbek-search-query"><?php esc_html_e( 'Search for:', 'sbek' ); ?></label>
-	<input type="search" id="sbek-search-query" name="s" value="<?php echo esc_attr( get_search_query() ); ?>" class="search-filter__input">
+	<input type="search" id="sbek-search-query" name="s" value="<?php echo esc_attr( get_search_query() ); ?>" class="search-filter__input" placeholder="<?php esc_attr_e( 'Search news…', 'sbek' ); ?>" required>
 	<label class="screen-reader-text" for="sbek-search-cat"><?php esc_html_e( 'Category', 'sbek' ); ?></label>
 	<select id="sbek-search-cat" name="cat" class="search-filter__select">
 		<option value=""><?php esc_html_e( 'All categories', 'sbek' ); ?></option>
@@ -51,8 +51,10 @@ get_header();
 				'template-parts/feed',
 				null,
 				array(
-					/* translators: %s: search query. */
-					'title' => sprintf( __( 'Search: %s', 'sbek' ), get_search_query( false ) ),
+					'title' => '' !== trim( get_search_query( false ) )
+						/* translators: %s: search query. */
+						? sprintf( __( 'Search: %s', 'sbek' ), get_search_query( false ) )
+						: __( 'Search', 'sbek' ),
 					'intro' => $sbek_intro,
 				)
 			);

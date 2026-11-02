@@ -34,6 +34,19 @@ function sbek_enqueue_assets(): void {
 add_action( 'wp_enqueue_scripts', 'sbek_enqueue_assets' );
 
 /**
+ * Tiny blocking script at the top of <head>: flags JS support (`sbek-js`,
+ * which switches the desktop menu to one row + "More") and restores the
+ * saved list/grid feed view (`sbek-grid`) before first paint, so a grid
+ * preference doesn't flash the list layout first.
+ */
+function sbek_head_boot_script(): void {
+	wp_print_inline_script_tag(
+		"(function(d){d.classList.add('sbek-js');try{if(localStorage.getItem('sbekFeedView')==='grid'){d.classList.add('sbek-grid');}}catch(e){}})(document.documentElement);"
+	);
+}
+add_action( 'wp_head', 'sbek_head_boot_script', 1 );
+
+/**
  * The emoji polyfill (inline script + stylesheet on every page) isn't needed
  * by any modern browser.
  */

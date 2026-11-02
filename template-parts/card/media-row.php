@@ -30,5 +30,5 @@ $sbek_url = get_permalink( $sbek_post );
 		);
 		?>
 	</a>
-	<a href="<?php echo esc_url( $sbek_url ); ?>" class="media-row__title"><?php echo esc_html( get_the_title( $sbek_post ) ); ?></a>
+	<a href="<?php echo esc_url( $sbek_url ); ?>" class="media-row__title"><?php echo sbek_get_sponsored_label( $sbek_post ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped in helper. ?><?php echo esc_html( get_the_title( $sbek_post ) ); ?></a>
 </li>

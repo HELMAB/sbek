@@ -36,7 +36,7 @@ $sbek_render_page = static function ( array $items ): void {
 ?>
 <section class="related" aria-labelledby="sbek-related-title">
 	<h2 id="sbek-related-title" class="rule-title"><?php esc_html_e( 'Related articles', 'sbek' ); ?></h2>
-	<div class="pager" data-sbek-pager>
+	<div class="pager" data-sbek-pager data-page-label="<?php /* translators: 1: current page, 2: number of pages. */ echo esc_attr__( 'Page %1$s of %2$s', 'sbek' ); ?>">
 		<div class="pager__view" data-pager-view>
 			<?php $sbek_render_page( $sbek_pages[0] ); ?>
 		</div>
@@ -44,10 +44,16 @@ $sbek_render_page = static function ( array $items ): void {
 			<template data-pager-page><?php $sbek_render_page( $sbek_page ); ?></template>
 		<?php endforeach; ?>
 		<?php if ( count( $sbek_pages ) > 1 ) : ?>
+			<button type="button" class="pager__prev pager__prev--related" data-pager-prev>
+				<?php echo sbek_icon( 'chevron-left', array( 'width' => 30, 'height' => 30 ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- static SVG. ?>
+				<span class="screen-reader-text"><?php esc_html_e( 'Previous related articles', 'sbek' ); ?></span>
+			</button>
 			<button type="button" class="pager__next pager__next--related" data-pager-next>
 				<?php echo sbek_icon( 'chevron-right', array( 'width' => 30, 'height' => 30 ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- static SVG. ?>
 				<span class="screen-reader-text"><?php esc_html_e( 'More related articles', 'sbek' ); ?></span>
 			</button>
+			<p class="pager__count" aria-hidden="true" data-pager-count>1 / <?php echo esc_html( (string) count( $sbek_pages ) ); ?></p>
+			<p class="screen-reader-text" role="status" data-pager-status></p>
 		<?php endif; ?>
 	</div>
 </section>

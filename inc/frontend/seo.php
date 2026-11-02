@@ -1,6 +1,6 @@
 <?php
 /**
- * Open Graph / Twitter tags and schema.org JSON-LD.
+ * Meta description, Open Graph / Twitter tags and schema.org JSON-LD.
  *
  * Steps aside when a dedicated SEO plugin (Yoast, Rank Math, SEOPress, AIOSEO)
  * is active, so pages never carry two competing sets of tags.
@@ -14,31 +14,121 @@ function sbek_seo_plugin_active(): bool {
     return defined( 'WPSEO_VERSION' ) || defined( 'RANK_MATH_VERSION' ) || defined( 'SEOPRESS_VERSION' ) || defined( 'AIOSEO_VERSION' );
 }
 
-function sbek_seo_meta_tags() {
-    global $post;
+/**
+ * Title, description, URL, image and type of the current view for the meta
+ * description and Open Graph tags; null for views that shouldn't be shared
+ * (search, 404, paged archives keep their first page's tags out).
+ *
+ * @return array{title:string,description:string,url:string,image:string,type:string}|null
+ */
+function sbek_seo_context(): ?array {
+    $default_image = sbek_site_setting_image_url( 'og_image', 'large' );
+    $site_text     = trim( sbek_site_text( 'description' ) );
+    $site_text     = '' !== $site_text ? $site_text : (string) get_bloginfo( 'description' );
 
-    if ( ! is_singular() || sbek_seo_plugin_active() ) {
+    if ( is_singular() ) {
+        $post = get_queried_object();
+        if ( ! $post instanceof WP_Post ) {
+            return null;
+        }
+
+        return [
+            'title'       => wp_strip_all_tags( get_the_title( $post ) ),
+            'description' => sbek_seo_description( $post ),
+            'url'         => (string) get_permalink( $post ),
+            'image'       => has_post_thumbnail( $post ) ? (string) wp_get_attachment_image_url( get_post_thumbnail_id( $post ), 'large' ) : $default_image,
+            'type'        => 'post' === $post->post_type ? 'article' : 'website',
+        ];
+    }
+
+    if ( is_front_page() || ( is_home() && ! is_paged() ) ) {
+        return [
+            'title'       => (string) get_bloginfo( 'name' ),
+            'description' => $site_text,
+            'url'         => sbek_home_url(),
+            'image'       => $default_image,
+            'type'        => 'website',
+        ];
+    }
+
+    $object = get_queried_object();
+
+    if ( $object instanceof WP_Term && in_array( $object->taxonomy, array( 'category', 'post_tag' ), true ) ) {
+        $link = get_term_link( $object );
+        $text = sbek_plain_text( sbek_term_description( $object ) );
+
+        return [
+            'title'       => $object->name,
+            'description' => '' !== $text ? $text : $site_text,
+            'url'         => is_wp_error( $link ) ? '' : (string) $link,
+            'image'       => $default_image,
+            'type'        => 'website',
+        ];
+    }
+
+    if ( $object instanceof WP_User ) {
+        return [
+            'title'       => $object->display_name,
+            'description' => sbek_plain_text( (string) get_the_author_meta( 'description', $object->ID ) ),
+            'url'         => get_author_posts_url( $object->ID ),
+            'image'       => $default_image,
+            'type'        => 'profile',
+        ];
+    }
+
+    return null;
+}
+
+/**
+ * Tag-free, single-line text capped at 200 characters (Khmer has no spaces
+ * between words, so word trimming can't shorten it).
+ */
+function sbek_plain_text( string $text ): string {
+    $text = trim( preg_replace( '/[\s\x{200B}]+/u', ' ', wp_strip_all_tags( strip_shortcodes( $text ) ) ) );
+
+    return mb_strlen( $text ) > 200 ? mb_substr( $text, 0, 199 ) . '…' : $text;
+}
+
+/**
+ * Meta description + Open Graph / Twitter tags for posts, pages, the home
+ * page, category/tag archives and author pages.
+ */
+function sbek_seo_meta_tags(): void {
+    if ( sbek_seo_plugin_active() ) {
         return;
     }
 
+    $context = sbek_seo_context();
+    if ( ! $context ) {
+        return;
+    }
+
+    if ( '' !== $context['description'] ) {
+        echo '<meta name="description" content="' . esc_attr( $context['description'] ) . '" />' . "\n";
+    }
+
     echo '<!-- Open Graph Meta Tags -->' . "\n";
-    echo '<meta property="og:title" content="' . esc_attr( wp_strip_all_tags( get_the_title() ) ) . '" />' . "\n";
-    echo '<meta property="og:type" content="article" />' . "\n";
-    echo '<meta property="og:url" content="' . esc_url( get_permalink() ) . '" />' . "\n";
+    echo '<meta property="og:title" content="' . esc_attr( $context['title'] ) . '" />' . "\n";
+    echo '<meta property="og:type" content="' . esc_attr( $context['type'] ) . '" />' . "\n";
+    if ( '' !== $context['url'] ) {
+        echo '<meta property="og:url" content="' . esc_url( $context['url'] ) . '" />' . "\n";
+    }
     echo '<meta property="og:site_name" content="' . esc_attr( get_bloginfo( 'name' ) ) . '" />' . "\n";
     echo '<meta property="og:locale" content="' . esc_attr( str_replace( '-', '_', get_bloginfo( 'language' ) ) ) . '" />' . "\n";
 
-    // Featured image, falling back to the site-wide default share image.
-    $img_src = has_post_thumbnail( $post->ID )
-        ? wp_get_attachment_image_url( get_post_thumbnail_id( $post->ID ), 'large' )
-        : sbek_site_setting_image_url( 'og_image', 'large' );
-
-    if ( $img_src ) {
-        echo '<meta property="og:image" content="' . esc_url( $img_src ) . '" />' . "\n";
+    if ( '' !== $context['image'] ) {
+        echo '<meta property="og:image" content="' . esc_url( $context['image'] ) . '" />' . "\n";
+    }
+    if ( '' !== $context['description'] ) {
+        echo '<meta property="og:description" content="' . esc_attr( $context['description'] ) . '" />' . "\n";
     }
 
-    echo '<meta name="twitter:card" content="summary_large_image" />' . "\n";
-    echo '<meta property="og:description" content="' . esc_attr( sbek_seo_description( $post ) ) . '" />' . "\n";
+    if ( 'article' === $context['type'] ) {
+        echo '<meta property="article:published_time" content="' . esc_attr( (string) get_the_date( DATE_W3C, get_queried_object() ) ) . '" />' . "\n";
+        echo '<meta property="article:modified_time" content="' . esc_attr( (string) get_the_modified_date( DATE_W3C, get_queried_object() ) ) . '" />' . "\n";
+    }
+
+    echo '<meta name="twitter:card" content="' . ( '' !== $context['image'] ? 'summary_large_image' : 'summary' ) . '" />' . "\n";
 }
 add_action( 'wp_head', 'sbek_seo_meta_tags' );
 
@@ -46,11 +136,7 @@ add_action( 'wp_head', 'sbek_seo_meta_tags' );
  * Shared excerpt/description text for OG tags and NewsArticle JSON-LD.
  */
 function sbek_seo_description( WP_Post $post ): string {
-    $excerpt = has_excerpt( $post->ID ) ? $post->post_excerpt : wp_trim_words( $post->post_content, 30 );
-    $excerpt = trim( preg_replace( '/[\s\x{200B}]+/u', ' ', wp_strip_all_tags( strip_shortcodes( $excerpt ) ) ) );
-
-    // Khmer has no spaces between words, so word trimming can't shorten it — cap by characters.
-    return mb_strlen( $excerpt ) > 200 ? mb_substr( $excerpt, 0, 199 ) . '…' : $excerpt;
+    return sbek_plain_text( has_excerpt( $post->ID ) ? $post->post_excerpt : wp_trim_words( $post->post_content, 30 ) );
 }
 
 /**
@@ -194,43 +280,24 @@ function sbek_article_jsonld() {
 add_action( 'wp_head', 'sbek_article_jsonld' );
 
 /**
- * Output BreadcrumbList JSON-LD on single posts (Home → Section → Article),
- * mirroring the visible breadcrumb trail rendered by single.php.
+ * Output BreadcrumbList JSON-LD on single posts (Home → Section → Article).
+ * Built from sbek_breadcrumb_items(), the same trail sbek_breadcrumb() shows
+ * above the headline in single.php.
  */
 function sbek_breadcrumb_jsonld() {
     if ( ! is_singular( 'post' ) || sbek_seo_plugin_active() ) {
         return;
     }
 
-    global $post;
-
-    $items = [
-        [
-            '@type'    => 'ListItem',
-            'position' => 1,
-            'name'     => __( 'Home', 'sbek' ),
-            'item'     => sbek_home_url(),
-        ],
-    ];
-
-    $position = 2;
-    $category = sbek_primary_category( $post );
-
-    if ( $category ) {
+    $items = [];
+    foreach ( sbek_breadcrumb_items( get_queried_object_id() ) as $i => $crumb ) {
         $items[] = [
             '@type'    => 'ListItem',
-            'position' => $position++,
-            'name'     => $category->name,
-            'item'     => get_category_link( $category->term_id ),
+            'position' => $i + 1,
+            'name'     => $crumb['name'],
+            'item'     => $crumb['url'],
         ];
     }
-
-    $items[] = [
-        '@type'    => 'ListItem',
-        'position' => $position,
-        'name'     => wp_strip_all_tags( get_the_title( $post ) ),
-        'item'     => get_permalink( $post ),
-    ];
 
     echo '<script type="application/ld+json">'
         . wp_json_encode( [
@@ -244,10 +311,11 @@ add_action( 'wp_head', 'sbek_breadcrumb_jsonld' );
 
 /**
  * Point crawlers at every language's sitemap. WordPress core already lists
- * the default (English) sitemap on virtual robots.txt via wp_sitemaps_robots();
- * this adds the /jp/ variant, which core has no awareness of. The front-end
- * language pre_get_posts filter in inc/i18n.php (scoped only by is_admin())
- * already makes wp-sitemap.xml itself language-aware per the active prefix.
+ * the default-language (Khmer) sitemap on the virtual robots.txt via
+ * wp_sitemaps_robots(); this adds the prefixed variants (e.g. /en/), which
+ * core has no awareness of. The front-end language pre_get_posts filter in
+ * inc/i18n.php already makes wp-sitemap.xml itself language-aware per the
+ * active prefix.
  */
 function sbek_add_localized_sitemaps_to_robots( $output, $public ) {
     if ( '1' !== (string) $public ) {

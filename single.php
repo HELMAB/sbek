@@ -1,8 +1,9 @@
 <?php
 /**
- * Single article: blurred cover backdrop, headline + meta, body (cover image
- * injected after the first paragraph, see inc/frontend/content.php), source /
- * author, share links, tags, related stories; sidebar on the right.
+ * Single article: blurred cover backdrop, breadcrumb, headline + meta, body
+ * (cover image injected after the first paragraph, see
+ * inc/frontend/content.php), source / author, share links, tags, related
+ * stories; sidebar on the right.
  *
  * @package sbek
  */
@@ -20,7 +21,10 @@ while ( have_posts() ) :
 	$sbek_source    = (string) get_post_meta( $sbek_post->ID, '_sbek_source_name', true );
 	$sbek_source_to = (string) get_post_meta( $sbek_post->ID, '_sbek_source_url', true );
 	$sbek_video     = (string) get_post_meta( $sbek_post->ID, '_sbek_video_url', true );
-	$sbek_sponsored = (bool) get_post_meta( $sbek_post->ID, '_sbek_is_sponsored', true );
+	$sbek_sponsored = sbek_is_sponsored( $sbek_post );
+	$sbek_share_txt = wp_strip_all_tags( $sbek_title );
+	// "Updated" only for real edits, not typo fixes right after publishing.
+	$sbek_updated   = get_post_modified_time( 'U', true ) - get_post_time( 'U', true ) > HOUR_IN_SECONDS;
 	$sbek_tags      = get_the_tags();
 	$sbek_has_zwsp  = false !== strpos( $sbek_post->post_content, "\u{200B}" );
 	?>
@@ -45,6 +49,7 @@ while ( have_posts() ) :
 		<div class="container layout-sidebar">
 			<article id="post-<?php the_ID(); ?>" <?php post_class( 'article white-bg layout-sidebar__main' ); ?>>
 				<header class="article__header">
+					<?php sbek_breadcrumb( $sbek_post ); ?>
 					<?php if ( $sbek_sponsored ) : ?>
 						<p class="article__sponsored"><?php esc_html_e( 'Sponsored content', 'sbek' ); ?></p>
 					<?php endif; ?>
@@ -54,6 +59,17 @@ while ( have_posts() ) :
 							<?php echo sbek_icon( 'clock', array( 'width' => 12, 'height' => 12 ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- static SVG. ?>
 							<time datetime="<?php echo esc_attr( get_the_date( DATE_W3C ) ); ?>"><?php echo esc_html( sbek_post_date() ); ?></time>
 						</li>
+						<?php if ( $sbek_updated ) : ?>
+							<li class="article__updated">
+								<?php
+								printf(
+									/* translators: %s: date and time of the last update. */
+									esc_html__( 'Updated: %s', 'sbek' ),
+									'<time datetime="' . esc_attr( get_the_modified_date( DATE_W3C ) ) . '">' . esc_html( get_the_modified_date( _x( 'l, j F Y H:i', 'post date format', 'sbek' ) ) ) . '</time>'
+								);
+								?>
+							</li>
+						<?php endif; ?>
 					</ul>
 				</header>
 
@@ -95,39 +111,52 @@ while ( have_posts() ) :
 						<p>
 							<?php esc_html_e( 'Source:', 'sbek' ); ?>
 							<?php if ( $sbek_source_to ) : ?>
-								<a href="<?php echo esc_url( $sbek_source_to ); ?>" target="_blank" rel="noopener noreferrer nofollow"><?php echo esc_html( $sbek_source ); ?></a>
+								<a href="<?php echo esc_url( $sbek_source_to ); ?>" target="_blank" rel="<?php echo esc_attr( 'noopener noreferrer ' . ( $sbek_sponsored ? 'sponsored' : 'nofollow' ) ); ?>"><?php echo esc_html( $sbek_source ); ?></a>
 							<?php else : ?>
 								<?php echo esc_html( $sbek_source ); ?>
 							<?php endif; ?>
 						</p>
 					<?php endif; ?>
-					<p>
-						<?php
-						/* translators: %s: author name. */
-						printf( esc_html__( 'By: %s', 'sbek' ), '<a href="' . esc_url( get_author_posts_url( (int) $sbek_post->post_author ) ) . '">' . esc_html( get_the_author() ) . '</a>' );
-						?>
-					</p>
+					<?php if ( sbek_section_enabled( 'byline' ) ) : ?>
+						<p>
+							<?php
+							/* translators: %s: author name. */
+							printf( esc_html__( 'By: %s', 'sbek' ), '<a href="' . esc_url( get_author_posts_url( (int) $sbek_post->post_author ) ) . '">' . esc_html( get_the_author() ) . '</a>' );
+							?>
+						</p>
+					<?php endif; ?>
 
+					<?php
+					$sbek_share = array(
+						'fb'       => array( 'facebook', __( 'Share on Facebook', 'sbek' ), 'https://www.facebook.com/sharer/sharer.php?u=' . rawurlencode( $sbek_url ) ),
+						'telegram' => array( 'telegram', __( 'Share on Telegram', 'sbek' ), 'https://t.me/share/url?url=' . rawurlencode( $sbek_url ) . '&text=' . rawurlencode( $sbek_share_txt ) ),
+						'x'        => array( 'x', __( 'Share on X', 'sbek' ), 'https://twitter.com/intent/tweet?url=' . rawurlencode( $sbek_url ) . '&text=' . rawurlencode( $sbek_share_txt ) ),
+						'mail'     => array( 'at-sign', __( 'Share by email', 'sbek' ), 'mailto:?subject=' . rawurlencode( $sbek_share_txt ) . '&body=' . rawurlencode( $sbek_url ) ),
+					);
+					?>
 					<ul class="share-links" aria-label="<?php esc_attr_e( 'Share', 'sbek' ); ?>">
-						<li>
-							<a class="share-links__fb" href="<?php echo esc_url( 'https://www.facebook.com/sharer/sharer.php?u=' . rawurlencode( $sbek_url ) ); ?>" target="_blank" rel="noopener noreferrer">
-								<?php echo sbek_icon( 'facebook', array( 'width' => 13, 'height' => 13 ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- static SVG. ?>
-								<span class="screen-reader-text"><?php esc_html_e( 'Share on Facebook', 'sbek' ); ?></span>
-							</a>
+						<li class="share-links__native-item" hidden>
+							<button type="button" class="share-links__native" data-sbek-share data-url="<?php echo esc_url( $sbek_url ); ?>" data-title="<?php echo esc_attr( $sbek_share_txt ); ?>">
+								<?php echo sbek_icon( 'share-2', array( 'width' => 15, 'height' => 15 ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- static SVG. ?>
+								<span class="screen-reader-text"><?php esc_html_e( 'Share…', 'sbek' ); ?></span>
+							</button>
 						</li>
+						<?php foreach ( $sbek_share as $sbek_share_key => $sbek_share_item ) : ?>
+							<li>
+								<a class="share-links__<?php echo esc_attr( $sbek_share_key ); ?>" href="<?php echo esc_url( $sbek_share_item[2] ); ?>"<?php echo 'mail' === $sbek_share_key ? '' : ' target="_blank" rel="noopener noreferrer"'; ?>>
+									<?php echo sbek_icon( $sbek_share_item[0], array( 'width' => 15, 'height' => 15 ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- static SVG. ?>
+									<span class="screen-reader-text"><?php echo esc_html( $sbek_share_item[1] ); ?></span>
+								</a>
+							</li>
+						<?php endforeach; ?>
 						<li>
-							<a class="share-links__x" href="<?php echo esc_url( 'https://twitter.com/intent/tweet?url=' . rawurlencode( $sbek_url ) . '&text=' . rawurlencode( wp_strip_all_tags( $sbek_title ) ) ); ?>" target="_blank" rel="noopener noreferrer">
-								<?php echo sbek_icon( 'x', array( 'width' => 12, 'height' => 12 ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- static SVG. ?>
-								<span class="screen-reader-text"><?php esc_html_e( 'Share on X', 'sbek' ); ?></span>
-							</a>
-						</li>
-						<li>
-							<a class="share-links__mail" href="<?php echo esc_url( 'mailto:?subject=' . rawurlencode( wp_strip_all_tags( $sbek_title ) ) . '&body=' . rawurlencode( $sbek_url ) ); ?>">
-								<?php echo sbek_icon( 'at-sign', array( 'width' => 13, 'height' => 13 ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- static SVG. ?>
-								<span class="screen-reader-text"><?php esc_html_e( 'Share by email', 'sbek' ); ?></span>
-							</a>
+							<button type="button" class="share-links__copy" data-sbek-copy="<?php echo esc_url( $sbek_url ); ?>" data-copied="<?php esc_attr_e( 'Link copied', 'sbek' ); ?>">
+								<?php echo sbek_icon( 'link', array( 'width' => 15, 'height' => 15 ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- static SVG. ?>
+								<span class="screen-reader-text"><?php esc_html_e( 'Copy link', 'sbek' ); ?></span>
+							</button>
 						</li>
 					</ul>
+					<p class="share-links__status screen-reader-text" role="status" data-sbek-copy-status></p>
 				</footer>
 
 				<?php if ( $sbek_tags ) : ?>

@@ -83,7 +83,10 @@ function sbek_render_news_meta_box( WP_Post $post ): void {
 	<p>
 		<label for="sbek_video_url"><strong><?php esc_html_e( 'Video URL', 'sbek' ); ?></strong></label>
 		<input type="url" id="sbek_video_url" name="sbek_video_url" value="<?php echo esc_attr( (string) $video ); ?>" class="widefat" placeholder="https://www.youtube.com/watch?v=…">
-		<span class="description"><?php esc_html_e( 'Embedded above the article. Set the post format to "Video" to list it in the homepage video block.', 'sbek' ); ?></span>
+		<span class="description"><?php esc_html_e( 'Embedded above the article. Saving a URL also sets the post format to "Video", which lists the post in the homepage video block.', 'sbek' ); ?></span>
+		<?php if ( ! $video && has_post_format( 'video', $post ) && ! sbek_content_has_video( $post->post_content ) ) : ?>
+			<span class="description sbek-meta-warning" style="display:block;margin-top:4px;color:#b32d2e;"><?php esc_html_e( 'This post is in the Video format but has no video: add a URL here or a video/embed block to the content. Its cards show a play icon.', 'sbek' ); ?></span>
+		<?php endif; ?>
 	</p>
 	<p>
 		<label for="sbek_source_name"><strong><?php esc_html_e( 'Source', 'sbek' ); ?></strong></label>
@@ -96,6 +99,17 @@ function sbek_render_news_meta_box( WP_Post $post ): void {
 	<p>
 		<label><input type="checkbox" name="sbek_is_sponsored" value="1" <?php checked( $sponsored ); ?>> <?php esc_html_e( 'Sponsored / advertorial', 'sbek' ); ?></label><br>
 		<label><input type="checkbox" name="sbek_is_breaking" value="1" <?php checked( $breaking ); ?>> <?php esc_html_e( 'Breaking news (header ticker)', 'sbek' ); ?></label>
+		<?php
+		$sbek_hours = absint( sbek_site_setting( 'breaking_hours', 48 ) );
+		if ( $sbek_hours ) :
+			?>
+			<br><span class="description">
+				<?php
+				/* translators: %d: number of hours. */
+				echo esc_html( sprintf( _n( 'Shown in the ticker for %d hour after publishing.', 'Shown in the ticker for %d hours after publishing.', $sbek_hours, 'sbek' ), $sbek_hours ) );
+				?>
+			</span>
+		<?php endif; ?>
 	</p>
 	<?php
 }
@@ -129,5 +143,43 @@ function sbek_save_news_meta( int $post_id, WP_Post $post ): void {
 			update_post_meta( $post_id, $key, $value ); // Runs the registered sanitize_callback.
 		}
 	}
+
+	// A video URL is what makes a video story: list it in the video block
+	// too, unless the editor picked another non-standard format on purpose.
+	if ( get_post_meta( $post_id, '_sbek_video_url', true ) && ! get_post_format( $post_id ) ) {
+		set_post_format( $post_id, 'video' );
+	}
 }
 add_action( 'save_post', 'sbek_save_news_meta', 10, 2 );
+
+/**
+ * Whether post content carries its own video (video/embed block, [video] or
+ * [embed] shortcode, or an iframe).
+ */
+function sbek_content_has_video( string $content ): bool {
+	return (bool) preg_match( '/<!-- wp:(video|embed|core-embed)|\[(video|embed)[\s\]]|<iframe\b/i', $content );
+}
+
+/**
+ * Editor script for the News details box (Video URL → Video format).
+ *
+ * @param string $hook Admin page hook.
+ */
+function sbek_news_meta_assets( string $hook ): void {
+	$screen = get_current_screen();
+	if ( ! in_array( $hook, array( 'post.php', 'post-new.php' ), true ) || ! $screen || 'post' !== $screen->post_type ) {
+		return;
+	}
+
+	wp_enqueue_script(
+		'sbek-admin-news-meta',
+		SBEK_URI . '/assets/js/admin-news-meta.js',
+		array(),
+		sbek_asset_version( 'assets/js/admin-news-meta.js' ),
+		array(
+			'in_footer' => true,
+			'strategy'  => 'defer',
+		)
+	);
+}
+add_action( 'admin_enqueue_scripts', 'sbek_news_meta_assets' );

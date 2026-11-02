@@ -21,7 +21,7 @@ $sbek_has_ads = is_active_sidebar( 'sbek-ad-hero' );
 ?>
 <section id="banner" class="banner container<?php echo $sbek_has_ads ? ' banner--ads' : ''; ?>" aria-label="<?php esc_attr_e( 'Top stories', 'sbek' ); ?>">
 	<div class="banner__main" data-sbek-carousel aria-roledescription="carousel">
-		<div class="banner__track" data-carousel-track aria-live="polite">
+		<div class="banner__track" id="sbek-banner-track" data-carousel-track aria-live="off">
 			<?php
 			foreach ( $sbek_posts as $sbek_i => $sbek_post ) :
 				$sbek_wide = in_array( $sbek_i, array( 0, 2 ), true );
@@ -50,6 +50,27 @@ $sbek_has_ads = is_active_sidebar( 'sbek-ad-hero' );
 				<?php echo sbek_icon( 'chevron-right', array( 'width' => 22, 'height' => 22 ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- static SVG. ?>
 				<span class="screen-reader-text"><?php esc_html_e( 'Next', 'sbek' ); ?></span>
 			</button>
+			<div class="banner__controls">
+				<button type="button" class="banner__pause" aria-controls="sbek-banner-track" data-carousel-pause hidden
+					data-label-pause="<?php esc_attr_e( 'Stop automatic slide show', 'sbek' ); ?>"
+					data-label-play="<?php esc_attr_e( 'Start automatic slide show', 'sbek' ); ?>">
+					<?php echo sbek_icon( 'pause', array( 'width' => 14, 'height' => 14, 'class' => 'banner__pause-icon' ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- static SVG. ?>
+					<?php echo sbek_icon( 'play', array( 'width' => 14, 'height' => 14, 'class' => 'banner__play-icon' ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- static SVG. ?>
+					<span class="screen-reader-text" data-carousel-pause-label><?php esc_html_e( 'Stop automatic slide show', 'sbek' ); ?></span>
+				</button>
+				<div class="banner__dots" role="group" aria-label="<?php esc_attr_e( 'Choose a story', 'sbek' ); ?>">
+					<?php foreach ( $sbek_posts as $sbek_i => $sbek_post ) : ?>
+						<button type="button" class="banner__dot" data-carousel-dot="<?php echo esc_attr( (string) $sbek_i ); ?>"<?php echo 0 === $sbek_i ? ' aria-current="true"' : ''; ?>>
+							<span class="screen-reader-text">
+								<?php
+								/* translators: 1: story number, 2: number of stories. */
+								echo esc_html( sprintf( __( 'Story %1$d of %2$d', 'sbek' ), $sbek_i + 1, count( $sbek_posts ) ) );
+								?>
+							</span>
+						</button>
+					<?php endforeach; ?>
+				</div>
+			</div>
 		<?php endif; ?>
 	</div>
 	<?php sbek_ad_area( 'sbek-ad-hero', 'banner__ads' ); ?>
