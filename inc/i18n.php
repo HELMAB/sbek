@@ -513,7 +513,7 @@ function sbek_localize_term_name( $term ) {
 add_filter( 'get_term', 'sbek_localize_term_name' );
 
 /**
- * English site title / tagline (Theme Option → General) on /en/ pages.
+ * English site title / tagline (Sbek Theme → General) on /en/ pages.
  * Affects <title>, the logo alt text, the footer and structured data.
  *
  * @param mixed  $value  Option value.

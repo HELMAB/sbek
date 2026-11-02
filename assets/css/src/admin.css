@@ -13,6 +13,20 @@
   --color-sbek-blue: #0056b3;
 }
 
+/* One accent for every admin screen: the brand color from Sbek Theme → Design
+   (set inline by sbek_admin_accent_style(); these are the defaults). */
+.sbek-options,
+.sbek-setup {
+	--sbek-accent: #fa1939;
+	--sbek-accent-dark: #d90c16;
+	--sbek-on-accent: #ffffff;
+	--sbek-accent-text: color-mix(in srgb, var(--sbek-accent) 75%, #000);
+	--sbek-accent-soft: color-mix(in srgb, var(--sbek-accent) 9%, transparent);
+	--sbek-accent-soft-2: color-mix(in srgb, var(--sbek-accent) 16%, transparent);
+	--sbek-accent-ring: color-mix(in srgb, var(--sbek-accent) 18%, transparent);
+	--sbek-danger: #b91c1c;
+}
+
 /* ─────────────────────────────────────────────────────────────────────────
    Settings card — two layers: header (icon + title + description) and body.
    ───────────────────────────────────────────────────────────────────────── */
@@ -40,8 +54,8 @@
 	width: 40px;
 	height: 40px;
 	border-radius: 11px;
-	background: rgba(250, 25, 57, .10);
-	color: #fa1939;
+	background: var(--sbek-accent-soft);
+	color: var(--sbek-accent-text);
 }
 .sbek-card__heading { flex: 1 1 auto; min-width: 0; }
 .sbek-card__title {
@@ -77,8 +91,8 @@
 	font-size: 12.5px;
 	font-weight: 600;
 	line-height: 1;
-	color: #fff;
-	background: #0056b3;
+	color: var(--sbek-on-accent);
+	background: var(--sbek-accent);
 	border: 0;
 	border-radius: 8px;
 	cursor: pointer;
@@ -120,16 +134,16 @@
 	transition: border-color .18s ease, background .18s ease, box-shadow .18s ease, transform .18s ease;
 }
 .sbek-media-dropzone:hover {
-	border-color: #0056b3;
-	background: linear-gradient(180deg, #f6faff 0%, #eaf3ff 100%);
-	box-shadow: 0 10px 24px -14px rgba(0, 86, 179, .55);
+	border-color: var(--sbek-accent);
+	background: linear-gradient(180deg, #ffffff 0%, var(--sbek-accent-soft) 100%);
+	box-shadow: 0 10px 24px -14px color-mix(in srgb, var(--sbek-accent) 55%, transparent);
 }
 .sbek-media-dropzone:active { transform: translateY(1px); }
 .sbek-media-dropzone:focus-visible {
 	outline: none;
-	border-color: #0056b3;
+	border-color: var(--sbek-accent);
 	border-style: solid;
-	box-shadow: 0 0 0 3px rgba(0, 86, 179, .28);
+	box-shadow: 0 0 0 3px var(--sbek-accent-ring);
 }
 
 .sbek-media-dropzone__icon {
@@ -139,13 +153,13 @@
 	width: 52px;
 	height: 52px;
 	border-radius: 16px;
-	background: rgba(0, 86, 179, .08);
-	color: #0056b3;
+	background: var(--sbek-accent-soft);
+	color: var(--sbek-accent-text);
 	transition: transform .18s ease, background .18s ease;
 }
 .sbek-media-dropzone:hover .sbek-media-dropzone__icon {
 	transform: translateY(-3px) scale(1.06);
-	background: rgba(0, 86, 179, .15);
+	background: var(--sbek-accent-soft-2);
 }
 .sbek-media-dropzone__label { font-size: 14px; font-weight: 700; letter-spacing: .01em; }
 .sbek-media-dropzone__hint  { font-size: 12px; color: #9ca3af; }
@@ -193,10 +207,10 @@
 	cursor: pointer;
 	transition: background .15s ease, color .15s ease, border-color .15s ease;
 }
-.sbek-media-btn--change { color: #0056b3; background: rgba(0, 86, 179, .08); }
-.sbek-media-btn--change:hover { background: rgba(0, 86, 179, .16); }
-.sbek-media-btn--remove { color: #e31e24; background: transparent; }
-.sbek-media-btn--remove:hover { background: rgba(227, 30, 36, .1); }
+.sbek-media-btn--change { color: var(--sbek-accent-text); background: var(--sbek-accent-soft); }
+.sbek-media-btn--change:hover { background: var(--sbek-accent-soft-2); }
+.sbek-media-btn--remove { color: var(--sbek-danger); background: transparent; }
+.sbek-media-btn--remove:hover { background: rgba(185, 28, 28, .1); }
 
 /* Checkerboard backdrop so transparent logos stay legible. */
 .sbek-checkerboard {
@@ -239,7 +253,7 @@
 	display: block;
 	height: 100%;
 	border-radius: 999px;
-	background: #0056b3;
+	background: var(--sbek-accent);
 	transition: width .4s ease;
 }
 .sbek-setup__fill.is-complete { background: #16a34a; }
@@ -292,6 +306,9 @@
 	color: #c4c8cf; /* pending */
 }
 .sbek-setup__item.is-done .sbek-setup__icon { color: #16a34a; }
+.sbek-setup__label { color: inherit; text-decoration: none; }
+.sbek-setup__label:hover,
+.sbek-setup__label:focus { color: var(--sbek-accent-text); text-decoration: underline; box-shadow: none; }
 .sbek-setup__item.is-done .sbek-setup__label { color: #9ca3af; }
 
 /* Call to action */
@@ -301,15 +318,15 @@
 	gap: 6px;
 	font-size: 13px;
 	font-weight: 700;
-	color: #0056b3;
+	color: var(--sbek-accent-text);
 	text-decoration: none;
 	transition: gap .15s ease, color .15s ease;
 }
-.sbek-setup__cta:hover { color: #e31e24; gap: 9px; }
+.sbek-setup__cta:hover { color: var(--sbek-accent-dark); gap: 9px; }
 
 
 /* ─────────────────────────────────────────────────────────────────────────
-   Theme Option page — header, tab layout, fields, toggles, table, save bar.
+   Sbek Theme page — header, tab layout, fields, toggles, table, save bar.
    ───────────────────────────────────────────────────────────────────────── */
 
 .sbek-options {
@@ -345,10 +362,10 @@
 	gap: 16px;
 	margin: 12px 0 18px;
 	padding: 20px 24px;
-	background: linear-gradient(135deg, #fa1939 0%, #b8102a 100%);
+	background: linear-gradient(135deg, var(--sbek-accent) 0%, var(--sbek-accent-dark) 100%);
 	border-radius: 16px;
-	color: #fff;
-	box-shadow: 0 6px 18px rgba(184, 16, 42, .18);
+	color: var(--sbek-on-accent);
+	box-shadow: 0 6px 18px color-mix(in srgb, var(--sbek-accent-dark) 18%, transparent);
 }
 .sbek-options__title {
 	margin: 0;
@@ -356,14 +373,14 @@
 	font-size: 24px;
 	font-weight: 800;
 	line-height: 1.2;
-	color: #fff;
+	color: var(--sbek-on-accent);
 }
 .sbek-options__subtitle {
 	max-width: 640px;
 	margin: 4px 0 0;
 	font-size: 13px;
 	line-height: 1.5;
-	color: rgba(255, 255, 255, .85);
+	color: color-mix(in srgb, var(--sbek-on-accent) 85%, transparent);
 }
 .sbek-options__actions {
 	display: flex;
@@ -389,10 +406,14 @@
 .sbek-btn:focus-visible { outline: 2px solid #111827; outline-offset: 2px; }
 .sbek-btn--primary { background: #111827; color: #fff; }
 .sbek-btn--primary:hover { background: #000; color: #fff; }
-.sbek-btn--ghost { background: rgba(255, 255, 255, .14); border-color: rgba(255, 255, 255, .35); color: #fff; }
-.sbek-btn--ghost:hover { background: rgba(255, 255, 255, .24); color: #fff; }
-.sbek-savebar .sbek-btn--primary { background: #fa1939; }
-.sbek-savebar .sbek-btn--primary:hover { background: #d90c16; }
+.sbek-btn--ghost {
+	background: color-mix(in srgb, var(--sbek-on-accent) 14%, transparent);
+	border-color: color-mix(in srgb, var(--sbek-on-accent) 35%, transparent);
+	color: var(--sbek-on-accent);
+}
+.sbek-btn--ghost:hover { background: color-mix(in srgb, var(--sbek-on-accent) 24%, transparent); color: var(--sbek-on-accent); }
+.sbek-savebar .sbek-btn--primary { background: var(--sbek-accent); color: var(--sbek-on-accent); }
+.sbek-savebar .sbek-btn--primary:hover { background: var(--sbek-accent-dark); color: var(--sbek-on-accent); }
 
 /* Layout: vertical tabs + panels */
 .sbek-options__layout {
@@ -407,7 +428,7 @@
 
 .sbek-tabs {
 	position: sticky;
-	top: 46px;
+	top: 48px; /* 32px admin bar + 16px */
 	display: flex;
 	flex-direction: column;
 	gap: 4px;
@@ -438,10 +459,10 @@
 }
 .sbek-tabs__tab:hover { background: #f3f4f6; color: #111827; }
 .sbek-tabs__tab:focus { box-shadow: none; }
-.sbek-tabs__tab:focus-visible { outline: 2px solid #fa1939; outline-offset: -2px; }
+.sbek-tabs__tab:focus-visible { outline: 2px solid var(--sbek-accent); outline-offset: -2px; }
 .sbek-tabs__tab.is-active {
-	background: rgba(250, 25, 57, .09);
-	color: #d90c16;
+	background: var(--sbek-accent-soft);
+	color: var(--sbek-accent-text);
 }
 
 .sbek-options__panels { min-width: 0; }
@@ -488,9 +509,9 @@
 }
 .sbek-options textarea.sbek-input { min-height: 0; resize: vertical; }
 .sbek-options .sbek-input:focus {
-	border-color: #fa1939;
+	border-color: var(--sbek-accent);
 	outline: none;
-	box-shadow: 0 0 0 3px rgba(250, 25, 57, .15);
+	box-shadow: 0 0 0 3px var(--sbek-accent-ring);
 }
 .sbek-options .sbek-input--code {
 	font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
@@ -543,10 +564,10 @@
 	box-shadow: 0 1px 2px rgba(0, 0, 0, .2);
 	transition: transform .2s ease;
 }
-.sbek-toggle__input:checked + .sbek-toggle__label { border-color: rgba(250, 25, 57, .35); }
-.sbek-toggle__input:checked + .sbek-toggle__label .sbek-toggle__switch { background: #fa1939; }
+.sbek-toggle__input:checked + .sbek-toggle__label { border-color: color-mix(in srgb, var(--sbek-accent) 35%, transparent); }
+.sbek-toggle__input:checked + .sbek-toggle__label .sbek-toggle__switch { background: var(--sbek-accent); }
 .sbek-toggle__input:checked + .sbek-toggle__label .sbek-toggle__switch::after { transform: translateX(18px); }
-.sbek-toggle__input:focus-visible + .sbek-toggle__label { outline: 2px solid #fa1939; outline-offset: 2px; }
+.sbek-toggle__input:focus-visible + .sbek-toggle__label { outline: 2px solid var(--sbek-accent); outline-offset: 2px; }
 .sbek-toggle__title { display: block; font-size: 13.5px; font-weight: 700; color: #111827; }
 .sbek-toggle__help { display: block; margin-top: 2px; font-size: 12px; color: #6b7280; }
 
@@ -614,7 +635,7 @@
 	color: #9ca3af;
 	cursor: pointer;
 }
-.sbek-repeater__remove:hover { background: rgba(250, 25, 57, .08); color: #fa1939; }
+.sbek-repeater__remove:hover { background: rgba(185, 28, 28, .08); color: var(--sbek-danger); }
 
 /* Links list */
 .sbek-links {
@@ -634,7 +655,7 @@
 	color: #1f2937;
 	text-decoration: none;
 }
-.sbek-links a:hover { border-color: #fa1939; color: #d90c16; }
+.sbek-links a:hover { border-color: var(--sbek-accent); color: var(--sbek-accent-text); }
 .sbek-empty { margin: 0; color: #6b7280; }
 
 /* Sticky save bar */
@@ -713,6 +734,14 @@
 	font: 700 14px/1 Arial, sans-serif;
 	color: var(--p-on-brand);
 }
+.sbek-preview__logo.has-image {
+	width: auto;
+	max-width: 140px;
+	border: 0;
+	border-radius: 0;
+	background: transparent;
+}
+.sbek-preview__logo img { display: block; height: 40px; width: auto; max-width: 140px; object-fit: contain; }
 .sbek-preview__ad {
 	width: 46%;
 	height: 34px;
@@ -788,8 +817,8 @@
 
 /* ── Tools: buttons, inline confirm, demo progress ────────────────────── */
 
-.sbek-btn--brand { background: #fa1939; color: #fff; }
-.sbek-btn--brand:hover { background: #d90c16; color: #fff; }
+.sbek-btn--brand { background: var(--sbek-accent); color: var(--sbek-on-accent); }
+.sbek-btn--brand:hover { background: var(--sbek-accent-dark); color: var(--sbek-on-accent); }
 .sbek-btn--danger { background: #b91c1c; color: #fff; }
 .sbek-btn--danger:hover { background: #991b1b; color: #fff; }
 .sbek-btn--danger-ghost { background: #fff; border-color: #fca5a5; color: #b91c1c; }
@@ -827,9 +856,74 @@
 	width: 0;
 	height: 100%;
 	border-radius: 999px;
-	background: #fa1939;
+	background: var(--sbek-accent);
 	transition: width .35s ease;
 }
 .sbek-demo__message { margin: 8px 0 0; font-size: 12.5px; color: #4b5563; }
 .sbek-demo.is-error .sbek-demo__message { color: #b91c1c; font-weight: 600; }
 .sbek-demo.is-error .sbek-demo__fill { background: #b91c1c; }
+
+/* ── Repeater: reorder buttons ────────────────────────────────────────── */
+
+.sbek-repeater__move { display: flex; flex: none; flex-direction: column; }
+.sbek-repeater__btn {
+	display: flex;
+	padding: 1px 4px;
+	border: 0;
+	border-radius: 5px;
+	background: transparent;
+	color: #9ca3af;
+	cursor: pointer;
+}
+.sbek-repeater__btn:hover { background: #f3f4f6; color: #111827; }
+.sbek-repeater__btn:focus-visible { outline: 2px solid var(--sbek-accent); outline-offset: 0; }
+/* Nothing to move past at the ends. */
+.sbek-repeater__row:first-child [data-sbek-move="-1"],
+.sbek-repeater__row:last-child [data-sbek-move="1"] { visibility: hidden; }
+
+/* ── Category table: color that follows the brand, homepage status ────── */
+
+.sbek-termcolor { display: flex; align-items: center; gap: 8px; white-space: nowrap; }
+.sbek-termcolor__auto { font-size: 12px; color: #9ca3af; }
+.sbek-termcolor[data-state="custom"] .sbek-termcolor__auto,
+.sbek-termcolor[data-state="auto"] .sbek-termcolor__reset { display: none; }
+
+.sbek-status {
+	display: inline-block;
+	margin-top: 5px;
+	padding: 2px 8px;
+	border-radius: 999px;
+	font-size: 11px;
+	font-weight: 600;
+	line-height: 1.6;
+}
+.sbek-status.is-on { background: rgba(22, 163, 74, .1); color: #15803d; }
+.sbek-status.is-off { background: rgba(180, 83, 9, .1); color: #b45309; }
+
+.sbek-field__help--info {
+	margin: 0 0 12px;
+	padding: 10px 12px;
+	border-radius: 9px;
+	background: #f3f4f6;
+	color: #374151;
+}
+
+/* ── Inline confirm: unsaved-changes note ─────────────────────────────── */
+
+.sbek-confirm__note { flex-basis: 100%; font-size: 12px; font-weight: 600; color: #b45309; }
+
+/* ── Footer card: subscriber actions ──────────────────────────────────── */
+
+.sbek-inline-actions {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 6px 10px;
+	margin-top: 12px;
+}
+.sbek-inline-actions__text { margin-right: auto; font-size: 13px; color: #4b5563; }
+
+/* ── "Not saved" notice list ──────────────────────────────────────────── */
+
+.sbek-notice-list { margin: 0 0 8px 18px; list-style: disc; }
+.sbek-repeater__row:only-child .sbek-repeater__move { display: none; }

@@ -6,7 +6,7 @@
  *   wp sbek demo reset [--yes]
  *   wp sbek demo status
  *
- * The same batches run from Theme Option → Tools; here they simply run in a
+ * The same batches run from Sbek Theme → Tools; here they simply run in a
  * loop. Loaded only under WP-CLI (see functions.php).
  *
  * @package sbek
@@ -29,7 +29,7 @@ class Sbek_Demo_Command {
 	 * ## OPTIONS
 	 *
 	 * [--skip-site-setup]
-	 * : Don't touch site options (language, permalinks, timezone, title, menus, widgets, Theme Option).
+	 * : Don't touch site options (language, permalinks, timezone, title, menus, widgets, Sbek Theme).
 	 *
 	 * [--posts=<n>]
 	 * : Khmer posts per category.

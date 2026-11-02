@@ -50,7 +50,7 @@ foreach ( $sbek_modules as $sbek_module ) {
 }
 unset( $sbek_modules, $sbek_module );
 
-// Demo importer: only needed in wp-admin (Theme Option → Tools) and WP-CLI.
+// Demo importer: only needed in wp-admin (Sbek Theme → Tools) and WP-CLI.
 if ( is_admin() || ( defined( 'WP_CLI' ) && WP_CLI ) ) {
 	require SBEK_DIR . '/inc/demo/class-sbek-demo-importer.php';
 }

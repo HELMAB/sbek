@@ -65,6 +65,12 @@ function sbek_icon_paths(): array {
 		'toggle'        => [ 'line', '<rect width="20" height="12" x="2" y="6" rx="6" ry="6"/><circle cx="16" cy="12" r="2"/>' ],
 		'external-link' => [ 'line', '<path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>' ],
 		'copyright'     => [ 'line', '<circle cx="12" cy="12" r="10"/><path d="M14.83 14.83a4 4 0 1 1 0-5.66"/>' ],
+		'type'          => [ 'line', '<path d="M12 4v16"/><path d="M4 7V5a1 1 0 0 1 1-1h14a1 1 0 0 1 1 1v2"/><path d="M9 20h6"/>' ],
+		'code'          => [ 'line', '<path d="m16 18 6-6-6-6"/><path d="m8 6-6 6 6 6"/>' ],
+		'rotate-ccw'    => [ 'line', '<path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/>' ],
+		'chevron-up'    => [ 'line', '<path d="m18 15-6-6-6 6"/>' ],
+		'download'      => [ 'line', '<path d="M12 15V3"/><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="m7 10 5 5 5-5"/>' ],
+		'panel-bottom'  => [ 'line', '<rect width="18" height="18" x="3" y="3" rx="2"/><path d="M3 15h18"/>' ],
 		'rocket'       => [ 'line', '<path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09"/><path d="M9 12a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.4 22.4 0 0 1-4 2z"/><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 .05 5 .05"/>' ],
 
 		// ── Simple Icons brand logos (solid) ────────────────────────────────
@@ -145,7 +151,17 @@ function sbek_icon( string $name, array $attrs = [] ): string {
  * @return string Icon name registered in sbek_icon_paths().
  */
 function sbek_social_icon_name( string $platform ): string {
-	$map = [
+	return sbek_social_icon_aliases()[ strtolower( trim( $platform ) ) ] ?? 'link';
+}
+
+/**
+ * Lower-case platform label => brand icon name (also passed to the Sbek Theme
+ * page JS so the row icon updates while typing).
+ *
+ * @return array<string,string>
+ */
+function sbek_social_icon_aliases(): array {
+	return [
 		'facebook'  => 'facebook',
 		'fb'        => 'facebook',
 		'messenger' => 'facebook',
@@ -163,8 +179,4 @@ function sbek_social_icon_name( string $platform ): string {
 		'whatsapp'  => 'whatsapp',
 		'whats app' => 'whatsapp',
 	];
-
-	$key = strtolower( trim( $platform ) );
-
-	return $map[ $key ] ?? 'link';
 }

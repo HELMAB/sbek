@@ -1,6 +1,6 @@
 <?php
 /**
- * "Theme Option" admin page — one place to edit all site-wide data the theme
+ * "Sbek Theme" admin page — one place to edit all site-wide data the theme
  * displays, organised in tabs:
  *
  *   General          Site title / tagline (Khmer = core options, English =
@@ -105,8 +105,14 @@ function sbek_sanitize_site_settings( $input ): array {
 	$input = is_array( $input ) ? $input : array();
 	$clean = sbek_site_settings_defaults();
 
-	foreach ( array( 'name_en', 'tagline_en', 'copyright', 'copyright_en', 'ga4_id', 'gtm_id' ) as $key ) {
+	foreach ( array( 'name_en', 'tagline_en', 'copyright', 'copyright_en' ) as $key ) {
 		$clean[ $key ] = sanitize_text_field( (string) ( $input[ $key ] ?? '' ) );
+	}
+
+	// Tracking IDs: only well-formed ones, or the snippet would load nothing.
+	foreach ( sbek_tracking_id_patterns() as $key => $pattern ) {
+		$id            = strtoupper( sanitize_text_field( (string) ( $input[ $key ] ?? '' ) ) );
+		$clean[ $key ] = preg_match( $pattern, $id ) ? $id : '';
 	}
 
 	foreach ( array( 'description', 'description_en', 'address', 'address_en' ) as $key ) {
@@ -184,6 +190,101 @@ function sbek_sanitize_site_settings( $input ): array {
 }
 
 /**
+ * Accepted formats of the tracking IDs (upper-cased before matching).
+ *
+ * @return array<string,string> setting key => regex.
+ */
+function sbek_tracking_id_patterns(): array {
+	return array(
+		'ga4_id' => '/^G-[A-Z0-9]{4,}$/',
+		'gtm_id' => '/^GTM-[A-Z0-9]{4,}$/',
+	);
+}
+
+/**
+ * Explain which submitted values the sanitizer is about to drop, so the user
+ * is told instead of the field silently coming back empty.
+ *
+ * @param array<string,mixed> $input Unslashed settings input.
+ * @return string[] Plain-text messages.
+ */
+function sbek_settings_input_problems( array $input ): array {
+	$problems = array();
+
+	$email = trim( (string) ( $input['email'] ?? '' ) );
+	if ( '' !== $email && ! is_email( sanitize_email( $email ) ) ) {
+		/* translators: %s: submitted value. */
+		$problems[] = sprintf( __( 'Contact email: “%s” is not a valid email address.', 'sbek' ), $email );
+	}
+
+	foreach ( array( 'lat' => 90, 'lng' => 180 ) as $key => $max ) {
+		$value = trim( (string) ( $input[ $key ] ?? '' ) );
+		if ( '' !== $value && ( ! is_numeric( $value ) || abs( (float) $value ) > $max ) ) {
+			$problems[] = 'lat' === $key
+				? __( 'Latitude must be a number between -90 and 90.', 'sbek' )
+				: __( 'Longitude must be a number between -180 and 180.', 'sbek' );
+		}
+	}
+
+	$examples = array(
+		'ga4_id' => array( __( 'Google Analytics 4 ID', 'sbek' ), 'G-XXXXXXXXXX' ),
+		'gtm_id' => array( __( 'Google Tag Manager ID', 'sbek' ), 'GTM-XXXXXXX' ),
+	);
+	foreach ( sbek_tracking_id_patterns() as $key => $pattern ) {
+		$value = strtoupper( trim( (string) ( $input[ $key ] ?? '' ) ) );
+		if ( '' !== $value && ! preg_match( $pattern, $value ) ) {
+			/* translators: 1: field label, 2: example ID. */
+			$problems[] = sprintf( __( '%1$s must look like %2$s.', 'sbek' ), $examples[ $key ][0], $examples[ $key ][1] );
+		}
+	}
+
+	foreach ( (array) ( $input['socials'] ?? array() ) as $row ) {
+		$url = trim( (string) ( $row['url'] ?? '' ) );
+		if ( '' !== $url && '' === esc_url_raw( $url, array( 'http', 'https' ) ) ) {
+			/* translators: %s: submitted URL. */
+			$problems[] = sprintf( __( 'Social link “%s” is not a valid http(s) address.', 'sbek' ), $url );
+		}
+	}
+
+	return $problems;
+}
+
+/**
+ * Why an attachment can't be the site icon ('' when it can). Core only crops
+ * icons in the Customizer, so a non-square image would be shown squashed.
+ */
+function sbek_site_icon_problem( int $attachment_id ): string {
+	$meta   = wp_get_attachment_metadata( $attachment_id );
+	$width  = (int) ( $meta['width'] ?? 0 );
+	$height = (int) ( $meta['height'] ?? 0 );
+
+	if ( ! $width || ! $height ) {
+		return '';
+	}
+
+	if ( abs( $width - $height ) > 2 || min( $width, $height ) < 512 ) {
+		/* translators: 1: width, 2: height in pixels. */
+		return sprintf( __( 'Site icon not changed: the image is %1$d×%2$dpx, but it must be square and at least 512×512px.', 'sbek' ), $width, $height );
+	}
+
+	return '';
+}
+
+/**
+ * Inline CSS variables that tint the admin screens with the brand color.
+ */
+function sbek_admin_accent_style(): string {
+	$design = sbek_design();
+
+	return sprintf(
+		'--sbek-accent:%1$s;--sbek-accent-dark:%2$s;--sbek-on-accent:%3$s;',
+		$design['brand'],
+		$design['brand_dark'],
+		sbek_readable_on( $design['brand'] )
+	);
+}
+
+/**
  * Read a site setting (or the whole array when $key is null).
  *
  * @param string|null $key     Setting key.
@@ -210,7 +311,7 @@ function sbek_site_setting_image_url( string $key, string $size = 'full' ): stri
 }
 
 /**
- * Whether a homepage/footer section is switched on in Theme Option.
+ * Whether a homepage/footer section is switched on in Sbek Theme.
  *
  * @param string $section ticker | video | newsletter.
  */
@@ -269,6 +370,7 @@ function sbek_save_theme_options(): void {
 	$settings = isset( $_POST[ SBEK_SETTINGS_OPTION ] ) && is_array( $_POST[ SBEK_SETTINGS_OPTION ] )
 		? wp_unslash( $_POST[ SBEK_SETTINGS_OPTION ] ) // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- sanitized by the registered callback.
 		: array();
+	$problems = sbek_settings_input_problems( $settings );
 	update_option( SBEK_SETTINGS_OPTION, $settings );
 
 	// 2. Core site identity.
@@ -281,8 +383,15 @@ function sbek_save_theme_options(): void {
 		update_option( 'blogdescription', sanitize_text_field( (string) $core['blogdescription'] ) );
 	}
 	if ( isset( $core['site_icon'] ) ) {
-		$icon = absint( $core['site_icon'] );
-		update_option( 'site_icon', ( $icon && wp_attachment_is_image( $icon ) ) ? $icon : 0 );
+		$icon    = absint( $core['site_icon'] );
+		$icon    = ( $icon && wp_attachment_is_image( $icon ) ) ? $icon : 0;
+		$problem = $icon && $icon !== (int) get_option( 'site_icon' ) ? sbek_site_icon_problem( $icon ) : '';
+
+		if ( $problem ) {
+			$problems[] = $problem; // Keep the current icon.
+		} else {
+			update_option( 'site_icon', $icon );
+		}
 	}
 
 	// 3. Category blocks (term meta; registered sanitizers apply).
@@ -296,8 +405,10 @@ function sbek_save_theme_options(): void {
 			continue;
 		}
 
+		// "color_auto" = follow the brand color: store nothing, so a later
+		// brand change still reaches this category.
 		$values = array(
-			'sbek_color'      => (string) sanitize_hex_color( (string) ( $fields['color'] ?? '' ) ),
+			'sbek_color'      => empty( $fields['color_auto'] ) ? (string) sanitize_hex_color( (string) ( $fields['color'] ?? '' ) ) : '',
 			'sbek_name_en'    => sanitize_text_field( (string) ( $fields['name_en'] ?? '' ) ),
 			'sbek_home_order' => absint( $fields['home_order'] ?? 0 ),
 		);
@@ -318,17 +429,28 @@ function sbek_save_theme_options(): void {
 	$tab = isset( $_POST['sbek_tab'] ) ? sanitize_key( wp_unslash( $_POST['sbek_tab'] ) ) : '';
 	$tab = isset( sbek_theme_option_tabs()[ $tab ] ) ? $tab : 'general';
 
+	if ( $problems ) {
+		set_transient( sbek_settings_problems_key(), $problems, 5 * MINUTE_IN_SECONDS );
+	}
+
 	wp_safe_redirect( add_query_arg( array( 'page' => SBEK_SETTINGS_SLUG, 'updated' => 1 ), admin_url( 'admin.php' ) ) . '#' . $tab );
 	exit;
 }
 add_action( 'admin_post_' . SBEK_SETTINGS_ACTION, 'sbek_save_theme_options' );
 
+/**
+ * Per-user transient holding the "not saved" messages of the last save.
+ */
+function sbek_settings_problems_key(): string {
+	return 'sbek_settings_problems_' . get_current_user_id();
+}
+
 // ─── 3. Menu, legacy URL, assets ───────────────────────────────────────────────
 
 function sbek_theme_options_menu(): void {
 	$hook = add_menu_page(
-		__( 'Theme Option', 'sbek' ),
-		__( 'Theme Option', 'sbek' ),
+		__( 'Sbek Theme', 'sbek' ),
+		__( 'Sbek Theme', 'sbek' ),
 		'manage_options',
 		SBEK_SETTINGS_SLUG,
 		'sbek_render_theme_options_page',
@@ -342,7 +464,7 @@ function sbek_theme_options_menu(): void {
 	// must stay registered — wp-admin refuses unknown pages before any hook we
 	// could redirect from — so register it, redirect on its load hook (before
 	// output), and hide it from the menu.
-	$legacy = add_submenu_page( 'options-general.php', __( 'Theme Option', 'sbek' ), __( 'Theme Option', 'sbek' ), 'manage_options', 'sbek-site-settings', '__return_null' );
+	$legacy = add_submenu_page( 'options-general.php', __( 'Sbek Theme', 'sbek' ), __( 'Sbek Theme', 'sbek' ), 'manage_options', 'sbek-site-settings', '__return_null' );
 	add_action( "load-{$legacy}", 'sbek_redirect_legacy_options_url' );
 	remove_submenu_page( 'options-general.php', 'sbek-site-settings' );
 }
@@ -375,6 +497,9 @@ function sbek_theme_options_assets(): void {
 			'demoNonce'   => wp_create_nonce( SBEK_DEMO_NONCE ),
 			'demoFailed'  => __( 'Something went wrong. You can continue the job or remove what was created.', 'sbek' ),
 			'demoDone'    => __( 'Done! Reloading…', 'sbek' ),
+			'socialIcons' => sbek_social_icon_aliases(),
+			/* translators: 1: width, 2: height in pixels. */
+			'iconSize'    => __( 'This image is %1$d×%2$dpx. The site icon must be square and at least 512×512px, so it will not be saved.', 'sbek' ),
 		)
 	);
 }
@@ -412,14 +537,18 @@ function sbek_section_close(): void {
  * @param string               $name  Full input name.
  * @param string               $label Label.
  * @param string               $value Current value.
- * @param array<string,string> $args  type, placeholder, help, class.
+ * @param array<string,mixed>  $args  type, placeholder, help, class, dir, attrs (extra attributes).
  */
 function sbek_option_input( string $name, string $label, string $value, array $args = array() ): void {
-	$id = 'sbek-' . md5( $name );
+	$id    = 'sbek-' . md5( $name );
+	$extra = isset( $args['dir'] ) ? ' dir="' . esc_attr( $args['dir'] ) . '"' : '';
+	foreach ( (array) ( $args['attrs'] ?? array() ) as $attr => $attr_value ) {
+		$extra .= ' ' . esc_attr( $attr ) . '="' . esc_attr( (string) $attr_value ) . '"';
+	}
 	?>
 	<div class="sbek-field <?php echo esc_attr( $args['class'] ?? '' ); ?>">
 		<label class="sbek-field__label" for="<?php echo esc_attr( $id ); ?>"><?php echo esc_html( $label ); ?></label>
-		<input class="sbek-input" type="<?php echo esc_attr( $args['type'] ?? 'text' ); ?>" id="<?php echo esc_attr( $id ); ?>" name="<?php echo esc_attr( $name ); ?>" value="<?php echo esc_attr( $value ); ?>" placeholder="<?php echo esc_attr( $args['placeholder'] ?? '' ); ?>"<?php echo isset( $args['dir'] ) ? ' dir="' . esc_attr( $args['dir'] ) . '"' : ''; ?>>
+		<input class="sbek-input" type="<?php echo esc_attr( $args['type'] ?? 'text' ); ?>" id="<?php echo esc_attr( $id ); ?>" name="<?php echo esc_attr( $name ); ?>" value="<?php echo esc_attr( $value ); ?>" placeholder="<?php echo esc_attr( $args['placeholder'] ?? '' ); ?>"<?php echo $extra; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped above. ?>>
 		<?php if ( ! empty( $args['help'] ) ) : ?>
 			<p class="sbek-field__help"><?php echo esc_html( $args['help'] ); ?></p>
 		<?php endif; ?>
@@ -519,11 +648,12 @@ function sbek_option_font( string $name, string $label, string $value, array $ch
  * @param int    $attachment_id Current attachment ID.
  * @param string $select_label  Empty-state call to action.
  * @param string $hint          File-type / size hint.
+ * @param string $role          '' | logo (feeds the Design preview) | site_icon (size check).
  */
-function sbek_render_media_field( string $name, int $attachment_id, string $select_label, string $hint = '' ): void {
+function sbek_render_media_field( string $name, int $attachment_id, string $select_label, string $hint = '', string $role = '' ): void {
 	$url = $attachment_id ? (string) wp_get_attachment_image_url( $attachment_id, 'medium' ) : '';
 	?>
-	<div class="sbek-media" data-sbek-media-field data-state="<?php echo esc_attr( $url ? 'filled' : 'empty' ); ?>">
+	<div class="sbek-media" data-sbek-media-field data-state="<?php echo esc_attr( $url ? 'filled' : 'empty' ); ?>"<?php echo $role ? ' data-sbek-media-role="' . esc_attr( $role ) . '"' : ''; ?>>
 		<input type="hidden" name="<?php echo esc_attr( $name ); ?>" value="<?php echo esc_attr( $attachment_id ? (string) $attachment_id : '' ); ?>" data-sbek-media-input>
 		<button type="button" class="sbek-media-dropzone" data-sbek-media-select>
 			<span class="sbek-media-dropzone__icon"><?php echo sbek_icon( 'image-plus', array( 'width' => 26, 'height' => 26 ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- static SVG. ?></span>
@@ -547,6 +677,7 @@ function sbek_render_media_field( string $name, int $attachment_id, string $sele
 				</button>
 			</div>
 		</div>
+		<p class="sbek-field__help sbek-field__help--warn" data-sbek-media-warning hidden></p>
 	</div>
 	<?php
 }
@@ -586,16 +717,44 @@ function sbek_repeater_row( string $group, ?int $index, array $row = array() ): 
 	$slot = null === $index ? '__i__' : (string) $index;
 	?>
 	<div class="sbek-repeater__row" data-sbek-row>
+		<span class="sbek-repeater__move">
+			<button type="button" class="sbek-repeater__btn" data-sbek-move="-1" aria-label="<?php esc_attr_e( 'Move up', 'sbek' ); ?>" title="<?php esc_attr_e( 'Move up', 'sbek' ); ?>">
+				<?php echo sbek_icon( 'chevron-up', array( 'width' => 15, 'height' => 15 ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- static SVG. ?>
+			</button>
+			<button type="button" class="sbek-repeater__btn" data-sbek-move="1" aria-label="<?php esc_attr_e( 'Move down', 'sbek' ); ?>" title="<?php esc_attr_e( 'Move down', 'sbek' ); ?>">
+				<?php echo sbek_icon( 'chevron-down', array( 'width' => 15, 'height' => 15 ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- static SVG. ?>
+			</button>
+		</span>
 		<?php if ( 'socials' === $group ) : ?>
-			<span class="sbek-repeater__icon" aria-hidden="true"><?php echo sbek_icon( sbek_social_icon_name( (string) ( $row['platform'] ?? '' ) ), array( 'width' => 18, 'height' => 18 ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- static SVG. ?></span>
+			<span class="sbek-repeater__icon" aria-hidden="true" data-sbek-social-icon><?php echo sbek_icon( sbek_social_icon_name( (string) ( $row['platform'] ?? '' ) ), array( 'width' => 18, 'height' => 18 ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- static SVG. ?></span>
 		<?php endif; ?>
 		<?php foreach ( $fields as $key => list( $placeholder, $type ) ) : ?>
-			<input class="sbek-input" type="<?php echo esc_attr( $type ); ?>" <?php echo esc_attr( $attr ); ?>="<?php echo esc_attr( SBEK_SETTINGS_OPTION . "[{$group}][{$slot}][{$key}]" ); ?>" value="<?php echo esc_attr( (string) ( $row[ $key ] ?? '' ) ); ?>" placeholder="<?php echo esc_attr( $placeholder ); ?>" aria-label="<?php echo esc_attr( $placeholder ); ?>">
+			<input class="sbek-input" type="<?php echo esc_attr( $type ); ?>" <?php echo esc_attr( $attr ); ?>="<?php echo esc_attr( SBEK_SETTINGS_OPTION . "[{$group}][{$slot}][{$key}]" ); ?>" value="<?php echo esc_attr( (string) ( $row[ $key ] ?? '' ) ); ?>" placeholder="<?php echo esc_attr( $placeholder ); ?>" aria-label="<?php echo esc_attr( $placeholder ); ?>"<?php echo 'platform' === $key ? ' list="sbek-social-platforms" autocomplete="off" data-sbek-platform' : ''; ?>>
 		<?php endforeach; ?>
-		<button type="button" class="sbek-repeater__remove" data-sbek-remove aria-label="<?php esc_attr_e( 'Remove', 'sbek' ); ?>">
+		<button type="button" class="sbek-repeater__remove" data-sbek-remove aria-label="<?php esc_attr_e( 'Remove', 'sbek' ); ?>" title="<?php esc_attr_e( 'Remove', 'sbek' ); ?>">
 			<?php echo sbek_icon( 'trash-2', array( 'width' => 18, 'height' => 18 ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- static SVG. ?>
 		</button>
 	</div>
+	<?php
+}
+
+/**
+ * Hidden assets for the social repeater: platform suggestions (datalist) and
+ * one SVG per brand icon, cloned by the JS while the platform is typed.
+ */
+function sbek_render_social_assets(): void {
+	$platforms = array( 'Facebook', 'Instagram', 'YouTube', 'TikTok', 'Telegram', 'X', 'LinkedIn', 'WhatsApp' );
+	?>
+	<datalist id="sbek-social-platforms">
+		<?php foreach ( $platforms as $platform ) : ?>
+			<option value="<?php echo esc_attr( $platform ); ?>"></option>
+		<?php endforeach; ?>
+	</datalist>
+	<template id="sbek-social-icons">
+		<?php foreach ( array_unique( array_merge( array_values( sbek_social_icon_aliases() ), array( 'link' ) ) ) as $icon ) : ?>
+			<span data-icon="<?php echo esc_attr( $icon ); ?>"><?php echo sbek_icon( $icon, array( 'width' => 18, 'height' => 18 ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- static SVG. ?></span>
+		<?php endforeach; ?>
+	</template>
 	<?php
 }
 
@@ -630,7 +789,7 @@ function sbek_render_theme_options_page(): void {
 		}
 	);
 	?>
-	<div class="wrap sbek-options">
+	<div class="wrap sbek-options" style="<?php echo esc_attr( sbek_admin_accent_style() ); ?>">
 		<?php
 		// Decorative welcome banner (source: docs/brand/source/options-banner.html); the tabs below carry the same information.
 		$banner = 'assets/images/theme-options-banner.png';
@@ -639,13 +798,25 @@ function sbek_render_theme_options_page(): void {
 			<img class="sbek-options__banner" src="<?php echo esc_url( add_query_arg( 'ver', filemtime( SBEK_DIR . '/' . $banner ), SBEK_URI . '/' . $banner ) ); ?>" width="2400" height="480" alt="" decoding="async">
 		<?php endif; ?>
 		<form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>" class="sbek-options__form" data-sbek-options-form>
+			<script>
+				// Show only the requested tab from the first paint (the main JS
+				// loads in the footer and removes this rule once tabs are wired).
+				( function () {
+					var tabs = <?php echo wp_json_encode( array_keys( $tabs ) ); ?>;
+					var slug = window.location.hash.slice( 1 );
+					var style = document.createElement( 'style' );
+					style.id = 'sbek-tab-boot';
+					style.textContent = '.sbek-options .sbek-panel:not([data-sbek-panel="' + ( tabs.indexOf( slug ) > -1 ? slug : tabs[ 0 ] ) + '"]){display:none}';
+					document.head.appendChild( style );
+				}() );
+			</script>
 			<input type="hidden" name="action" value="<?php echo esc_attr( SBEK_SETTINGS_ACTION ); ?>">
 			<input type="hidden" name="sbek_tab" value="general" data-sbek-current-tab>
 			<?php wp_nonce_field( SBEK_SETTINGS_ACTION ); ?>
 
 			<header class="sbek-options__header">
 				<div class="sbek-options__titles">
-					<h1 class="sbek-options__title"><?php esc_html_e( 'Theme Option', 'sbek' ); ?></h1>
+					<h1 class="sbek-options__title"><?php esc_html_e( 'Sbek Theme', 'sbek' ); ?></h1>
 					<p class="sbek-options__subtitle"><?php esc_html_e( 'Everything your site shows outside of articles — identity, homepage sections, contact details, social links and tracking — in one place.', 'sbek' ); ?></p>
 				</div>
 				<div class="sbek-options__actions">
@@ -653,7 +824,7 @@ function sbek_render_theme_options_page(): void {
 						<?php echo sbek_icon( 'external-link', array( 'width' => 15, 'height' => 15 ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- static SVG. ?>
 						<?php esc_html_e( 'View site', 'sbek' ); ?>
 					</a>
-					<button type="submit" class="sbek-btn sbek-btn--primary"><?php esc_html_e( 'Save changes', 'sbek' ); ?></button>
+					<button type="submit" class="sbek-btn sbek-btn--primary" data-sbek-save><?php esc_html_e( 'Save changes', 'sbek' ); ?></button>
 				</div>
 			</header>
 			<hr class="wp-header-end"><?php // Core moves admin notices here instead of into the header. ?>
@@ -661,10 +832,22 @@ function sbek_render_theme_options_page(): void {
 			<?php
 			if ( isset( $_GET['updated'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- display-only flag.
 				wp_admin_notice(
-					__( 'Theme options saved.', 'sbek' ),
+					__( 'Sbek Theme settings saved.', 'sbek' ),
 					array(
 						'type'        => 'success',
 						'dismissible' => true,
+					)
+				);
+			}
+			$problems = get_transient( sbek_settings_problems_key() );
+			if ( $problems && is_array( $problems ) ) {
+				delete_transient( sbek_settings_problems_key() );
+				wp_admin_notice(
+					'<p><strong>' . esc_html__( 'Some values were not saved:', 'sbek' ) . '</strong></p><ul class="sbek-notice-list"><li>' . implode( '</li><li>', array_map( 'esc_html', $problems ) ) . '</li></ul>',
+					array(
+						'type'           => 'warning',
+						'dismissible'    => true,
+						'paragraph_wrap' => false,
 					)
 				);
 			}
@@ -680,7 +863,7 @@ function sbek_render_theme_options_page(): void {
 			?>
 
 			<div class="sbek-options__layout">
-				<nav class="sbek-tabs" role="tablist" aria-label="<?php esc_attr_e( 'Theme Option sections', 'sbek' ); ?>" data-sbek-tabs>
+				<nav class="sbek-tabs" role="tablist" aria-label="<?php esc_attr_e( 'Sbek Theme sections', 'sbek' ); ?>" data-sbek-tabs>
 					<?php foreach ( $tabs as $slug => list( $label, $icon ) ) : ?>
 						<a class="sbek-tabs__tab" href="#<?php echo esc_attr( $slug ); ?>" role="tab" id="sbek-tab-<?php echo esc_attr( $slug ); ?>" aria-controls="sbek-panel-<?php echo esc_attr( $slug ); ?>" data-sbek-tab="<?php echo esc_attr( $slug ); ?>">
 							<?php echo sbek_icon( $icon, array( 'width' => 18, 'height' => 18 ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- static SVG. ?>
@@ -708,11 +891,11 @@ function sbek_render_theme_options_page(): void {
 							<div class="sbek-grid sbek-grid--3">
 								<div class="sbek-field">
 									<span class="sbek-field__label"><?php esc_html_e( 'Logo', 'sbek' ); ?></span>
-									<?php sbek_render_media_field( "{$opt}[logo]", (int) $s['logo'], __( 'Choose a logo', 'sbek' ), __( 'PNG or JPG, square works best', 'sbek' ) ); ?>
+									<?php sbek_render_media_field( "{$opt}[logo]", (int) $s['logo'], __( 'Choose a logo', 'sbek' ), __( 'PNG or JPG, square works best', 'sbek' ), 'logo' ); ?>
 								</div>
 								<div class="sbek-field">
 									<span class="sbek-field__label"><?php esc_html_e( 'Site icon', 'sbek' ); ?></span>
-									<?php sbek_render_media_field( 'sbek_core[site_icon]', (int) get_option( 'site_icon' ), __( 'Choose an icon', 'sbek' ), __( 'Square, at least 512×512px', 'sbek' ) ); ?>
+									<?php sbek_render_media_field( 'sbek_core[site_icon]', (int) get_option( 'site_icon' ), __( 'Choose an icon', 'sbek' ), __( 'Square, at least 512×512px', 'sbek' ), 'site_icon' ); ?>
 								</div>
 								<div class="sbek-field">
 									<span class="sbek-field__label"><?php esc_html_e( 'Default share image', 'sbek' ); ?></span>
@@ -765,7 +948,11 @@ function sbek_render_theme_options_page(): void {
 					<section class="sbek-panel" id="sbek-panel-design" role="tabpanel" aria-labelledby="sbek-tab-design" data-sbek-panel="design">
 						<div class="sbek-preview" data-sbek-preview data-default-brand="<?php echo esc_attr( SBEK_BRAND_COLOR ); ?>" data-default-brand-dark="<?php echo esc_attr( SBEK_BRAND_DARK ); ?>" style="<?php echo esc_attr( $preview_vars ); ?>" aria-label="<?php esc_attr_e( 'Live preview', 'sbek' ); ?>">
 							<div class="sbek-preview__top">
-								<span class="sbek-preview__logo"><?php echo esc_html( mb_substr( (string) get_option( 'blogname' ), 0, 2 ) ); ?></span>
+								<?php $preview_logo = sbek_site_setting_image_url( 'logo', 'medium' ); ?>
+								<span class="sbek-preview__logo<?php echo $preview_logo ? ' has-image' : ''; ?>" data-sbek-preview-logo>
+									<img src="<?php echo esc_url( $preview_logo ); ?>" alt="" data-sbek-preview-logo-img<?php echo $preview_logo ? '' : ' hidden'; ?>>
+									<span data-sbek-preview-logo-text<?php echo $preview_logo ? ' hidden' : ''; ?>><?php echo esc_html( mb_substr( (string) get_option( 'blogname' ), 0, 2 ) ); ?></span>
+								</span>
 								<span class="sbek-preview__ad"></span>
 							</div>
 							<div class="sbek-preview__menu">
@@ -794,7 +981,7 @@ function sbek_render_theme_options_page(): void {
 							</div>
 						<?php sbek_section_close(); ?>
 
-						<?php sbek_section_open( 'sliders', __( 'Fonts', 'sbek' ), __( 'Khmer fonts are hosted on this site (no Google requests); visitors only download the fonts you pick. Latin text (English, numbers) uses the Latin font.', 'sbek' ) ); ?>
+						<?php sbek_section_open( 'type', __( 'Fonts', 'sbek' ), __( 'Khmer fonts are hosted on this site (no Google requests); visitors only download the fonts you pick. Latin text (English, numbers) uses the Latin font.', 'sbek' ) ); ?>
 							<div class="sbek-grid sbek-grid--3">
 								<?php
 								sbek_option_font( "{$opt}[font_body]", __( 'Khmer body text', 'sbek' ), $design['font_body'], $font_choices['body'], 'body' );
@@ -804,14 +991,15 @@ function sbek_render_theme_options_page(): void {
 							</div>
 						<?php sbek_section_close(); ?>
 
-						<?php sbek_section_open( 'copyright', __( 'Reset design', 'sbek' ), __( 'Restore the original Sabay red, Battambang and Koulen. Only colors and fonts are reset; everything else in Theme Option stays as it is.', 'sbek' ) ); ?>
+						<?php sbek_section_open( 'rotate-ccw', __( 'Reset design', 'sbek' ), __( 'Restore the original Sabay red, Battambang and Koulen. Only colors and fonts are reset; everything else in Sbek Theme stays as it is.', 'sbek' ) ); ?>
 							<?php
 							$is_default = sbek_design_is_default();
 							sbek_confirm_control(
 								__( 'Reset design to defaults', 'sbek' ),
 								__( 'Replace your colors and fonts with the defaults?', 'sbek' ),
 								'<button type="submit" form="sbek-reset-design-form" class="sbek-btn sbek-btn--danger">' . esc_html__( 'Yes, reset', 'sbek' ) . '</button>',
-								$is_default
+								$is_default,
+								__( 'Your unsaved changes on other tabs will be lost. Save them first to keep them.', 'sbek' )
 							);
 							?>
 							<?php if ( $is_default ) : ?>
@@ -822,18 +1010,43 @@ function sbek_render_theme_options_page(): void {
 
 					<?php // ── Homepage ──────────────────────────────────────────── ?>
 					<section class="sbek-panel" id="sbek-panel-homepage" role="tabpanel" aria-labelledby="sbek-tab-homepage" data-sbek-panel="homepage">
-						<?php sbek_section_open( 'toggle', __( 'Sections', 'sbek' ), __( 'Turn site-wide sections on or off. The hero grid shows sticky posts (then the latest).', 'sbek' ) ); ?>
+						<?php sbek_section_open( 'toggle', __( 'Sections', 'sbek' ), __( 'Turn sections on or off. The hero grid always shows sticky posts (then the latest).', 'sbek' ) ); ?>
 							<div class="sbek-stack">
 								<?php
-								sbek_option_toggle( "{$opt}[show_ticker]", __( 'Breaking-news ticker', 'sbek' ), __( 'Scrolling bar under the menu with posts marked "Breaking news".', 'sbek' ), (bool) $s['show_ticker'] );
+								sbek_option_toggle( "{$opt}[show_ticker]", __( 'Breaking-news ticker', 'sbek' ), __( 'Scrolling bar under the menu, on every page, with posts marked "Breaking news".', 'sbek' ), (bool) $s['show_ticker'] );
 								sbek_option_toggle( "{$opt}[show_video]", __( 'Video block', 'sbek' ), __( 'Homepage block listing posts in the "Video" post format.', 'sbek' ), (bool) $s['show_video'] );
-								sbek_option_toggle( "{$opt}[show_newsletter]", __( 'Newsletter signup', 'sbek' ), __( 'Email signup form in the footer.', 'sbek' ), (bool) $s['show_newsletter'] );
 								?>
 							</div>
 						<?php sbek_section_close(); ?>
 
-						<?php sbek_section_open( 'palette', __( 'Category blocks', 'sbek' ), __( 'Each category\'s accent color (badges, headers, arrows), its English name, and its position on the homepage. Position 1, 2, 3… shows it as a block in that order; leave empty to hide it.', 'sbek' ) ); ?>
+						<?php
+						$home_ids   = wp_list_pluck( sbek_get_home_categories(), 'term_id' );
+						$positioned = false;
+						foreach ( $categories as $category ) {
+							if ( $category->count && (int) get_term_meta( $category->term_id, 'sbek_home_order', true ) ) {
+								$positioned = true;
+								break;
+							}
+						}
+						sbek_section_open(
+							'grid',
+							__( 'Category blocks', 'sbek' ),
+							sprintf(
+								/* translators: %d: maximum number of homepage blocks. */
+								__( 'Each category\'s accent color (badges, headers, arrows), its English name, and its homepage position. Positions 1, 2, 3… show categories as blocks in that order, up to %d; categories without posts are skipped.', 'sbek' ),
+								SBEK_HOME_BLOCK_LIMIT
+							)
+						);
+						?>
 							<?php if ( $categories ) : ?>
+								<?php if ( ! $positioned ) : ?>
+									<p class="sbek-field__help sbek-field__help--info">
+										<?php
+										/* translators: %d: maximum number of homepage blocks. */
+										echo esc_html( sprintf( __( 'No positions are set yet, so the homepage shows the first %d top-level categories that have posts, alphabetically. Give a category a position to choose them yourself.', 'sbek' ), SBEK_HOME_BLOCK_LIMIT ) );
+										?>
+									</p>
+								<?php endif; ?>
 								<div class="sbek-table-wrap">
 									<table class="sbek-table">
 										<thead>
@@ -861,9 +1074,30 @@ function sbek_render_theme_options_page(): void {
 															?>
 															· <a href="<?php echo esc_url( get_edit_term_link( $category, 'category' ) ); ?>"><?php esc_html_e( 'Edit', 'sbek' ); ?></a>
 														</span>
+														<?php
+														$rank = array_search( $category->term_id, $home_ids, true );
+														if ( false !== $rank ) {
+															$status = array( 'is-on', __( 'On homepage', 'sbek' ) );
+														} elseif ( $order && ! $category->count ) {
+															$status = array( 'is-off', __( 'Hidden: no posts yet', 'sbek' ) );
+														} elseif ( $order ) {
+															/* translators: %d: maximum number of homepage blocks. */
+															$status = array( 'is-off', sprintf( __( 'Hidden: only %d blocks are shown', 'sbek' ), SBEK_HOME_BLOCK_LIMIT ) );
+														} else {
+															$status = null;
+														}
+														if ( $status ) :
+															?>
+															<span class="sbek-status <?php echo esc_attr( $status[0] ); ?>"><?php echo esc_html( $status[1] ); ?></span>
+														<?php endif; ?>
 													</th>
 													<td>
-														<input type="color" class="sbek-color" name="<?php echo esc_attr( $base . '[color]' ); ?>" value="<?php echo esc_attr( $color ? $color : sbek_brand_color() ); ?>" aria-label="<?php echo esc_attr( sprintf( /* translators: %s: category. */ __( 'Color for %s', 'sbek' ), $category->name ) ); ?>">
+														<div class="sbek-termcolor" data-sbek-term-color data-brand="<?php echo esc_attr( sbek_brand_color() ); ?>" data-state="<?php echo esc_attr( $color ? 'custom' : 'auto' ); ?>">
+															<input type="hidden" name="<?php echo esc_attr( $base . '[color_auto]' ); ?>" value="<?php echo $color ? '0' : '1'; ?>" data-sbek-term-color-auto>
+															<input type="color" class="sbek-color" name="<?php echo esc_attr( $base . '[color]' ); ?>" value="<?php echo esc_attr( $color ? $color : sbek_brand_color() ); ?>" aria-label="<?php echo esc_attr( sprintf( /* translators: %s: category. */ __( 'Color for %s', 'sbek' ), $category->name ) ); ?>" data-sbek-term-color-input>
+															<span class="sbek-termcolor__auto"><?php esc_html_e( 'Brand color', 'sbek' ); ?></span>
+															<button type="button" class="sbek-colorfield__reset sbek-termcolor__reset" data-sbek-term-color-reset title="<?php esc_attr_e( 'Follow the brand color again', 'sbek' ); ?>"><?php esc_html_e( 'Reset', 'sbek' ); ?></button>
+														</div>
 													</td>
 													<td>
 														<input type="text" class="sbek-input" name="<?php echo esc_attr( $base . '[name_en]' ); ?>" value="<?php echo esc_attr( (string) get_term_meta( $category->term_id, 'sbek_name_en', true ) ); ?>" aria-label="<?php echo esc_attr( sprintf( /* translators: %s: category. */ __( 'English name for %s', 'sbek' ), $category->name ) ); ?>">
@@ -886,6 +1120,7 @@ function sbek_render_theme_options_page(): void {
 								<li><a href="<?php echo esc_url( admin_url( 'nav-menus.php' ) ); ?>"><?php esc_html_e( 'Menus (Khmer and English)', 'sbek' ); ?></a></li>
 								<li><a href="<?php echo esc_url( admin_url( 'widgets.php' ) ); ?>"><?php esc_html_e( 'Ad slots and sidebar widgets', 'sbek' ); ?></a></li>
 								<li><a href="<?php echo esc_url( admin_url( 'edit.php?post_type=post&show_sticky=1' ) ); ?>"><?php esc_html_e( 'Sticky posts (homepage hero)', 'sbek' ); ?></a></li>
+								<li><a href="<?php echo esc_url( admin_url( 'edit.php?post_type=sbek_subscriber' ) ); ?>"><?php esc_html_e( 'Newsletter subscribers', 'sbek' ); ?></a></li>
 								<li><a href="<?php echo esc_url( admin_url( 'options-general.php' ) ); ?>"><?php esc_html_e( 'Language, time zone and date format', 'sbek' ); ?></a></li>
 								<li><a href="<?php echo esc_url( admin_url( 'options-permalink.php' ) ); ?>"><?php esc_html_e( 'Permalinks', 'sbek' ); ?></a></li>
 							</ul>
@@ -918,14 +1153,56 @@ function sbek_render_theme_options_page(): void {
 							</div>
 						<?php sbek_section_close(); ?>
 
-						<?php sbek_section_open( 'map-pin', __( 'Address & location', 'sbek' ), __( 'Postal address for the footer; coordinates for maps and structured data.', 'sbek' ) ); ?>
+						<?php sbek_section_open( 'map-pin', __( 'Address & location', 'sbek' ), __( 'Postal address for the footer. The coordinates are not shown to visitors; they tell search engines where your newsroom is (structured data).', 'sbek' ) ); ?>
 							<div class="sbek-grid sbek-grid--2">
 								<?php
 								sbek_option_textarea( "{$opt}[address]", __( 'Address (Khmer)', 'sbek' ), (string) $s['address'] );
 								sbek_option_textarea( "{$opt}[address_en]", __( 'Address (English)', 'sbek' ), (string) $s['address_en'] );
-								sbek_option_input( "{$opt}[lat]", __( 'Latitude', 'sbek' ), (string) $s['lat'], array( 'placeholder' => '11.5564' ) );
-								sbek_option_input( "{$opt}[lng]", __( 'Longitude', 'sbek' ), (string) $s['lng'], array( 'placeholder' => '104.9282' ) );
+								sbek_option_input(
+									"{$opt}[lat]",
+									__( 'Latitude', 'sbek' ),
+									(string) $s['lat'],
+									array(
+										'type'        => 'number',
+										'placeholder' => '11.5564',
+										'dir'         => 'ltr',
+										'attrs'       => array( 'min' => '-90', 'max' => '90', 'step' => 'any' ),
+									)
+								);
+								sbek_option_input(
+									"{$opt}[lng]",
+									__( 'Longitude', 'sbek' ),
+									(string) $s['lng'],
+									array(
+										'type'        => 'number',
+										'placeholder' => '104.9282',
+										'dir'         => 'ltr',
+										'attrs'       => array( 'min' => '-180', 'max' => '180', 'step' => 'any' ),
+									)
+								);
 								?>
+							</div>
+						<?php sbek_section_close(); ?>
+
+						<?php
+						$subscribers = (int) array_sum( (array) wp_count_posts( 'sbek_subscriber' ) );
+						sbek_section_open( 'panel-bottom', __( 'Footer', 'sbek' ), __( 'Optional footer sections.', 'sbek' ) );
+						?>
+							<?php sbek_option_toggle( "{$opt}[show_newsletter]", __( 'Newsletter signup', 'sbek' ), __( 'Email signup form in the footer. Addresses are stored on this site, under Subscribers.', 'sbek' ), (bool) $s['show_newsletter'] ); ?>
+							<div class="sbek-inline-actions">
+								<span class="sbek-inline-actions__text">
+									<?php
+									/* translators: %s: number of subscribers. */
+									echo esc_html( sprintf( _n( '%s subscriber', '%s subscribers', $subscribers, 'sbek' ), number_format_i18n( $subscribers ) ) );
+									?>
+								</span>
+								<a class="sbek-btn sbek-btn--plain" href="<?php echo esc_url( admin_url( 'edit.php?post_type=sbek_subscriber' ) ); ?>"><?php esc_html_e( 'View subscribers', 'sbek' ); ?></a>
+								<?php if ( $subscribers ) : ?>
+									<a class="sbek-btn sbek-btn--plain" href="<?php echo esc_url( sbek_subscribers_export_url() ); ?>">
+										<?php echo sbek_icon( 'download', array( 'width' => 15, 'height' => 15 ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- static SVG. ?>
+										<?php esc_html_e( 'Export CSV', 'sbek' ); ?>
+									</a>
+								<?php endif; ?>
 							</div>
 						<?php sbek_section_close(); ?>
 
@@ -958,13 +1235,33 @@ function sbek_render_theme_options_page(): void {
 						<?php sbek_section_open( 'trending-up', __( 'Analytics', 'sbek' ), __( 'Google Analytics 4 loads only when no Tag Manager container is set.', 'sbek' ) ); ?>
 							<div class="sbek-grid sbek-grid--2">
 								<?php
-								sbek_option_input( "{$opt}[ga4_id]", __( 'Google Analytics 4 ID', 'sbek' ), (string) $s['ga4_id'], array( 'placeholder' => 'G-XXXXXXXXXX', 'dir' => 'ltr' ) );
-								sbek_option_input( "{$opt}[gtm_id]", __( 'Google Tag Manager ID', 'sbek' ), (string) $s['gtm_id'], array( 'placeholder' => 'GTM-XXXXXXX', 'dir' => 'ltr' ) );
+								sbek_option_input(
+									"{$opt}[ga4_id]",
+									__( 'Google Analytics 4 ID', 'sbek' ),
+									(string) $s['ga4_id'],
+									array(
+										'placeholder' => 'G-XXXXXXXXXX',
+										'dir'         => 'ltr',
+										'help'        => __( 'Starts with G- (Admin → Data streams in Google Analytics).', 'sbek' ),
+										'attrs'       => array( 'pattern' => '[Gg]-[A-Za-z0-9]{4,}', 'title' => 'G-XXXXXXXXXX', 'spellcheck' => 'false' ),
+									)
+								);
+								sbek_option_input(
+									"{$opt}[gtm_id]",
+									__( 'Google Tag Manager ID', 'sbek' ),
+									(string) $s['gtm_id'],
+									array(
+										'placeholder' => 'GTM-XXXXXXX',
+										'dir'         => 'ltr',
+										'help'        => __( 'Starts with GTM-. When set, the GA4 ID above is ignored — add GA4 inside Tag Manager instead.', 'sbek' ),
+										'attrs'       => array( 'pattern' => '[Gg][Tt][Mm]-[A-Za-z0-9]{4,}', 'title' => 'GTM-XXXXXXX', 'spellcheck' => 'false' ),
+									)
+								);
 								?>
 							</div>
 						<?php sbek_section_close(); ?>
 
-						<?php sbek_section_open( 'sliders', __( 'Custom code', 'sbek' ), __( 'Raw HTML/JS added to every public page. Only paste code from sources you trust.', 'sbek' ) ); ?>
+						<?php sbek_section_open( 'code', __( 'Custom code', 'sbek' ), __( 'Raw HTML/JS added to every public page. Only paste code from sources you trust.', 'sbek' ) ); ?>
 							<?php
 							sbek_option_textarea( "{$opt}[header_scripts]", __( 'Before </head>', 'sbek' ), (string) $s['header_scripts'], array( 'rows' => '5', 'code' => '1' ) );
 							sbek_option_textarea( "{$opt}[footer_scripts]", __( 'Before </body>', 'sbek' ), (string) $s['footer_scripts'], array( 'rows' => '5', 'code' => '1' ) );
@@ -982,7 +1279,7 @@ function sbek_render_theme_options_page(): void {
 				</div>
 			</div>
 
-			<div class="sbek-savebar">
+			<div class="sbek-savebar" data-sbek-save>
 				<span class="sbek-savebar__hint" data-sbek-dirty-hint hidden><?php esc_html_e( 'You have unsaved changes.', 'sbek' ); ?></span>
 				<button type="submit" class="sbek-btn sbek-btn--primary"><?php esc_html_e( 'Save changes', 'sbek' ); ?></button>
 			</div>
@@ -998,4 +1295,5 @@ function sbek_render_theme_options_page(): void {
 	<template id="sbek-tmpl-phones"><?php sbek_repeater_row( 'phones', null ); ?></template>
 	<template id="sbek-tmpl-socials"><?php sbek_repeater_row( 'socials', null ); ?></template>
 	<?php
+	sbek_render_social_assets();
 }

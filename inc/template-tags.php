@@ -184,7 +184,7 @@ function sbek_section_header( string $label, string $color, string $url = '', st
 }
 
 /**
- * Site logo <img> (Theme Option logo, else the site name as text).
+ * Site logo <img> (Sbek Theme logo, else the site name as text).
  *
  * @param string $class Extra classes on the <img>/<span>.
  * @param int    $size  Rendered height in px.

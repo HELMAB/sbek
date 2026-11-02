@@ -1,6 +1,6 @@
 <?php
 /**
- * Design settings (Theme Option → Design): brand colors and fonts.
+ * Design settings (Sbek Theme → Design): brand colors and fonts.
  *
  * The stylesheet stays static; these settings only override a handful of CSS
  * custom properties in a tiny inline <style> (see sbek_design_css()). Every

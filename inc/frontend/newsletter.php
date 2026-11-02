@@ -170,3 +170,81 @@ function sbek_subscribe_notice(): ?array {
 			);
 	}
 }
+
+// ─── Admin: CSV export ─────────────────────────────────────────────────────────
+
+const SBEK_EXPORT_SUBSCRIBERS_ACTION = 'sbek_export_subscribers';
+
+/**
+ * Nonce-protected download link for the subscriber CSV.
+ */
+function sbek_subscribers_export_url(): string {
+	return wp_nonce_url( admin_url( 'admin-post.php?action=' . SBEK_EXPORT_SUBSCRIBERS_ACTION ), SBEK_EXPORT_SUBSCRIBERS_ACTION );
+}
+
+/**
+ * Stream every subscriber as CSV (email, language, date). Administrators only.
+ */
+function sbek_export_subscribers(): void {
+	if ( ! current_user_can( 'manage_options' ) ) {
+		wp_die( esc_html__( 'You do not have permission to do this.', 'sbek' ), 403 );
+	}
+
+	check_admin_referer( SBEK_EXPORT_SUBSCRIBERS_ACTION );
+
+	$ids = get_posts(
+		array(
+			'post_type'      => 'sbek_subscriber',
+			'post_status'    => 'any',
+			'posts_per_page' => -1,
+			'orderby'        => 'date',
+			'order'          => 'ASC',
+			'fields'         => 'ids',
+			'no_found_rows'  => true,
+		)
+	);
+
+	nocache_headers();
+	header( 'Content-Type: text/csv; charset=utf-8' );
+	header( 'Content-Disposition: attachment; filename="subscribers-' . wp_date( 'Y-m-d' ) . '.csv"' );
+
+	$out = fopen( 'php://output', 'w' );
+	fwrite( $out, "\xEF\xBB\xBF" ); // UTF-8 BOM so spreadsheet apps detect the encoding.
+	fputcsv( $out, array( 'email', 'language', 'subscribed' ) );
+
+	// A leading = + - @ would be run as a formula by spreadsheet apps.
+	$cell = static fn( string $value ): string => preg_match( '/^[=+\-@\t\r]/', $value ) ? "'" . $value : $value;
+
+	foreach ( $ids as $id ) {
+		fputcsv(
+			$out,
+			array(
+				$cell( get_the_title( $id ) ),
+				$cell( (string) get_post_meta( $id, '_sbek_sub_lang', true ) ),
+				get_the_date( 'Y-m-d H:i', $id ),
+			)
+		);
+	}
+
+	fclose( $out ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fclose
+	exit;
+}
+add_action( 'admin_post_' . SBEK_EXPORT_SUBSCRIBERS_ACTION, 'sbek_export_subscribers' );
+
+/**
+ * "Export CSV" button above the Subscribers list.
+ *
+ * @param string $which top | bottom.
+ */
+function sbek_subscribers_export_button( string $which ): void {
+	if ( 'top' !== $which || 'sbek_subscriber' !== get_current_screen()?->post_type || ! current_user_can( 'manage_options' ) ) {
+		return;
+	}
+
+	printf(
+		'<div class="alignleft actions"><a class="button" href="%s">%s</a></div>',
+		esc_url( sbek_subscribers_export_url() ),
+		esc_html__( 'Export CSV', 'sbek' )
+	);
+}
+add_action( 'manage_posts_extra_tablenav', 'sbek_subscribers_export_button' );

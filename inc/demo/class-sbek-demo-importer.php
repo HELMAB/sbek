@@ -2,7 +2,7 @@
 /**
  * Demo content importer / remover, run in small resumable batches.
  *
- * Used by both the Theme Option → Tools buttons (one batch per AJAX request,
+ * Used by both the Sbek Theme → Tools buttons (one batch per AJAX request,
  * so no single request can hit a PHP or web-server timeout) and the WP-CLI
  * command (which simply loops over the batches).
  *
@@ -342,7 +342,7 @@ class Sbek_Demo_Importer {
 		update_option( 'widget_block', $instances );
 		update_option( 'sidebars_widgets', $sidebars );
 
-		// Theme Option is kept (the site owner may have edited it since the
+		// Sbek Theme is kept (the site owner may have edited it since the
 		// import) — only references to images that were just deleted are cleared.
 		$deleted  = array_map( 'intval', (array) $this->manifest['attachments'] );
 		$settings = get_option( 'sbek_site_settings' );
@@ -1000,7 +1000,7 @@ class Sbek_Demo_Importer {
 	}
 
 	/**
-	 * Fill Theme Option with demo details — only fields that are still empty,
+	 * Fill Sbek Theme with demo details — only fields that are still empty,
 	 * so values the site owner has set are never overwritten.
 	 */
 	private function save_site_settings(): void {

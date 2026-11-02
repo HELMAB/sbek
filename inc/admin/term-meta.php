@@ -80,7 +80,7 @@ function sbek_term_form_fields( string $taxonomy ): array {
 		'sbek_color' => array(
 			'label'       => __( 'Accent color', 'sbek' ),
 			'type'        => 'color',
-			'description' => __( 'Used for badges, section headers and arrows.', 'sbek' ),
+			'description' => __( 'Used for badges, section headers and arrows. While "Use the brand color" is ticked, the category follows the brand color, even after it changes.', 'sbek' ),
 		),
 	);
 
@@ -97,7 +97,11 @@ function sbek_term_form_fields( string $taxonomy ): array {
 		$fields['sbek_home_order'] = array(
 			'label'       => __( 'Homepage position', 'sbek' ),
 			'type'        => 'number',
-			'description' => __( '1, 2, 3… shows this category as a homepage block in that order. Empty or 0 = not on the homepage.', 'sbek' ),
+			'description' => sprintf(
+				/* translators: %d: maximum number of homepage blocks. */
+				__( '1, 2, 3… shows this category as a homepage block in that order (up to %d; categories without posts are skipped). Leave empty to keep it off the homepage. If no category has a position, the first top-level categories are shown.', 'sbek' ),
+				SBEK_HOME_BLOCK_LIMIT
+			),
 		);
 	}
 
@@ -115,7 +119,16 @@ function sbek_term_field_input( string $taxonomy, string $key, array $field, $va
 
 	switch ( $field['type'] ) {
 		case 'color':
-			printf( '<input type="color" %s value="%s">', $attrs, esc_attr( (string) ( $value ?: sbek_brand_color() ) ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $attrs escaped above.
+			// An <input type="color"> can't be empty, so "no custom color" is a
+			// separate checkbox; picking a color unticks it.
+			printf(
+				'<input type="color" %1$s value="%2$s" oninput="this.form.%3$s_auto.checked=false"> <label style="display:inline-flex;align-items:center;gap:4px;margin-left:8px"><input type="checkbox" name="%3$s_auto" value="1"%4$s> %5$s</label>',
+				$attrs, // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped above.
+				esc_attr( (string) ( $value ?: sbek_brand_color() ) ),
+				esc_attr( $key ),
+				$value ? '' : ' checked',
+				esc_html__( 'Use the brand color', 'sbek' )
+			);
 			break;
 		case 'number':
 			printf( '<input type="number" min="0" step="1" %s value="%s" class="small-text">', $attrs, esc_attr( $value ? (string) $value : '' ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $attrs escaped above.
@@ -163,6 +176,11 @@ function sbek_save_term_fields( int $term_id ): void {
 		}
 
 		$value = trim( (string) wp_unslash( $_POST[ $key ] ) ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- sanitized by the registered meta callback.
+
+		// "Use the brand color" ticked: store nothing so the brand color applies.
+		if ( 'sbek_color' === $key && ! empty( $_POST['sbek_color_auto'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing -- verified above.
+			$value = '';
+		}
 
 		if ( '' === $value || '0' === $value ) {
 			delete_term_meta( $term_id, $key );

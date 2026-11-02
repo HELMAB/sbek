@@ -29,13 +29,13 @@ wp option update WPLANG km
 ```
 
 Then:
-1. Open **Theme Option** in the admin menu and work through the tabs: site title/tagline (Khmer + English), logo and icon, brand colors and fonts (Design), homepage sections, category colors / English names / homepage order, contact details, socials, analytics.
+1. Open **Sbek Theme** in the admin menu and work through the tabs: site title/tagline (Khmer + English), logo and icon, brand colors and fonts (Design), homepage sections, category colors / English names / homepage order, contact details, socials, analytics.
 2. Build the menus under **Appearance → Menus** (locations *Primary menu (Khmer)* and *(English)*).
 3. Put ad code into the *Ad:* widget areas, if you use ads.
 
 ### Demo content
 
-Use **Theme Option → Tools → Import demo content** (with a progress bar; **Remove demo content** undoes it). The same is available from the command line:
+Use **Sbek Theme → Tools → Import demo content** (with a progress bar; **Remove demo content** undoes it). The same is available from the command line:
 
 ```bash
 wp sbek demo import       # categories, ~140 posts, images, menus, widgets, settings, permalinks
@@ -43,7 +43,7 @@ wp sbek demo reset --yes  # removes exactly what import created
 wp sbek demo status
 ```
 
-To go back to the original colors and fonts, use **Theme Option → Design → Reset design to defaults**.
+To go back to the original colors and fonts, use **Sbek Theme → Design → Reset design to defaults**.
 
 ## Development
 

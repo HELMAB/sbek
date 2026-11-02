@@ -39,7 +39,7 @@
 
   /* Khmer family first: its @font-face unicode-range covers only Khmer, so
      Latin characters fall through to the Latin stack (Arial by default).
-     Theme Option → Design overrides these (inc/design.php). */
+     Sbek Theme → Design overrides these (inc/design.php). */
   --font-sans: "Battambang", Arial, Helvetica, sans-serif;
   --font-strong: "Koulen", Arial, Helvetica, sans-serif;
 

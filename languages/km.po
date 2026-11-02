@@ -1,15 +1,15 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Sbek 2.0.0\n"
-"Report-Msgid-Bugs-To: \n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/theme/wp-sbek-theme\n"
+"POT-Creation-Date: 2026-11-02T03:33:55+00:00\n"
+"PO-Revision-Date: 2026-11-02T03:32:41+00:00\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Khmer\n"
+"Language: km\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-11-02T02:03:20+00:00\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Language: km\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: sbek\n"
@@ -27,34 +27,25 @@ msgstr ""
 
 #. Description of the theme
 #: style.css
-msgid "A fast bilingual (Khmer / English) news theme with a Sabay-style layout: hero grid, video and category blocks, infinite-scroll archives and a clean article page. Built with Tailwind CSS v4 and vanilla JS."
-msgstr ""
+msgid "Khmer-first news, bilingual by design. A fast classic news theme for Khmer / English sites — no translation plugin: / is Khmer, /en/ is English, with linked translations and English category names. Hero grid, video and colored category blocks, breaking-news ticker, infinite-scroll archives with a list/grid switch and a clean article page. One Sbek Theme panel (7 tabs) sets identity, brand colors, 11 self-hosted Khmer fonts, homepage sections, contact, social and analytics, plus one-click demo import. About 8 KB CSS and 4 KB JS gzipped; built with Tailwind CSS v4 and vanilla JS."
+msgstr "ព័ត៌មានខ្មែរជាចម្បង រចនាឡើងសម្រាប់ពីរភាសា។ ស្បែកព័ត៌មានបុរាណដែលលឿនសម្រាប់គេហទំព័រខ្មែរ / អង់គ្លេស ដោយមិនចាំបាច់ប្រើកម្មវិធីជំនួយបកប្រែ៖ / ជាភាសាខ្មែរ /en/ ជាភាសាអង់គ្លេស ជាមួយការភ្ជាប់អត្ថបទបកប្រែ និងឈ្មោះប្រភេទជាភាសាអង់គ្លេស។ មានក្រឡាអត្ថបទលេចធ្លោ ប្លុកវីដេអូ និងប្លុកប្រភេទតាមពណ៌ ខ្សែព័ត៌មានទាន់ហេតុការណ៍ ទំព័របណ្ណសាររំកិលមិនចេះចប់ដែលប្ដូរបញ្ជី/ក្រឡាបាន និងទំព័រអត្ថបទស្អាត។ ផ្ទាំង Sbek Theme តែមួយ (៧ ផ្ទាំងរង) កំណត់អត្តសញ្ញាណ ពណ៌ម៉ាក ពុម្ពអក្សរខ្មែរ ១១ ដែលផ្ទុកលើគេហទំព័រផ្ទាល់ ផ្នែកទំព័រដើម ទំនាក់ទំនង បណ្តាញសង្គម និងការវិភាគ ព្រមទាំងការនាំចូលមាតិកាគំរូដោយចុចតែម្ដង។ CSS ប្រហែល 8 KB និង JS 4 KB (gzip) បង្កើតដោយ Tailwind CSS v4 និង JavaScript សុទ្ធ។"
 
 #: 404.php:16
 msgid "The page you are looking for could not be found."
 msgstr "រកមិនឃើញទំព័រដែលអ្នកកំពុងស្វែងរកទេ"
 
-#: 404.php:18
-#: template-parts/content-none.php:15
+#: 404.php:18 template-parts/content-none.php:15
 msgid "Back to the home page"
 msgstr "ត្រឡប់ទៅទំព័រដើម"
 
-#: 404.php:24
-#: sidebar.php:16
+#: 404.php:24 sidebar.php:16
 msgid "Popular articles"
 msgstr "អត្ថបទពេញនិយម"
 
-#: archive.php:23
-#: template-parts/home/video.php:21
+#: archive.php:23 template-parts/home/video.php:21
 #: template-parts/home/video.php:22
 msgid "Video"
 msgstr "វីដេអូ"
-
-#. translators: 1: year, 2: site name.
-#: inc/admin/theme-options.php:230
-#, php-format
-msgid "© %1$s %2$s. All rights reserved."
-msgstr "© រក្សាសិទ្ធិគ្រប់យ៉ាងដោយ %2$s ឆ្នាំ%1$s"
 
 #: footer.php:26
 msgid "Privacy Policy"
@@ -72,8 +63,7 @@ msgstr "អំពីយើង"
 msgid "Follow us"
 msgstr "ជួបគ្នានៅបណ្តាញសង្គម"
 
-#: footer.php:70
-#: inc/admin/theme-options.php:899
+#: footer.php:70 inc/admin/theme-options.php:1141
 msgid "Contact"
 msgstr "ទំនាក់ទំនង"
 
@@ -89,14 +79,11 @@ msgstr "ម៉ឺនុយមេ"
 msgid "Toggle navigation"
 msgstr "បើក/បិទម៉ឺនុយ"
 
-#: header.php:64
-#: search.php:32
-#: searchform.php:18
+#: header.php:64 search.php:32 searchform.php:18
 msgid "Search"
 msgstr "ស្វែងរក"
 
-#: header.php:66
-#: inc/i18n.php:249
+#: header.php:66 inc/i18n.php:249
 msgid "Language"
 msgstr "ភាសា"
 
@@ -110,85 +97,109 @@ msgstr "ព័ត៌មានលម្អិតនៃអត្ថបទ"
 
 #: inc/admin/custom-fields.php:79
 msgid "Trending score (0–100)"
-msgstr ""
+msgstr "ពិន្ទុពេញនិយម (0–100)"
 
 #: inc/admin/custom-fields.php:81
 msgid "Higher scores rank first in \"Popular articles\"."
-msgstr ""
+msgstr "ពិន្ទុខ្ពស់ជាងនឹងបង្ហាញមុនគេនៅក្នុង \"អត្ថបទពេញនិយម\"។"
 
 #: inc/admin/custom-fields.php:84
 msgid "Video URL"
-msgstr ""
+msgstr "តំណវីដេអូ"
 
 #: inc/admin/custom-fields.php:86
 msgid "Embedded above the article. Set the post format to \"Video\" to list it in the homepage video block."
-msgstr ""
+msgstr "បង្កប់នៅខាងលើអត្ថបទ។ កំណត់ទម្រង់អត្ថបទជា \"វីដេអូ\" ដើម្បីបង្ហាញវានៅក្នុងប្លុកវីដេអូលើទំព័រដើម។"
 
 #: inc/admin/custom-fields.php:89
 msgid "Source"
-msgstr ""
+msgstr "ប្រភព"
 
 #: inc/admin/custom-fields.php:93
 msgid "Source URL"
-msgstr ""
+msgstr "តំណប្រភព"
 
 #: inc/admin/custom-fields.php:97
 msgid "Sponsored / advertorial"
-msgstr ""
+msgstr "អត្ថបទឧបត្ថម្ភ / ពាណិជ្ជកម្ម"
 
 #: inc/admin/custom-fields.php:98
 msgid "Breaking news (header ticker)"
-msgstr ""
+msgstr "ព័ត៌មានទាន់ហេតុការណ៍ (ខ្សែព័ត៌មានរត់ខាងលើ)"
 
-#: inc/admin/dashboard-widget.php:23
+#: inc/admin/dashboard-widget.php:41
+msgid "Add the English site title"
+msgstr "បញ្ចូលឈ្មោះគេហទំព័រជាភាសាអង់គ្លេស"
+
+#: inc/admin/dashboard-widget.php:46
 msgid "Upload a site logo"
-msgstr ""
-
-#: inc/admin/dashboard-widget.php:27
-msgid "Add a default share image"
-msgstr ""
-
-#: inc/admin/dashboard-widget.php:31
-msgid "Set the company location"
-msgstr ""
-
-#: inc/admin/dashboard-widget.php:35
-msgid "Write a company description"
-msgstr ""
-
-#: inc/admin/dashboard-widget.php:47
-msgid "Add a contact phone number"
-msgstr ""
+msgstr "ផ្ទុកឡូហ្គោគេហទំព័រ"
 
 #: inc/admin/dashboard-widget.php:51
-msgid "Link a social profile"
-msgstr ""
+msgid "Add a site icon"
+msgstr "បន្ថែមរូបតំណាងគេហទំព័រ"
 
-#: inc/admin/dashboard-widget.php:55
-msgid "Connect analytics (GA4 or GTM)"
-msgstr ""
+#: inc/admin/dashboard-widget.php:56
+msgid "Add a default share image"
+msgstr "បន្ថែមរូបភាពចែករំលែកលំនាំដើម"
+
+#: inc/admin/dashboard-widget.php:61
+msgid "Choose the homepage category blocks"
+msgstr "ជ្រើសរើសប្លុកប្រភេទលើទំព័រដើម"
+
+#: inc/admin/dashboard-widget.php:66
+msgid "Assign the Khmer and English menus"
+msgstr "កំណត់ម៉ឺនុយភាសាខ្មែរ និងអង់គ្លេស"
 
 #: inc/admin/dashboard-widget.php:71
-msgid "Theme Setup"
-msgstr ""
+msgid "Write a site description"
+msgstr "សរសេរការពិពណ៌នាគេហទំព័រ"
 
-#: inc/admin/dashboard-widget.php:107
-msgid "Finish setting up your site identity. These details power your header, SEO tags, structured data, and footer."
-msgstr ""
+#: inc/admin/dashboard-widget.php:76
+msgid "Add a contact email"
+msgstr "បន្ថែមអ៊ីមែលទំនាក់ទំនង"
+
+#: inc/admin/dashboard-widget.php:81
+msgid "Add a contact phone number"
+msgstr "បន្ថែមលេខទូរស័ព្ទទំនាក់ទំនង"
+
+#: inc/admin/dashboard-widget.php:86
+msgid "Set the newsroom location"
+msgstr "កំណត់ទីតាំងបន្ទប់ព័ត៌មាន"
+
+#: inc/admin/dashboard-widget.php:91
+msgid "Link a social profile"
+msgstr "ភ្ជាប់គណនីបណ្តាញសង្គម"
+
+#: inc/admin/dashboard-widget.php:96
+msgid "Connect analytics (GA4 or GTM)"
+msgstr "ភ្ជាប់ការវិភាគ (GA4 ឬ GTM)"
+
+#: inc/admin/dashboard-widget.php:113
+msgid "Theme Setup"
+msgstr "ការរៀបចំស្បែក"
+
+#: inc/admin/dashboard-widget.php:149
+msgid "Finish setting up your site. These details power your header, homepage, SEO tags, structured data and footer. Click an item to go straight to it."
+msgstr "បញ្ចប់ការរៀបចំគេហទំព័ររបស់អ្នក។ ព័ត៌មានទាំងនេះប្រើសម្រាប់ផ្នែកខាងលើ ទំព័រដើម ស្លាក SEO ទិន្នន័យរចនាសម្ព័ន្ធ និងបាតទំព័រ។ ចុចលើធាតុណាមួយ ដើម្បីទៅកែវាភ្លាមៗ។"
 
 #. translators: 1: completed count, 2: total count.
-#: inc/admin/dashboard-widget.php:117
+#: inc/admin/dashboard-widget.php:159
 #, php-format
 msgid "%1$d of %2$d complete"
-msgstr ""
+msgstr "បានបញ្ចប់ %1$d ក្នុងចំណោម %2$d"
 
-#: inc/admin/dashboard-widget.php:125
-msgid "All set — your site identity is fully configured!"
-msgstr ""
+#: inc/admin/dashboard-widget.php:167
+msgid "All set — your site is fully configured!"
+msgstr "រួចរាល់ — គេហទំព័ររបស់អ្នកត្រូវបានរៀបចំពេញលេញហើយ!"
 
-#: inc/admin/dashboard-widget.php:141
+#: inc/admin/dashboard-widget.php:183
 msgid "Review settings"
-msgstr ""
+msgstr "ពិនិត្យការកំណត់"
+
+#: inc/admin/dashboard-widget.php:183
+msgid "Go to Sbek Theme"
+msgstr "ទៅកាន់ Sbek Theme"
 
 #: inc/admin/login.php:49
 msgid "Welcome back! Sign in to manage the newsroom."
@@ -210,102 +221,739 @@ msgstr "ព័ត៌មានរហ័ស និងទុកចិត្តប�
 msgid "Write, edit and publish stories for your readers."
 msgstr "សរសេរ កែសម្រួល និងចុះផ្សាយអត្ថបទសម្រាប់អ្នកអាន។"
 
-#: inc/admin/theme-options.php:542
-msgid "Replace"
-msgstr ""
-
-#: inc/admin/theme-options.php:546
-#: inc/admin/theme-options.php:595
-msgid "Remove"
-msgstr ""
-
-#: inc/admin/theme-options.php:562
-msgid "Add"
-msgstr ""
-
-#: inc/admin/theme-options.php:606
-msgid "You do not have permission to access this page."
-msgstr ""
-
-#: inc/admin/theme-options.php:700
-msgid "Branding"
-msgstr ""
-
-#: inc/admin/theme-options.php:919
-msgid "Latitude"
-msgstr ""
-
-#: inc/admin/theme-options.php:920
-msgid "Longitude"
-msgstr ""
-
-#: inc/admin/theme-options.php:893
-msgid "Description (Khmer)"
-msgstr ""
-
-#: inc/admin/theme-options.php:894
-msgid "Description (English)"
-msgstr ""
-
-#: inc/admin/theme-options.php:917
-msgid "Address (Khmer)"
-msgstr ""
-
-#: inc/admin/theme-options.php:918
-msgid "Address (English)"
-msgstr ""
-
-#: inc/admin/theme-options.php:900
-msgid "Contact email"
-msgstr ""
-
-#: inc/admin/theme-options.php:581
-msgid "Platform (e.g. Facebook)"
-msgstr ""
-
-#: inc/admin/theme-options.php:954
-msgid "Google Analytics 4 ID"
-msgstr ""
-
-#: inc/admin/theme-options.php:955
-msgid "Google Tag Manager ID"
-msgstr ""
-
-#: inc/admin/theme-options.php:966
-msgid "Your role cannot save raw scripts; unsafe markup will be stripped on save."
-msgstr ""
-
 #: inc/admin/term-meta.php:81
 msgid "Accent color"
-msgstr ""
+msgstr "ពណ៌សម្គាល់"
 
 #: inc/admin/term-meta.php:83
-msgid "Used for badges, section headers and arrows."
-msgstr ""
+msgid "Used for badges, section headers and arrows. While \"Use the brand color\" is ticked, the category follows the brand color, even after it changes."
+msgstr "ប្រើសម្រាប់ស្លាក ក្បាលផ្នែក និងសញ្ញាព្រួញ។ ពេលធីក \"ប្រើពណ៌ម៉ាក\" ប្រភេទនេះនឹងប្រើពណ៌ម៉ាក ទោះបីពណ៌ម៉ាកត្រូវបានប្ដូរនៅពេលក្រោយក៏ដោយ។"
 
 #. translators: %s: language name.
 #: inc/admin/term-meta.php:90
 #, php-format
 msgid "Name (%s)"
-msgstr ""
+msgstr "ឈ្មោះ (%s)"
 
 #: inc/admin/term-meta.php:92
 msgid "Shown on pages in that language. Leave empty to use the main name."
-msgstr ""
+msgstr "បង្ហាញលើទំព័រជាភាសានោះ។ ទុកទទេ ដើម្បីប្រើឈ្មោះចម្បង។"
 
-#: inc/admin/term-meta.php:98
-#: inc/admin/theme-options.php:837
+#: inc/admin/term-meta.php:98 inc/admin/theme-options.php:1057
 msgid "Homepage position"
-msgstr ""
+msgstr "ទីតាំងលើទំព័រដើម"
 
-#: inc/admin/term-meta.php:100
-msgid "1, 2, 3… shows this category as a homepage block in that order. Empty or 0 = not on the homepage."
-msgstr ""
+#. translators: %d: maximum number of homepage blocks.
+#: inc/admin/term-meta.php:102
+#, php-format
+msgid "1, 2, 3… shows this category as a homepage block in that order (up to %d; categories without posts are skipped). Leave empty to keep it off the homepage. If no category has a position, the first top-level categories are shown."
+msgstr "1, 2, 3… បង្ហាញប្រភេទនេះជាប្លុកលើទំព័រដើមតាមលំដាប់នោះ (រហូតដល់ %d ប្រភេទដែលគ្មានអត្ថបទនឹងត្រូវរំលង)។ ទុកទទេ ដើម្បីមិនបង្ហាញលើទំព័រដើម។ ប្រសិនបើគ្មានប្រភេទណាមានទីតាំងទេ ប្រភេទកម្រិតកំពូលដំបូងៗនឹងត្រូវបង្ហាញ។"
 
-#: inc/admin/term-meta.php:190
-#: inc/admin/theme-options.php:835
+#: inc/admin/term-meta.php:130
+msgid "Use the brand color"
+msgstr "ប្រើពណ៌ម៉ាក"
+
+#: inc/admin/term-meta.php:208 inc/admin/theme-options.php:1055
 msgid "Color"
-msgstr ""
+msgstr "ពណ៌"
+
+#. translators: %s: submitted value.
+#: inc/admin/theme-options.php:217
+#, php-format
+msgid "Contact email: “%s” is not a valid email address."
+msgstr "អ៊ីមែលទំនាក់ទំនង៖ “%s” មិនមែនជាអាសយដ្ឋានអ៊ីមែលត្រឹមត្រូវទេ។"
+
+#: inc/admin/theme-options.php:224
+msgid "Latitude must be a number between -90 and 90."
+msgstr "រយៈទទឹងត្រូវតែជាលេខចន្លោះ -90 និង 90។"
+
+#: inc/admin/theme-options.php:225
+msgid "Longitude must be a number between -180 and 180."
+msgstr "រយៈបណ្ដោយត្រូវតែជាលេខចន្លោះ -180 និង 180។"
+
+#: inc/admin/theme-options.php:230 inc/admin/theme-options.php:1240
+msgid "Google Analytics 4 ID"
+msgstr "លេខសម្គាល់ Google Analytics 4"
+
+#: inc/admin/theme-options.php:231 inc/admin/theme-options.php:1251
+msgid "Google Tag Manager ID"
+msgstr "លេខសម្គាល់ Google Tag Manager"
+
+#. translators: 1: field label, 2: example ID.
+#: inc/admin/theme-options.php:237
+#, php-format
+msgid "%1$s must look like %2$s."
+msgstr "%1$s ត្រូវមានទម្រង់ដូច %2$s។"
+
+#. translators: %s: submitted URL.
+#: inc/admin/theme-options.php:245
+#, php-format
+msgid "Social link “%s” is not a valid http(s) address."
+msgstr "តំណបណ្តាញសង្គម “%s” មិនមែនជាអាសយដ្ឋាន http(s) ត្រឹមត្រូវទេ។"
+
+#. translators: 1: width, 2: height in pixels.
+#: inc/admin/theme-options.php:267
+#, php-format
+msgid "Site icon not changed: the image is %1$d×%2$dpx, but it must be square and at least 512×512px."
+msgstr "មិនបានប្ដូររូបតំណាងគេហទំព័រទេ៖ រូបភាពមានទំហំ %1$d×%2$dpx ប៉ុន្តែវាត្រូវតែជាការ៉េ និងយ៉ាងហោចណាស់ 512×512px។"
+
+#. translators: 1: year, 2: site name.
+#: inc/admin/theme-options.php:331
+#, php-format
+msgid "© %1$s %2$s. All rights reserved."
+msgstr "© រក្សាសិទ្ធិគ្រប់យ៉ាងដោយ %2$s ឆ្នាំ%1$s"
+
+#: inc/admin/theme-options.php:352
+msgid "General"
+msgstr "ទូទៅ"
+
+#: inc/admin/theme-options.php:353
+msgid "Design"
+msgstr "រចនាបថ"
+
+#: inc/admin/theme-options.php:354
+msgid "Homepage"
+msgstr "ទំព័រដើម"
+
+#: inc/admin/theme-options.php:355
+msgid "Contact & Footer"
+msgstr "ទំនាក់ទំនង និងបាតទំព័រ"
+
+#: inc/admin/theme-options.php:356
+msgid "Social"
+msgstr "បណ្តាញសង្គម"
+
+#: inc/admin/theme-options.php:357
+msgid "Integrations"
+msgstr "ការភ្ជាប់សេវា"
+
+#: inc/admin/theme-options.php:358
+msgid "Tools"
+msgstr "ឧបករណ៍"
+
+#: inc/admin/theme-options.php:364
+msgid "You do not have permission to change these settings."
+msgstr "អ្នកមិនមានសិទ្ធិផ្លាស់ប្ដូរការកំណត់ទាំងនេះទេ។"
+
+#: inc/admin/theme-options.php:452 inc/admin/theme-options.php:453
+#: inc/admin/theme-options.php:467 inc/admin/theme-options.php:819
+msgid "Sbek Theme"
+msgstr "Sbek Theme"
+
+#: inc/admin/theme-options.php:494
+msgid "Select image"
+msgstr "ជ្រើសរើសរូបភាព"
+
+#: inc/admin/theme-options.php:495
+msgid "Use this image"
+msgstr "ប្រើរូបភាពនេះ"
+
+#: inc/admin/theme-options.php:498
+msgid "Something went wrong. You can continue the job or remove what was created."
+msgstr "មានបញ្ហាកើតឡើង។ អ្នកអាចបន្តការងារ ឬលុបអ្វីដែលបានបង្កើតរួច។"
+
+#: inc/admin/theme-options.php:499
+msgid "Done! Reloading…"
+msgstr "រួចរាល់! កំពុងផ្ទុកឡើងវិញ…"
+
+#. translators: 1: width, 2: height in pixels.
+#: inc/admin/theme-options.php:502
+#, php-format
+msgid "This image is %1$d×%2$dpx. The site icon must be square and at least 512×512px, so it will not be saved."
+msgstr "រូបភាពនេះមានទំហំ %1$d×%2$dpx។ រូបតំណាងគេហទំព័រត្រូវតែជាការ៉េ និងយ៉ាងហោចណាស់ 512×512px ដូច្នេះវានឹងមិនត្រូវបានរក្សាទុកទេ។"
+
+#. translators: %s: field label.
+#: inc/admin/theme-options.php:611
+#, php-format
+msgid "%s (hex)"
+msgstr "%s (hex)"
+
+#. translators: %s: field label.
+#: inc/admin/theme-options.php:612 inc/admin/theme-options.php:1099
+msgid "Reset"
+msgstr "កំណត់ឡើងវិញ"
+
+#: inc/admin/theme-options.php:672
+msgid "Replace"
+msgstr "ប្ដូរ"
+
+#: inc/admin/theme-options.php:676 inc/admin/theme-options.php:734
+msgid "Remove"
+msgstr "លុបចេញ"
+
+#: inc/admin/theme-options.php:693
+msgid "Add"
+msgstr "បន្ថែម"
+
+#: inc/admin/theme-options.php:708
+msgid "Label (e.g. Newsroom)"
+msgstr "ស្លាក (ឧ. បន្ទប់ព័ត៌មាន)"
+
+#: inc/admin/theme-options.php:712
+msgid "Platform (e.g. Facebook)"
+msgstr "បណ្តាញ (ឧ. Facebook)"
+
+#: inc/admin/theme-options.php:721
+msgid "Move up"
+msgstr "ផ្លាស់ឡើងលើ"
+
+#: inc/admin/theme-options.php:724
+msgid "Move down"
+msgstr "ផ្លាស់ចុះក្រោម"
+
+#: inc/admin/theme-options.php:765
+msgid "You do not have permission to access this page."
+msgstr "អ្នកមិនមានសិទ្ធិចូលមើលទំព័រនេះទេ។"
+
+#: inc/admin/theme-options.php:820
+msgid "Everything your site shows outside of articles — identity, homepage sections, contact details, social links and tracking — in one place."
+msgstr "អ្វីៗទាំងអស់ដែលគេហទំព័ររបស់អ្នកបង្ហាញក្រៅពីអត្ថបទ — អត្តសញ្ញាណ ផ្នែកទំព័រដើម ព័ត៌មានទំនាក់ទំនង តំណបណ្តាញសង្គម និងការតាមដាន — នៅកន្លែងតែមួយ។"
+
+#: inc/admin/theme-options.php:825
+msgid "View site"
+msgstr "មើលគេហទំព័រ"
+
+#: inc/admin/theme-options.php:827 inc/admin/theme-options.php:1284
+msgid "Save changes"
+msgstr "រក្សាទុកការផ្លាស់ប្ដូរ"
+
+#: inc/admin/theme-options.php:835
+msgid "Sbek Theme settings saved."
+msgstr "បានរក្សាទុកការកំណត់ Sbek Theme។"
+
+#: inc/admin/theme-options.php:846
+msgid "Some values were not saved:"
+msgstr "តម្លៃខ្លះមិនត្រូវបានរក្សាទុកទេ៖"
+
+#: inc/admin/theme-options.php:856
+msgid "Design reset to the default colors and fonts."
+msgstr "បានកំណត់រចនាបថឡើងវិញទៅពណ៌ និងពុម្ពអក្សរលំនាំដើម។"
+
+#: inc/admin/theme-options.php:866
+msgid "Sbek Theme sections"
+msgstr "ផ្នែកនៃ Sbek Theme"
+
+#: inc/admin/theme-options.php:879
+msgid "Site identity"
+msgstr "អត្តសញ្ញាណគេហទំព័រ"
+
+#: inc/admin/theme-options.php:879
+msgid "The name and tagline shown in browser tabs, search results and the footer. English versions are used on /en/ pages; leave them empty to reuse the Khmer text."
+msgstr "ឈ្មោះ និងពាក្យស្លោកដែលបង្ហាញលើផ្ទាំងកម្មវិធីរុករក លទ្ធផលស្វែងរក និងបាតទំព័រ។ កំណែភាសាអង់គ្លេសប្រើលើទំព័រ /en/ ។ ទុកទទេ ដើម្បីប្រើអត្ថបទខ្មែរដដែល។"
+
+#: inc/admin/theme-options.php:882
+msgid "Site title (Khmer)"
+msgstr "ឈ្មោះគេហទំព័រ (ខ្មែរ)"
+
+#: inc/admin/theme-options.php:883
+msgid "Site title (English)"
+msgstr "ឈ្មោះគេហទំព័រ (អង់គ្លេស)"
+
+#: inc/admin/theme-options.php:884
+msgid "Tagline (Khmer)"
+msgstr "ពាក្យស្លោក (ខ្មែរ)"
+
+#: inc/admin/theme-options.php:885
+msgid "Tagline (English)"
+msgstr "ពាក្យស្លោក (អង់គ្លេស)"
+
+#: inc/admin/theme-options.php:890
+msgid "Branding"
+msgstr "ម៉ាកយីហោ"
+
+#: inc/admin/theme-options.php:890
+msgid "Logo for the header and footer, the browser/app icon, and the image used when a page without its own picture is shared."
+msgstr "ឡូហ្គោសម្រាប់ផ្នែកខាងលើ និងបាតទំព័រ រូបតំណាងកម្មវិធីរុករក/កម្មវិធី និងរូបភាពដែលប្រើនៅពេលចែករំលែកទំព័រដែលគ្មានរូបភាពផ្ទាល់ខ្លួន។"
+
+#: inc/admin/theme-options.php:893
+msgid "Logo"
+msgstr "ឡូហ្គោ"
+
+#: inc/admin/theme-options.php:894
+msgid "Choose a logo"
+msgstr "ជ្រើសរើសឡូហ្គោ"
+
+#: inc/admin/theme-options.php:894
+msgid "PNG or JPG, square works best"
+msgstr "PNG ឬ JPG រាងការ៉េល្អបំផុត"
+
+#: inc/admin/theme-options.php:897
+msgid "Site icon"
+msgstr "រូបតំណាងគេហទំព័រ"
+
+#: inc/admin/theme-options.php:898
+msgid "Choose an icon"
+msgstr "ជ្រើសរើសរូបតំណាង"
+
+#: inc/admin/theme-options.php:898
+msgid "Square, at least 512×512px"
+msgstr "រាងការ៉េ យ៉ាងហោចណាស់ 512×512px"
+
+#: inc/admin/theme-options.php:901
+msgid "Default share image"
+msgstr "រូបភាពចែករំលែកលំនាំដើម"
+
+#: inc/admin/theme-options.php:902
+msgid "Choose an image"
+msgstr "ជ្រើសរើសរូបភាព"
+
+#: inc/admin/theme-options.php:902
+msgid "JPG or PNG, 1200×630px"
+msgstr "JPG ឬ PNG ទំហំ 1200×630px"
+
+#: inc/admin/theme-options.php:949
+msgid "Live preview"
+msgstr "មើលជាមុនផ្ទាល់"
+
+#: inc/admin/theme-options.php:969 template-parts/newsletter-form.php:29
+msgid "Subscribe"
+msgstr "ចុះឈ្មោះ"
+
+#: inc/admin/theme-options.php:974
+msgid "Colors"
+msgstr "ពណ៌"
+
+#: inc/admin/theme-options.php:974
+msgid "Text on these colors switches between white and dark automatically, so it always stays readable."
+msgstr "អក្សរលើពណ៌ទាំងនេះប្ដូររវាងពណ៌ស និងពណ៌ខ្មៅដោយស្វ័យប្រវត្តិ ដើម្បីឱ្យអានបានស្រួលជានិច្ច។"
+
+#. translators: %s: category.
+#: inc/admin/theme-options.php:977 inc/admin/theme-options.php:1098
+msgid "Brand color"
+msgstr "ពណ៌ម៉ាក"
+
+#: inc/admin/theme-options.php:977
+msgid "Menu bar, buttons, ticker label, links and accents. The darker hover shade is derived from it."
+msgstr "របារម៉ឺនុយ ប៊ូតុង ស្លាកខ្សែព័ត៌មានរត់ តំណ និងចំណុចសម្គាល់។ ពណ៌ងងឹតពេលដាក់កណ្ដុរពីលើ ត្រូវបានគណនាចេញពីពណ៌នេះ។"
+
+#: inc/admin/theme-options.php:978
+msgid "Top bar"
+msgstr "របារខាងលើ"
+
+#: inc/admin/theme-options.php:978
+msgid "Logo bar on desktop and the menu bar on mobile."
+msgstr "របារឡូហ្គោលើកុំព្យូទ័រ និងរបារម៉ឺនុយលើទូរស័ព្ទ។"
+
+#: inc/admin/theme-options.php:979 inc/admin/theme-options.php:1189
+msgid "Footer"
+msgstr "បាតទំព័រ"
+
+#: inc/admin/theme-options.php:979
+msgid "Footer background."
+msgstr "ផ្ទៃខាងក្រោយបាតទំព័រ។"
+
+#: inc/admin/theme-options.php:984
+msgid "Fonts"
+msgstr "ពុម្ពអក្សរ"
+
+#: inc/admin/theme-options.php:984
+msgid "Khmer fonts are hosted on this site (no Google requests); visitors only download the fonts you pick. Latin text (English, numbers) uses the Latin font."
+msgstr "ពុម្ពអក្សរខ្មែរត្រូវបានផ្ទុកលើគេហទំព័រនេះផ្ទាល់ (មិនស្នើទៅ Google ទេ) ហើយអ្នកទស្សនាទាញយកតែពុម្ពអក្សរដែលអ្នកជ្រើសរើសប៉ុណ្ណោះ។ អក្សរឡាតាំង (អង់គ្លេស លេខ) ប្រើពុម្ពអក្សរឡាតាំង។"
+
+#: inc/admin/theme-options.php:987
+msgid "Khmer body text"
+msgstr "អក្សរខ្មែរក្នុងអត្ថបទ"
+
+#: inc/admin/theme-options.php:988
+msgid "Khmer headings & menu"
+msgstr "ចំណងជើង និងម៉ឺនុយខ្មែរ"
+
+#: inc/admin/theme-options.php:989
+msgid "Latin text"
+msgstr "អក្សរឡាតាំង"
+
+#: inc/admin/theme-options.php:994
+msgid "Reset design"
+msgstr "កំណត់រចនាបថឡើងវិញ"
+
+#: inc/admin/theme-options.php:994
+msgid "Restore the original Sabay red, Battambang and Koulen. Only colors and fonts are reset; everything else in Sbek Theme stays as it is."
+msgstr "ស្ដារពណ៌ក្រហម Sabay និងពុម្ពអក្សរ Battambang និង Koulen ដើមវិញ។ មានតែពណ៌ និងពុម្ពអក្សរប៉ុណ្ណោះដែលត្រូវកំណត់ឡើងវិញ ចំណែកការកំណត់ផ្សេងទៀតក្នុង Sbek Theme នៅដដែល។"
+
+#: inc/admin/theme-options.php:998
+msgid "Reset design to defaults"
+msgstr "កំណត់រចនាបថទៅលំនាំដើមវិញ"
+
+#: inc/admin/theme-options.php:999
+msgid "Replace your colors and fonts with the defaults?"
+msgstr "ជំនួសពណ៌ និងពុម្ពអក្សររបស់អ្នកដោយលំនាំដើមឬ?"
+
+#: inc/admin/theme-options.php:1000
+msgid "Yes, reset"
+msgstr "បាទ/ចាស កំណត់ឡើងវិញ"
+
+#: inc/admin/theme-options.php:1002
+msgid "Your unsaved changes on other tabs will be lost. Save them first to keep them."
+msgstr "ការផ្លាស់ប្ដូរដែលមិនទាន់រក្សាទុកនៅផ្ទាំងផ្សេងទៀតនឹងបាត់បង់។ សូមរក្សាទុកវាជាមុនសិន ប្រសិនបើចង់រក្សាវាទុក។"
+
+#: inc/admin/theme-options.php:1006
+msgid "The design already uses the defaults."
+msgstr "រចនាបថកំពុងប្រើលំនាំដើមរួចហើយ។"
+
+#: inc/admin/theme-options.php:1013
+msgid "Sections"
+msgstr "ផ្នែក"
+
+#: inc/admin/theme-options.php:1013
+msgid "Turn sections on or off. The hero grid always shows sticky posts (then the latest)."
+msgstr "បើក ឬបិទផ្នែកនានា។ ក្រឡាអត្ថបទលេចធ្លោតែងតែបង្ហាញអត្ថបទដែលបានខ្ទាស់ (បន្ទាប់មកអត្ថបទថ្មីបំផុត)។"
+
+#: inc/admin/theme-options.php:1016
+msgid "Breaking-news ticker"
+msgstr "ខ្សែព័ត៌មានទាន់ហេតុការណ៍"
+
+#: inc/admin/theme-options.php:1016
+msgid "Scrolling bar under the menu, on every page, with posts marked \"Breaking news\"."
+msgstr "របាររំកិលនៅក្រោមម៉ឺនុយលើគ្រប់ទំព័រ ដែលបង្ហាញអត្ថបទដែលបានសម្គាល់ថា \"ព័ត៌មានទាន់ហេតុការណ៍\"។"
+
+#: inc/admin/theme-options.php:1017
+msgid "Video block"
+msgstr "ប្លុកវីដេអូ"
+
+#: inc/admin/theme-options.php:1017
+msgid "Homepage block listing posts in the \"Video\" post format."
+msgstr "ប្លុកលើទំព័រដើម ដែលបង្ហាញអត្ថបទក្នុងទម្រង់ \"វីដេអូ\"។"
+
+#: inc/admin/theme-options.php:1033
+msgid "Category blocks"
+msgstr "ប្លុកប្រភេទ"
+
+#. translators: %d: maximum number of homepage blocks.
+#: inc/admin/theme-options.php:1036
+#, php-format
+msgid "Each category's accent color (badges, headers, arrows), its English name, and its homepage position. Positions 1, 2, 3… show categories as blocks in that order, up to %d; categories without posts are skipped."
+msgstr "ពណ៌សម្គាល់របស់ប្រភេទនីមួយៗ (ស្លាក ក្បាលផ្នែក សញ្ញាព្រួញ) ឈ្មោះជាភាសាអង់គ្លេស និងទីតាំងលើទំព័រដើម។ ទីតាំង 1, 2, 3… បង្ហាញប្រភេទជាប្លុកតាមលំដាប់នោះ រហូតដល់ %d ប្លុក។ ប្រភេទដែលគ្មានអត្ថបទនឹងត្រូវរំលង។"
+
+#. translators: %d: maximum number of homepage blocks.
+#: inc/admin/theme-options.php:1046
+#, php-format
+msgid "No positions are set yet, so the homepage shows the first %d top-level categories that have posts, alphabetically. Give a category a position to choose them yourself."
+msgstr "មិនទាន់មានការកំណត់ទីតាំងនៅឡើយទេ ដូច្នេះទំព័រដើមបង្ហាញប្រភេទកម្រិតកំពូលដែលមានអត្ថបទ %d ដំបូងតាមលំដាប់អក្ខរក្រម។ ផ្ដល់ទីតាំងឱ្យប្រភេទ ដើម្បីជ្រើសរើសដោយខ្លួនឯង។"
+
+#: inc/admin/theme-options.php:1054 search.php:25
+msgid "Category"
+msgstr "ប្រភេទ"
+
+#: inc/admin/theme-options.php:1056
+msgid "English name"
+msgstr "ឈ្មោះជាភាសាអង់គ្លេស"
+
+#. translators: %s: number of posts.
+#: inc/admin/theme-options.php:1073
+#, php-format
+msgid "%s post"
+msgid_plural "%s posts"
+msgstr[0] "អត្ថបទ %s"
+
+#: inc/admin/theme-options.php:1075
+msgid "Edit"
+msgstr "កែសម្រួល"
+
+#: inc/admin/theme-options.php:1080
+msgid "On homepage"
+msgstr "នៅលើទំព័រដើម"
+
+#: inc/admin/theme-options.php:1082
+msgid "Hidden: no posts yet"
+msgstr "លាក់៖ មិនទាន់មានអត្ថបទ"
+
+#. translators: %d: maximum number of homepage blocks.
+#: inc/admin/theme-options.php:1085
+#, php-format
+msgid "Hidden: only %d blocks are shown"
+msgstr "លាក់៖ បង្ហាញតែ %d ប្លុកប៉ុណ្ណោះ"
+
+#. translators: %s: category.
+#: inc/admin/theme-options.php:1097
+#, php-format
+msgid "Color for %s"
+msgstr "ពណ៌សម្រាប់ %s"
+
+#: inc/admin/theme-options.php:1099
+msgid "Follow the brand color again"
+msgstr "ប្រើពណ៌ម៉ាកវិញ"
+
+#. translators: %s: category.
+#: inc/admin/theme-options.php:1103
+#, php-format
+msgid "English name for %s"
+msgstr "ឈ្មោះជាភាសាអង់គ្លេសសម្រាប់ %s"
+
+#. translators: %s: category.
+#: inc/admin/theme-options.php:1106
+#, php-format
+msgid "Homepage position for %s"
+msgstr "ទីតាំងលើទំព័រដើមសម្រាប់ %s"
+
+#: inc/admin/theme-options.php:1114
+msgid "No categories yet."
+msgstr "មិនទាន់មានប្រភេទនៅឡើយទេ។"
+
+#: inc/admin/theme-options.php:1114
+msgid "Add one"
+msgstr "បន្ថែមមួយ"
+
+#: inc/admin/theme-options.php:1118
+msgid "Elsewhere in WordPress"
+msgstr "កន្លែងផ្សេងទៀតក្នុង WordPress"
+
+#: inc/admin/theme-options.php:1118
+msgid "Site data that has its own dedicated screen."
+msgstr "ទិន្នន័យគេហទំព័រដែលមានទំព័រកំណត់ដាច់ដោយឡែក។"
+
+#: inc/admin/theme-options.php:1120
+msgid "Menus (Khmer and English)"
+msgstr "ម៉ឺនុយ (ខ្មែរ និងអង់គ្លេស)"
+
+#: inc/admin/theme-options.php:1121
+msgid "Ad slots and sidebar widgets"
+msgstr "កន្លែងផ្សាយពាណិជ្ជកម្ម និងវិដជិតរបារចំហៀង"
+
+#: inc/admin/theme-options.php:1122
+msgid "Sticky posts (homepage hero)"
+msgstr "អត្ថបទខ្ទាស់ (ផ្នែកលេចធ្លោលើទំព័រដើម)"
+
+#: inc/admin/theme-options.php:1123
+msgid "Newsletter subscribers"
+msgstr "អ្នកជាវព្រឹត្តិបត្រព័ត៌មាន"
+
+#: inc/admin/theme-options.php:1124
+msgid "Language, time zone and date format"
+msgstr "ភាសា តំបន់ម៉ោង និងទម្រង់កាលបរិច្ឆេទ"
+
+#: inc/admin/theme-options.php:1125
+msgid "Permalinks"
+msgstr "តំណអចិន្ត្រៃយ៍"
+
+#: inc/admin/theme-options.php:1132
+msgid "About"
+msgstr "អំពី"
+
+#: inc/admin/theme-options.php:1132
+msgid "Short description in the footer's \"About us\" column, also used for SEO and structured data."
+msgstr "ការពិពណ៌នាខ្លីក្នុងជួរឈរ \"អំពីយើង\" នៃបាតទំព័រ ដែលប្រើសម្រាប់ SEO និងទិន្នន័យរចនាសម្ព័ន្ធផងដែរ។"
+
+#: inc/admin/theme-options.php:1135
+msgid "Description (Khmer)"
+msgstr "ការពិពណ៌នា (ខ្មែរ)"
+
+#: inc/admin/theme-options.php:1136
+msgid "Description (English)"
+msgstr "ការពិពណ៌នា (អង់គ្លេស)"
+
+#: inc/admin/theme-options.php:1141
+msgid "Shown in the footer and in structured data. Add as many phone numbers as you need."
+msgstr "បង្ហាញនៅបាតទំព័រ និងក្នុងទិន្នន័យរចនាសម្ព័ន្ធ។ បន្ថែមលេខទូរស័ព្ទបានច្រើនតាមតម្រូវការ។"
+
+#: inc/admin/theme-options.php:1142
+msgid "Contact email"
+msgstr "អ៊ីមែលទំនាក់ទំនង"
+
+#: inc/admin/theme-options.php:1144
+msgid "Phone numbers"
+msgstr "លេខទូរស័ព្ទ"
+
+#: inc/admin/theme-options.php:1156
+msgid "Address & location"
+msgstr "អាសយដ្ឋាន និងទីតាំង"
+
+#: inc/admin/theme-options.php:1156
+msgid "Postal address for the footer. The coordinates are not shown to visitors; they tell search engines where your newsroom is (structured data)."
+msgstr "អាសយដ្ឋានសម្រាប់បាតទំព័រ។ កូអរដោនេមិនបង្ហាញដល់អ្នកទស្សនាទេ វាប្រាប់ម៉ាស៊ីនស្វែងរកពីទីតាំងបន្ទប់ព័ត៌មានរបស់អ្នក (ទិន្នន័យរចនាសម្ព័ន្ធ)។"
+
+#: inc/admin/theme-options.php:1159
+msgid "Address (Khmer)"
+msgstr "អាសយដ្ឋាន (ខ្មែរ)"
+
+#: inc/admin/theme-options.php:1160
+msgid "Address (English)"
+msgstr "អាសយដ្ឋាន (អង់គ្លេស)"
+
+#: inc/admin/theme-options.php:1163
+msgid "Latitude"
+msgstr "រយៈទទឹង"
+
+#: inc/admin/theme-options.php:1174
+msgid "Longitude"
+msgstr "រយៈបណ្ដោយ"
+
+#: inc/admin/theme-options.php:1189
+msgid "Optional footer sections."
+msgstr "ផ្នែកបន្ថែមនៃបាតទំព័រ។"
+
+#: inc/admin/theme-options.php:1191
+msgid "Newsletter signup"
+msgstr "ការចុះឈ្មោះទទួលព្រឹត្តិបត្រព័ត៌មាន"
+
+#: inc/admin/theme-options.php:1191
+msgid "Email signup form in the footer. Addresses are stored on this site, under Subscribers."
+msgstr "ទម្រង់ចុះឈ្មោះតាមអ៊ីមែលនៅបាតទំព័រ។ អាសយដ្ឋានត្រូវបានរក្សាទុកលើគេហទំព័រនេះ នៅក្រោម \"អ្នកជាវព័ត៌មាន\"។"
+
+#. translators: %s: number of subscribers.
+#: inc/admin/theme-options.php:1196
+#, php-format
+msgid "%s subscriber"
+msgid_plural "%s subscribers"
+msgstr[0] "អ្នកជាវ %s នាក់"
+
+#: inc/admin/theme-options.php:1199
+msgid "View subscribers"
+msgstr "មើលអ្នកជាវ"
+
+#: inc/admin/theme-options.php:1203 inc/frontend/newsletter.php:247
+msgid "Export CSV"
+msgstr "នាំចេញជា CSV"
+
+#: inc/admin/theme-options.php:1209
+msgid "Copyright line"
+msgstr "បន្ទាត់រក្សាសិទ្ធិ"
+
+#: inc/admin/theme-options.php:1209
+msgid "Leave empty for the default. You can use {year} and {site}."
+msgstr "ទុកទទេ ដើម្បីប្រើលំនាំដើម។ អ្នកអាចប្រើ {year} និង {site}។"
+
+#: inc/admin/theme-options.php:1212
+msgid "Copyright (Khmer)"
+msgstr "រក្សាសិទ្ធិ (ខ្មែរ)"
+
+#: inc/admin/theme-options.php:1213
+msgid "Copyright (English)"
+msgstr "រក្សាសិទ្ធិ (អង់គ្លេស)"
+
+#: inc/admin/theme-options.php:1221
+msgid "Social profiles"
+msgstr "គណនីបណ្តាញសង្គម"
+
+#: inc/admin/theme-options.php:1221
+msgid "Icons in the footer and \"sameAs\" links in structured data. Known platforms (Facebook, Instagram, YouTube, TikTok, Telegram, X, LinkedIn, WhatsApp) get their own icon."
+msgstr "រូបតំណាងនៅបាតទំព័រ និងតំណ \"sameAs\" ក្នុងទិន្នន័យរចនាសម្ព័ន្ធ។ បណ្តាញដែលស្គាល់ (Facebook, Instagram, YouTube, TikTok, Telegram, X, LinkedIn, WhatsApp) មានរូបតំណាងផ្ទាល់ខ្លួន។"
+
+#: inc/admin/theme-options.php:1235
+msgid "Analytics"
+msgstr "ការវិភាគ"
+
+#: inc/admin/theme-options.php:1235
+msgid "Google Analytics 4 loads only when no Tag Manager container is set."
+msgstr "Google Analytics 4 ផ្ទុកតែនៅពេលមិនបានកំណត់ Tag Manager ប៉ុណ្ណោះ។"
+
+#: inc/admin/theme-options.php:1245
+msgid "Starts with G- (Admin → Data streams in Google Analytics)."
+msgstr "ចាប់ផ្ដើមដោយ G- (Admin → Data streams ក្នុង Google Analytics)។"
+
+#: inc/admin/theme-options.php:1256
+msgid "Starts with GTM-. When set, the GA4 ID above is ignored — add GA4 inside Tag Manager instead."
+msgstr "ចាប់ផ្ដើមដោយ GTM-។ នៅពេលកំណត់ លេខសម្គាល់ GA4 ខាងលើនឹងមិនត្រូវប្រើទេ — សូមបន្ថែម GA4 នៅក្នុង Tag Manager ជំនួសវិញ។"
+
+#: inc/admin/theme-options.php:1264
+msgid "Custom code"
+msgstr "កូដផ្ទាល់ខ្លួន"
+
+#: inc/admin/theme-options.php:1264
+msgid "Raw HTML/JS added to every public page. Only paste code from sources you trust."
+msgstr "កូដ HTML/JS ដែលបន្ថែមទៅគ្រប់ទំព័រសាធារណៈ។ សូមបិទភ្ជាប់តែកូដពីប្រភពដែលអ្នកទុកចិត្តប៉ុណ្ណោះ។"
+
+#: inc/admin/theme-options.php:1266
+msgid "Before </head>"
+msgstr "មុន </head>"
+
+#: inc/admin/theme-options.php:1267
+msgid "Before </body>"
+msgstr "មុន </body>"
+
+#: inc/admin/theme-options.php:1270
+msgid "Your role cannot save raw scripts; unsafe markup will be stripped on save."
+msgstr "តួនាទីរបស់អ្នកមិនអាចរក្សាទុកស្គ្រីបដើមបានទេ។ កូដដែលមិនមានសុវត្ថិភាពនឹងត្រូវដកចេញពេលរក្សាទុក។"
+
+#: inc/admin/theme-options.php:1283
+msgid "You have unsaved changes."
+msgstr "អ្នកមានការផ្លាស់ប្ដូរដែលមិនទាន់រក្សាទុក។"
+
+#: inc/admin/tools.php:25 inc/admin/tools.php:85
+#: inc/frontend/newsletter.php:190
+msgid "You do not have permission to do this."
+msgstr "អ្នកមិនមានសិទ្ធិធ្វើសកម្មភាពនេះទេ។"
+
+#: inc/admin/tools.php:48
+msgid "Starting import…"
+msgstr "កំពុងចាប់ផ្ដើមនាំចូល…"
+
+#: inc/admin/tools.php:48
+msgid "Starting removal…"
+msgstr "កំពុងចាប់ផ្ដើមលុប…"
+
+#: inc/admin/tools.php:63
+msgid "Job cancelled. Anything already created can still be removed."
+msgstr "បានបោះបង់ការងារ។ អ្វីដែលបានបង្កើតរួច នៅតែអាចលុបចេញបាន។"
+
+#: inc/admin/tools.php:141
+msgid "Cancel"
+msgstr "បោះបង់"
+
+#: inc/admin/tools.php:153
+msgid "Demo content"
+msgstr "មាតិកាគំរូ"
+
+#: inc/admin/tools.php:153
+msgid "Sample categories, about 140 Khmer and English posts with images, pages, menus and ad placeholders — handy for previewing the theme. Removing deletes only what the import created; your own content and Sbek Theme values are kept."
+msgstr "ប្រភេទគំរូ អត្ថបទខ្មែរ និងអង់គ្លេសប្រហែល ១៤០ ព្រមទាំងរូបភាព ទំព័រ ម៉ឺនុយ និងកន្លែងពាណិជ្ជកម្មគំរូ — ងាយស្រួលសម្រាប់មើលស្បែកជាមុន។ ការលុបនឹងលុបតែអ្វីដែលការនាំចូលបានបង្កើតប៉ុណ្ណោះ មាតិកាផ្ទាល់ខ្លួន និងការកំណត់ Sbek Theme របស់អ្នកនៅដដែល។"
+
+#. translators: 1: "import" or "removal", 2: percent.
+#: inc/admin/tools.php:162
+#, php-format
+msgid "An unfinished %1$s stopped at %2$d%%. Continue it, or remove what was created so far."
+msgstr "%1$s ដែលមិនទាន់បញ្ចប់បានឈប់ត្រឹម %2$d%%។ សូមបន្ត ឬលុបអ្វីដែលបានបង្កើតរួច។"
+
+#: inc/admin/tools.php:163
+msgid "import"
+msgstr "ការនាំចូល"
+
+#: inc/admin/tools.php:163
+msgid "removal"
+msgstr "ការលុប"
+
+#. translators: 1: date, 2: posts and pages, 3: images.
+#: inc/admin/tools.php:171
+#, php-format
+msgid "Installed %1$s: %2$d posts and pages, %3$d images."
+msgstr "បានដំឡើង %1$s៖ អត្ថបទ និងទំព័រ %2$d រូបភាព %3$d។"
+
+#. translators: 1: posts and pages, 2: images.
+#: inc/admin/tools.php:181
+#, php-format
+msgid "An incomplete import left %1$d posts and pages and %2$d images. Remove them before importing again."
+msgstr "ការនាំចូលមិនពេញលេញបានបន្សល់អត្ថបទ និងទំព័រ %1$d និងរូបភាព %2$d។ សូមលុបវាចេញ មុននឹងនាំចូលម្ដងទៀត។"
+
+#: inc/admin/tools.php:187 inc/demo/class-sbek-demo-importer.php:121
+msgid "No demo content is installed."
+msgstr "មិនទាន់បានដំឡើងមាតិកាគំរូទេ។"
+
+#: inc/admin/tools.php:196
+msgid "Also apply the demo site settings"
+msgstr "អនុវត្តការកំណត់គេហទំព័រគំរូផងដែរ"
+
+#: inc/admin/tools.php:197
+msgid "Site title, Khmer language, Phnom Penh time zone, 8 posts per page, /article/123/ links, menus, ad placeholders, privacy page, and Sbek Theme details (only fields that are still empty). These are not undone by \"Remove\"."
+msgstr "ឈ្មោះគេហទំព័រ ភាសាខ្មែរ តំបន់ម៉ោងភ្នំពេញ អត្ថបទ ៨ ក្នុងមួយទំព័រ តំណ /article/123/ ម៉ឺនុយ កន្លែងពាណិជ្ជកម្មគំរូ ទំព័រឯកជនភាព និងព័ត៌មាន Sbek Theme (តែវាលដែលនៅទទេប៉ុណ្ណោះ)។ ការទាំងនេះមិនត្រូវបានត្រឡប់វិញដោយ \"លុប\" ទេ។"
+
+#: inc/admin/tools.php:210 inc/admin/tools.php:212
+msgid "Continue"
+msgstr "បន្ត"
+
+#: inc/admin/tools.php:210
+msgid "Import demo content"
+msgstr "នាំចូលមាតិកាគំរូ"
+
+#: inc/admin/tools.php:218
+msgid "Remove demo content"
+msgstr "លុបមាតិកាគំរូ"
+
+#: inc/admin/tools.php:219
+msgid "Delete all demo posts, pages, images, categories, menus and widgets?"
+msgstr "លុបអត្ថបទ ទំព័រ រូបភាព ប្រភេទ ម៉ឺនុយ និងវិដជិតគំរូទាំងអស់ឬ?"
+
+#: inc/admin/tools.php:220
+msgid "Yes, remove"
+msgstr "បាទ/ចាស លុប"
 
 #: inc/admin/translation.php:34
 msgid "Translation"
@@ -313,28 +961,157 @@ msgstr "ការបកប្រែ"
 
 #: inc/admin/translation.php:72
 msgid "Translated version"
-msgstr ""
+msgstr "កំណែបកប្រែ"
 
 #: inc/admin/translation.php:74
 msgid "— Not translated —"
-msgstr ""
+msgstr "— មិនទាន់បកប្រែ —"
 
 #: inc/admin/translation.php:77
 msgid "(no title)"
-msgstr ""
+msgstr "(គ្មានចំណងជើង)"
 
 #: inc/admin/translation.php:82
 msgid "Pick the same story in the other language. The link is saved on both posts."
-msgstr ""
+msgstr "ជ្រើសរើសអត្ថបទដដែលជាភាសាម្ខាងទៀត។ តំណភ្ជាប់ត្រូវបានរក្សាទុកលើអត្ថបទទាំងពីរ។"
+
+#: inc/demo/class-sbek-demo-importer.php:77
+msgid "Another demo-content job is still in progress. Continue or remove it first."
+msgstr "ការងារមាតិកាគំរូមួយទៀតកំពុងដំណើរការ។ សូមបន្ត ឬលុបវាជាមុនសិន។"
+
+#: inc/demo/class-sbek-demo-importer.php:82
+msgid "Demo content is already installed. Remove it first to import again."
+msgstr "មាតិកាគំរូត្រូវបានដំឡើងរួចហើយ។ សូមលុបវាជាមុន ដើម្បីនាំចូលម្ដងទៀត។"
+
+#: inc/demo/class-sbek-demo-importer.php:85
+msgid "The PHP GD extension is required to generate the demo images."
+msgstr "ត្រូវការផ្នែកបន្ថែម PHP GD ដើម្បីបង្កើតរូបភាពគំរូ។"
+
+#: inc/demo/class-sbek-demo-importer.php:96
+msgid "No administrator account found to author the demo posts."
+msgstr "រកមិនឃើញគណនីអ្នកគ្រប់គ្រងសម្រាប់ជាអ្នកនិពន្ធអត្ថបទគំរូទេ។"
+
+#: inc/demo/class-sbek-demo-importer.php:146
+#: inc/demo/class-sbek-demo-importer.php:166
+msgid "A batch is already running in another request. Please wait a moment."
+msgstr "មានការងារមួយកំពុងដំណើរការក្នុងសំណើផ្សេង។ សូមរង់ចាំបន្តិច។"
+
+#: inc/demo/class-sbek-demo-importer.php:162
+msgid "There is no demo-content job to run."
+msgstr "គ្មានការងារមាតិកាគំរូដែលត្រូវដំណើរការទេ។"
+
+#: inc/demo/class-sbek-demo-importer.php:222
+msgid "Site options and categories ready."
+msgstr "ការកំណត់គេហទំព័រ និងប្រភេទរួចរាល់។"
+
+#. translators: 1: images done, 2: total images.
+#: inc/demo/class-sbek-demo-importer.php:236
+#, php-format
+msgid "Generated images %1$d of %2$d."
+msgstr "បានបង្កើតរូបភាព %1$d ក្នុងចំណោម %2$d។"
+
+#. translators: 1: posts done, 2: total posts.
+#: inc/demo/class-sbek-demo-importer.php:248
+#, php-format
+msgid "Created Khmer posts %1$d of %2$d."
+msgstr "បានបង្កើតអត្ថបទខ្មែរ %1$d ក្នុងចំណោម %2$d។"
+
+#. translators: 1: posts done, 2: total posts.
+#: inc/demo/class-sbek-demo-importer.php:260
+#, php-format
+msgid "Created English posts %1$d of %2$d."
+msgstr "បានបង្កើតអត្ថបទអង់គ្លេស %1$d ក្នុងចំណោម %2$d។"
+
+#: inc/demo/class-sbek-demo-importer.php:265
+msgid "Created pages."
+msgstr "បានបង្កើតទំព័រ។"
+
+#: inc/demo/class-sbek-demo-importer.php:275
+msgid "Demo content imported."
+msgstr "បាននាំចូលមាតិកាគំរូ។"
+
+#. translators: 1: deleted count, 2: total.
+#: inc/demo/class-sbek-demo-importer.php:296
+#, php-format
+msgid "Deleted posts and pages %1$d of %2$d."
+msgstr "បានលុបអត្ថបទ និងទំព័រ %1$d ក្នុងចំណោម %2$d។"
+
+#. translators: 1: deleted count, 2: total.
+#: inc/demo/class-sbek-demo-importer.php:309
+#, php-format
+msgid "Deleted images %1$d of %2$d."
+msgstr "បានលុបរូបភាព %1$d ក្នុងចំណោម %2$d។"
+
+#: inc/demo/class-sbek-demo-importer.php:314
+msgid "Demo content removed. Site options such as language and permalinks were left as they are."
+msgstr "បានលុបមាតិកាគំរូ។ ការកំណត់គេហទំព័រដូចជាភាសា និងតំណអចិន្ត្រៃយ៍ នៅដដែល។"
+
+#: inc/demo/class-sbek-demo-importer.php:511
+msgid "The Khmer core language pack could not be downloaded; theme texts are still translated."
+msgstr "មិនអាចទាញយកកញ្ចប់ភាសាខ្មែររបស់ WordPress បានទេ ប៉ុន្តែអត្ថបទរបស់ស្បែកនៅតែត្រូវបានបកប្រែ។"
+
+#: inc/design.php:33
+msgid "Classic, very readable (default body)"
+msgstr "បុរាណ អានងាយស្រួល (លំនាំដើមសម្រាប់អត្ថបទ)"
+
+#: inc/design.php:34
+msgid "Modern sans"
+msgstr "Sans ទំនើប"
+
+#: inc/design.php:35
+msgid "Neutral, matches Android"
+msgstr "ធម្មតា ស៊ីគ្នានឹង Android"
+
+#: inc/design.php:36
+msgid "Serif, bookish"
+msgstr "Serif បែបសៀវភៅ"
+
+#: inc/design.php:37
+msgid "Clean sans"
+msgstr "Sans ស្អាត"
+
+#: inc/design.php:38
+msgid "Traditional serif"
+msgstr "Serif បែបប្រពៃណី"
+
+#: inc/design.php:39
+msgid "Simple, regular weight only"
+msgstr "សាមញ្ញ មានតែកម្រាស់ធម្មតា"
+
+#: inc/design.php:40
+msgid "Bold display (default headings)"
+msgstr "ក្បាលអក្សរដិត (លំនាំដើមសម្រាប់ចំណងជើង)"
+
+#: inc/design.php:41
+msgid "Ornate, ceremonial"
+msgstr "លម្អ បែបពិធី"
+
+#: inc/design.php:42
+msgid "Condensed display"
+msgstr "ក្បាលអក្សរបង្រួម"
+
+#: inc/design.php:43
+msgid "Rounded display"
+msgstr "ក្បាលអក្សរមូល"
+
+#: inc/design.php:54
+msgid "Arial (default)"
+msgstr "Arial (លំនាំដើម)"
+
+#: inc/design.php:55
+msgid "System UI"
+msgstr "System UI"
+
+#: inc/design.php:58
+msgid "Georgia (serif)"
+msgstr "Georgia (serif)"
 
 #: inc/frontend/class-sbek-menu-walker.php:88
-#: inc/frontend/class-sbek-menu-walker.php:134
-#: inc/frontend/seo.php:211
+#: inc/frontend/class-sbek-menu-walker.php:134 inc/frontend/seo.php:211
 msgid "Home"
 msgstr "ទំព័រដើម"
 
-#: inc/frontend/newsletter.php:23
-#: inc/frontend/newsletter.php:25
+#: inc/frontend/newsletter.php:23 inc/frontend/newsletter.php:25
 msgid "Subscribers"
 msgstr "អ្នកជាវព័ត៌មាន"
 
@@ -362,8 +1139,7 @@ msgstr "អាសយដ្ឋានអ៊ីមែលនេះបានចុះ
 msgid "Sorry, that did not work. Please check the address and try again."
 msgstr "សូមអភ័យទោស មិនអាចដំណើរការបានទេ។ សូមពិនិត្យអាសយដ្ឋាន ហើយព្យាយាមម្ដងទៀត។"
 
-#: inc/i18n.php:248
-#: inc/i18n.php:250
+#: inc/i18n.php:248 inc/i18n.php:250
 msgid "Languages"
 msgstr "ភាសា"
 
@@ -379,38 +1155,37 @@ msgstr "ម៉ឺនុយមេ (ខ្មែរ)"
 msgid "Primary menu (English)"
 msgstr "ម៉ឺនុយមេ (អង់គ្លេស)"
 
-#: inc/setup.php:58
-#: sidebar.php:20
+#: inc/setup.php:58 sidebar.php:20
 msgid "Sidebar"
 msgstr "របារចំហៀង"
 
 #: inc/setup.php:58
 msgid "Below the Popular / Latest lists on articles and archives."
-msgstr ""
+msgstr "នៅក្រោមបញ្ជីអត្ថបទពេញនិយម / ថ្មីៗ លើទំព័រអត្ថបទ និងបណ្ណសារ។"
 
 #: inc/setup.php:59
 msgid "Ad: header (728×90)"
-msgstr ""
+msgstr "ពាណិជ្ជកម្ម៖ ខាងលើ (728×90)"
 
 #: inc/setup.php:59
 msgid "Right of the logo in the black top bar (desktop)."
-msgstr ""
+msgstr "នៅខាងស្ដាំឡូហ្គោក្នុងរបារខាងលើពណ៌ខ្មៅ (កុំព្យូទ័រ)។"
 
 #: inc/setup.php:60
 msgid "Ad: beside hero (300×250 ×2)"
-msgstr ""
+msgstr "ពាណិជ្ជកម្ម៖ ក្បែរផ្នែកលេចធ្លោ (300×250 ×2)"
 
 #: inc/setup.php:60
 msgid "Right of the homepage hero grid (desktop). Add up to two widgets."
-msgstr ""
+msgstr "នៅខាងស្ដាំក្រឡាអត្ថបទលេចធ្លោលើទំព័រដើម (កុំព្យូទ័រ)។ បន្ថែមបានរហូតដល់ពីរវិដជិត។"
 
 #: inc/setup.php:61
 msgid "Ad: beside video (300×250)"
-msgstr ""
+msgstr "ពាណិជ្ជកម្ម៖ ក្បែរវីដេអូ (300×250)"
 
 #: inc/setup.php:61
 msgid "Right of the homepage video grid (large screens)."
-msgstr ""
+msgstr "នៅខាងស្ដាំក្រឡាវីដេអូលើទំព័រដើម (អេក្រង់ធំ)។"
 
 #. translators: PHP date format for article dates on cards and article pages.
 #: inc/template-tags.php:71
@@ -422,15 +1197,9 @@ msgstr "l, j F Y H:i"
 msgid "Latest news"
 msgstr "ព័ត៌មានថ្មីៗ"
 
-#: search.php:23
-#: searchform.php:14
+#: search.php:23 searchform.php:14
 msgid "Search for:"
 msgstr "ស្វែងរក៖"
-
-#: inc/admin/theme-options.php:834
-#: search.php:25
-msgid "Category"
-msgstr "ប្រភេទ"
 
 #: search.php:27
 msgid "All categories"
@@ -565,15 +1334,9 @@ msgstr "ព្រឹត្តិបត្រព័ត៌មាន"
 msgid "Get the top stories in your inbox."
 msgstr "ទទួលព័ត៌មានសំខាន់ៗតាមអ៊ីមែលរបស់អ្នក។"
 
-#: template-parts/newsletter-form.php:27
-#: template-parts/newsletter-form.php:28
+#: template-parts/newsletter-form.php:27 template-parts/newsletter-form.php:28
 msgid "Email address"
 msgstr "អាសយដ្ឋានអ៊ីមែល"
-
-#: inc/admin/theme-options.php:775
-#: template-parts/newsletter-form.php:29
-msgid "Subscribe"
-msgstr "ចុះឈ្មោះ"
 
 #: template-parts/related.php:38
 msgid "Related articles"
@@ -583,658 +1346,8 @@ msgstr "អត្ថបទទាក់ទង"
 msgid "More related articles"
 msgstr "អត្ថបទទាក់ទងបន្ទាប់"
 
-#: inc/admin/dashboard-widget.php:39
-msgid "Add a site icon"
-msgstr ""
-
-#: inc/admin/dashboard-widget.php:43
-msgid "Add a contact email"
-msgstr ""
-
-#: inc/admin/dashboard-widget.php:141
-msgid "Go to Theme Option"
-msgstr ""
-
-#: inc/admin/theme-options.php:251
-msgid "General"
-msgstr ""
-
-#: inc/admin/theme-options.php:253
-msgid "Homepage"
-msgstr ""
-
-#: inc/admin/theme-options.php:254
-msgid "Contact & Footer"
-msgstr ""
-
-#: inc/admin/theme-options.php:255
-msgid "Social"
-msgstr ""
-
-#: inc/admin/theme-options.php:256
-msgid "Integrations"
-msgstr ""
-
-#: inc/admin/theme-options.php:263
-msgid "You do not have permission to change these settings."
-msgstr ""
-
-#: inc/admin/theme-options.php:330
-#: inc/admin/theme-options.php:331
-#: inc/admin/theme-options.php:345
-#: inc/admin/theme-options.php:641
-msgid "Theme Option"
-msgstr ""
-
-#: inc/admin/theme-options.php:372
-msgid "Select image"
-msgstr ""
-
-#: inc/admin/theme-options.php:373
-msgid "Use this image"
-msgstr ""
-
-#: inc/admin/theme-options.php:577
-msgid "Label (e.g. Newsroom)"
-msgstr ""
-
-#: inc/admin/theme-options.php:642
-msgid "Everything your site shows outside of articles — identity, homepage sections, contact details, social links and tracking — in one place."
-msgstr ""
-
-#: inc/admin/theme-options.php:647
-msgid "View site"
-msgstr ""
-
-#: inc/admin/theme-options.php:649
-#: inc/admin/theme-options.php:980
-msgid "Save changes"
-msgstr ""
-
-#: inc/admin/theme-options.php:657
-msgid "Theme options saved."
-msgstr ""
-
-#: inc/admin/theme-options.php:676
-msgid "Theme Option sections"
-msgstr ""
-
-#: inc/admin/theme-options.php:689
-msgid "Site identity"
-msgstr ""
-
-#: inc/admin/theme-options.php:689
-msgid "The name and tagline shown in browser tabs, search results and the footer. English versions are used on /en/ pages; leave them empty to reuse the Khmer text."
-msgstr ""
-
-#: inc/admin/theme-options.php:692
-msgid "Site title (Khmer)"
-msgstr ""
-
-#: inc/admin/theme-options.php:693
-msgid "Site title (English)"
-msgstr ""
-
-#: inc/admin/theme-options.php:694
-msgid "Tagline (Khmer)"
-msgstr ""
-
-#: inc/admin/theme-options.php:695
-msgid "Tagline (English)"
-msgstr ""
-
-#: inc/admin/theme-options.php:700
-msgid "Logo for the header and footer, the browser/app icon, and the image used when a page without its own picture is shared."
-msgstr ""
-
-#: inc/admin/theme-options.php:703
-msgid "Logo"
-msgstr ""
-
-#: inc/admin/theme-options.php:704
-msgid "Choose a logo"
-msgstr ""
-
-#: inc/admin/theme-options.php:704
-msgid "PNG or JPG, square works best"
-msgstr ""
-
-#: inc/admin/theme-options.php:707
-msgid "Site icon"
-msgstr ""
-
-#: inc/admin/theme-options.php:708
-msgid "Choose an icon"
-msgstr ""
-
-#: inc/admin/theme-options.php:708
-msgid "Square, at least 512×512px"
-msgstr ""
-
-#: inc/admin/theme-options.php:711
-msgid "Default share image"
-msgstr ""
-
-#: inc/admin/theme-options.php:712
-msgid "Choose an image"
-msgstr ""
-
-#: inc/admin/theme-options.php:712
-msgid "JPG or PNG, 1200×630px"
-msgstr ""
-
-#: inc/admin/theme-options.php:818
-msgid "Sections"
-msgstr ""
-
-#: inc/admin/theme-options.php:818
-msgid "Turn site-wide sections on or off. The hero grid shows sticky posts (then the latest)."
-msgstr ""
-
-#: inc/admin/theme-options.php:821
-msgid "Breaking-news ticker"
-msgstr ""
-
-#: inc/admin/theme-options.php:821
-msgid "Scrolling bar under the menu with posts marked \"Breaking news\"."
-msgstr ""
-
-#: inc/admin/theme-options.php:822
-msgid "Video block"
-msgstr ""
-
-#: inc/admin/theme-options.php:822
-msgid "Homepage block listing posts in the \"Video\" post format."
-msgstr ""
-
-#: inc/admin/theme-options.php:823
-msgid "Newsletter signup"
-msgstr ""
-
-#: inc/admin/theme-options.php:823
-msgid "Email signup form in the footer."
-msgstr ""
-
-#: inc/admin/theme-options.php:828
-msgid "Category blocks"
-msgstr ""
-
-#: inc/admin/theme-options.php:828
-msgid "Each category's accent color (badges, headers, arrows), its English name, and its position on the homepage. Position 1, 2, 3… shows it as a block in that order; leave empty to hide it."
-msgstr ""
-
-#: inc/admin/theme-options.php:836
-msgid "English name"
-msgstr ""
-
-#. translators: %s: number of posts.
-#: inc/admin/theme-options.php:853
-#, php-format
-msgid "%s post"
-msgid_plural "%s posts"
-msgstr[0] ""
-
-#: inc/admin/theme-options.php:855
-msgid "Edit"
-msgstr ""
-
-#. translators: %s: category.
-#: inc/admin/theme-options.php:859
-#, php-format
-msgid "Color for %s"
-msgstr ""
-
-#. translators: %s: category.
-#: inc/admin/theme-options.php:862
-#, php-format
-msgid "English name for %s"
-msgstr ""
-
-#. translators: %s: category.
-#: inc/admin/theme-options.php:865
-#, php-format
-msgid "Homepage position for %s"
-msgstr ""
-
-#: inc/admin/theme-options.php:873
-msgid "No categories yet."
-msgstr ""
-
-#: inc/admin/theme-options.php:873
-msgid "Add one"
-msgstr ""
-
-#: inc/admin/theme-options.php:877
-msgid "Elsewhere in WordPress"
-msgstr ""
-
-#: inc/admin/theme-options.php:877
-msgid "Site data that has its own dedicated screen."
-msgstr ""
-
-#: inc/admin/theme-options.php:879
-msgid "Menus (Khmer and English)"
-msgstr ""
-
-#: inc/admin/theme-options.php:880
-msgid "Ad slots and sidebar widgets"
-msgstr ""
-
-#: inc/admin/theme-options.php:881
-msgid "Sticky posts (homepage hero)"
-msgstr ""
-
-#: inc/admin/theme-options.php:882
-msgid "Language, time zone and date format"
-msgstr ""
-
-#: inc/admin/theme-options.php:883
-msgid "Permalinks"
-msgstr ""
-
-#: inc/admin/theme-options.php:890
-msgid "About"
-msgstr ""
-
-#: inc/admin/theme-options.php:890
-msgid "Short description in the footer's \"About us\" column, also used for SEO and structured data."
-msgstr ""
-
-#: inc/admin/theme-options.php:899
-msgid "Shown in the footer and in structured data. Add as many phone numbers as you need."
-msgstr ""
-
-#: inc/admin/theme-options.php:902
-msgid "Phone numbers"
-msgstr ""
-
-#: inc/admin/theme-options.php:914
-msgid "Address & location"
-msgstr ""
-
-#: inc/admin/theme-options.php:914
-msgid "Postal address for the footer; coordinates for maps and structured data."
-msgstr ""
-
-#: inc/admin/theme-options.php:925
-msgid "Copyright line"
-msgstr ""
-
-#: inc/admin/theme-options.php:925
-msgid "Leave empty for the default. You can use {year} and {site}."
-msgstr ""
-
-#: inc/admin/theme-options.php:928
-msgid "Copyright (Khmer)"
-msgstr ""
-
-#: inc/admin/theme-options.php:929
-msgid "Copyright (English)"
-msgstr ""
-
-#: inc/admin/theme-options.php:937
-msgid "Social profiles"
-msgstr ""
-
-#: inc/admin/theme-options.php:937
-msgid "Icons in the footer and \"sameAs\" links in structured data. Known platforms (Facebook, Instagram, YouTube, TikTok, Telegram, X, LinkedIn, WhatsApp) get their own icon."
-msgstr ""
-
-#: inc/admin/theme-options.php:951
-msgid "Analytics"
-msgstr ""
-
-#: inc/admin/theme-options.php:951
-msgid "Google Analytics 4 loads only when no Tag Manager container is set."
-msgstr ""
-
-#: inc/admin/theme-options.php:960
-msgid "Custom code"
-msgstr ""
-
-#: inc/admin/theme-options.php:960
-msgid "Raw HTML/JS added to every public page. Only paste code from sources you trust."
-msgstr ""
-
-#: inc/admin/theme-options.php:962
-msgid "Before </head>"
-msgstr ""
-
-#: inc/admin/theme-options.php:963
-msgid "Before </body>"
-msgstr ""
-
-#: inc/admin/theme-options.php:979
-msgid "You have unsaved changes."
-msgstr ""
-
-#: inc/admin/theme-options.php:252
-msgid "Design"
-msgstr ""
-
-#. translators: %s: field label.
-#: inc/admin/theme-options.php:482
-#, php-format
-msgid "%s (hex)"
-msgstr ""
-
-#. translators: %s: field label.
-#: inc/admin/theme-options.php:483
-msgid "Reset"
-msgstr ""
-
-#: inc/admin/theme-options.php:759
-msgid "Live preview"
-msgstr ""
-
-#: inc/admin/theme-options.php:780
-msgid "Colors"
-msgstr ""
-
-#: inc/admin/theme-options.php:780
-msgid "Text on these colors switches between white and dark automatically, so it always stays readable."
-msgstr ""
-
-#: inc/admin/theme-options.php:783
-msgid "Brand color"
-msgstr ""
-
-#: inc/admin/theme-options.php:783
-msgid "Menu bar, buttons, ticker label, links and accents. The darker hover shade is derived from it."
-msgstr ""
-
-#: inc/admin/theme-options.php:784
-msgid "Top bar"
-msgstr ""
-
-#: inc/admin/theme-options.php:784
-msgid "Logo bar on desktop and the menu bar on mobile."
-msgstr ""
-
-#: inc/admin/theme-options.php:785
-msgid "Footer"
-msgstr ""
-
-#: inc/admin/theme-options.php:785
-msgid "Footer background."
-msgstr ""
-
-#: inc/admin/theme-options.php:790
-msgid "Fonts"
-msgstr ""
-
-#: inc/admin/theme-options.php:790
-msgid "Khmer fonts are hosted on this site (no Google requests); visitors only download the fonts you pick. Latin text (English, numbers) uses the Latin font."
-msgstr ""
-
-#: inc/admin/theme-options.php:793
-msgid "Khmer body text"
-msgstr ""
-
-#: inc/admin/theme-options.php:794
-msgid "Khmer headings & menu"
-msgstr ""
-
-#: inc/admin/theme-options.php:795
-msgid "Latin text"
-msgstr ""
-
-#: inc/design.php:33
-msgid "Classic, very readable (default body)"
-msgstr ""
-
-#: inc/design.php:34
-msgid "Modern sans"
-msgstr ""
-
-#: inc/design.php:35
-msgid "Neutral, matches Android"
-msgstr ""
-
-#: inc/design.php:36
-msgid "Serif, bookish"
-msgstr ""
-
-#: inc/design.php:37
-msgid "Clean sans"
-msgstr ""
-
-#: inc/design.php:38
-msgid "Traditional serif"
-msgstr ""
-
-#: inc/design.php:39
-msgid "Simple, regular weight only"
-msgstr ""
-
-#: inc/design.php:40
-msgid "Bold display (default headings)"
-msgstr ""
-
-#: inc/design.php:41
-msgid "Ornate, ceremonial"
-msgstr ""
-
-#: inc/design.php:42
-msgid "Condensed display"
-msgstr ""
-
-#: inc/design.php:43
-msgid "Rounded display"
-msgstr ""
-
-#: inc/design.php:54
-msgid "Arial (default)"
-msgstr ""
-
-#: inc/design.php:55
-msgid "System UI"
-msgstr ""
-
-#: inc/design.php:58
-msgid "Georgia (serif)"
-msgstr ""
-
-#: inc/admin/theme-options.php:257
-msgid "Tools"
-msgstr ""
-
-#: inc/admin/theme-options.php:376
-msgid "Something went wrong. You can continue the job or remove what was created."
-msgstr ""
-
-#: inc/admin/theme-options.php:377
-msgid "Done! Reloading…"
-msgstr ""
-
-#: inc/admin/theme-options.php:666
-msgid "Design reset to the default colors and fonts."
-msgstr ""
-
-#: inc/admin/theme-options.php:800
-msgid "Reset design"
-msgstr ""
-
-#: inc/admin/theme-options.php:800
-msgid "Restore the original Sabay red, Battambang and Koulen. Only colors and fonts are reset; everything else in Theme Option stays as it is."
-msgstr ""
-
-#: inc/admin/theme-options.php:804
-msgid "Reset design to defaults"
-msgstr ""
-
-#: inc/admin/theme-options.php:805
-msgid "Replace your colors and fonts with the defaults?"
-msgstr ""
-
-#: inc/admin/theme-options.php:806
-msgid "Yes, reset"
-msgstr ""
-
-#: inc/admin/theme-options.php:811
-msgid "The design already uses the defaults."
-msgstr ""
-
-#: inc/admin/tools.php:25
-#: inc/admin/tools.php:85
-msgid "You do not have permission to do this."
-msgstr ""
-
-#: inc/admin/tools.php:48
-msgid "Starting import…"
-msgstr ""
-
-#: inc/admin/tools.php:48
-msgid "Starting removal…"
-msgstr ""
-
-#: inc/admin/tools.php:63
-msgid "Job cancelled. Anything already created can still be removed."
-msgstr ""
-
-#: inc/admin/tools.php:137
-msgid "Cancel"
-msgstr ""
-
-#: inc/admin/tools.php:149
-msgid "Demo content"
-msgstr ""
-
-#: inc/admin/tools.php:149
-msgid "Sample categories, about 140 Khmer and English posts with images, pages, menus and ad placeholders — handy for previewing the theme. Removing deletes only what the import created; your own content and Theme Option values are kept."
-msgstr ""
-
-#. translators: 1: "import" or "removal", 2: percent.
-#: inc/admin/tools.php:158
-#, php-format
-msgid "An unfinished %1$s stopped at %2$d%%. Continue it, or remove what was created so far."
-msgstr ""
-
-#: inc/admin/tools.php:159
-msgid "import"
-msgstr ""
-
-#: inc/admin/tools.php:159
-msgid "removal"
-msgstr ""
-
-#. translators: 1: date, 2: posts and pages, 3: images.
-#: inc/admin/tools.php:167
-#, php-format
-msgid "Installed %1$s: %2$d posts and pages, %3$d images."
-msgstr ""
-
-#. translators: 1: posts and pages, 2: images.
-#: inc/admin/tools.php:177
-#, php-format
-msgid "An incomplete import left %1$d posts and pages and %2$d images. Remove them before importing again."
-msgstr ""
-
-#: inc/admin/tools.php:183
-#: inc/demo/class-sbek-demo-importer.php:121
-msgid "No demo content is installed."
-msgstr ""
-
-#: inc/admin/tools.php:192
-msgid "Also apply the demo site settings"
-msgstr ""
-
-#: inc/admin/tools.php:193
-msgid "Site title, Khmer language, Phnom Penh time zone, 8 posts per page, /article/123/ links, menus, ad placeholders, privacy page, and Theme Option details (only fields that are still empty). These are not undone by \"Remove\"."
-msgstr ""
-
-#: inc/admin/tools.php:206
-#: inc/admin/tools.php:208
-msgid "Continue"
-msgstr ""
-
-#: inc/admin/tools.php:206
-msgid "Import demo content"
-msgstr ""
-
-#: inc/admin/tools.php:214
-msgid "Remove demo content"
-msgstr ""
-
-#: inc/admin/tools.php:215
-msgid "Delete all demo posts, pages, images, categories, menus and widgets?"
-msgstr ""
-
-#: inc/admin/tools.php:216
-msgid "Yes, remove"
-msgstr ""
-
-#: inc/demo/class-sbek-demo-importer.php:77
-msgid "Another demo-content job is still in progress. Continue or remove it first."
-msgstr ""
-
-#: inc/demo/class-sbek-demo-importer.php:82
-msgid "Demo content is already installed. Remove it first to import again."
-msgstr ""
-
-#: inc/demo/class-sbek-demo-importer.php:85
-msgid "The PHP GD extension is required to generate the demo images."
-msgstr ""
-
-#: inc/demo/class-sbek-demo-importer.php:96
-msgid "No administrator account found to author the demo posts."
-msgstr ""
-
-#: inc/demo/class-sbek-demo-importer.php:146
-#: inc/demo/class-sbek-demo-importer.php:166
-msgid "A batch is already running in another request. Please wait a moment."
-msgstr ""
-
-#: inc/demo/class-sbek-demo-importer.php:162
-msgid "There is no demo-content job to run."
-msgstr ""
-
-#: inc/demo/class-sbek-demo-importer.php:222
-msgid "Site options and categories ready."
-msgstr ""
-
-#. translators: 1: images done, 2: total images.
-#: inc/demo/class-sbek-demo-importer.php:236
-#, php-format
-msgid "Generated images %1$d of %2$d."
-msgstr ""
-
-#. translators: 1: posts done, 2: total posts.
-#: inc/demo/class-sbek-demo-importer.php:248
-#, php-format
-msgid "Created Khmer posts %1$d of %2$d."
-msgstr ""
-
-#. translators: 1: posts done, 2: total posts.
-#: inc/demo/class-sbek-demo-importer.php:260
-#, php-format
-msgid "Created English posts %1$d of %2$d."
-msgstr ""
-
-#: inc/demo/class-sbek-demo-importer.php:265
-msgid "Created pages."
-msgstr ""
-
-#: inc/demo/class-sbek-demo-importer.php:275
-msgid "Demo content imported."
-msgstr ""
-
-#. translators: 1: deleted count, 2: total.
-#: inc/demo/class-sbek-demo-importer.php:296
-#, php-format
-msgid "Deleted posts and pages %1$d of %2$d."
-msgstr ""
-
-#. translators: 1: deleted count, 2: total.
-#: inc/demo/class-sbek-demo-importer.php:309
-#, php-format
-msgid "Deleted images %1$d of %2$d."
-msgstr ""
-
-#: inc/demo/class-sbek-demo-importer.php:314
-msgid "Demo content removed. Site options such as language and permalinks were left as they are."
-msgstr ""
-
-#: inc/demo/class-sbek-demo-importer.php:511
-msgid "The Khmer core language pack could not be downloaded; theme texts are still translated."
-msgstr ""
+#~ msgid "Used for badges, section headers and arrows."
+#~ msgstr "ប្រើសម្រាប់ស្លាក ក្បាលផ្នែក និងសញ្ញាព្រួញ។"
+
+#~ msgid "1, 2, 3… shows this category as a homepage block in that order. Empty or 0 = not on the homepage."
+#~ msgstr "1, 2, 3… បង្ហាញប្រភេទនេះជាប្លុកលើទំព័រដើមតាមលំដាប់នោះ។ ទទេ ឬ 0 = មិនបង្ហាញលើទំព័រដើម។"

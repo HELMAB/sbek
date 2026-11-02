@@ -12,6 +12,9 @@
 
 defined( 'ABSPATH' ) || exit;
 
+/** Maximum number of category blocks on the homepage. */
+const SBEK_HOME_BLOCK_LIMIT = 6;
+
 // ─── Cache versioning ──────────────────────────────────────────────────────────
 
 function sbek_cache_version(): int {
@@ -298,11 +301,12 @@ function sbek_get_breaking_posts( int $limit = 5 ): array {
 /**
  * Categories shown as homepage blocks: those with a positive "Homepage
  * position" (term meta `sbek_home_order`), in that order. If none are set,
- * every non-empty top-level category except the default one.
+ * the first non-empty top-level categories except the default one. Empty
+ * categories are skipped either way; at most $limit are returned.
  *
  * @return WP_Term[]
  */
-function sbek_get_home_categories( int $limit = 6 ): array {
+function sbek_get_home_categories( int $limit = SBEK_HOME_BLOCK_LIMIT ): array {
 	$ordered = get_terms(
 		array(
 			'taxonomy'   => 'category',

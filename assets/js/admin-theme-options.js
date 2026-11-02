@@ -1,14 +1,19 @@
 /**
- * Theme Option page: tabs, repeatable rows (phones / socials), media pickers
- * and an unsaved-changes hint. Vanilla JS; wp.media comes from wp_enqueue_media().
+ * Sbek Theme page: tabs, repeatable rows (phones / socials), media pickers,
+ * category colors, the Design live preview, inline confirmations, demo
+ * import and unsaved-changes tracking. Vanilla JS; wp.media comes from
+ * wp_enqueue_media().
  *
  * Markup contract:
  *   [data-sbek-tabs] [data-sbek-tab="slug"]   tab links (href="#slug")
  *   [data-sbek-panel="slug"]                  tab panels
  *   [data-sbek-current-tab]                   hidden input: tab to return to after saving
+ *   [data-sbek-save]                          save controls (hidden on the Tools tab)
  *   [data-sbek-add="group"] / [data-sbek-rows="group"] / #sbek-tmpl-group
- *   [data-sbek-remove] inside [data-sbek-row]
- *   [data-sbek-media-field] with [data-sbek-media-input|preview|select|remove]
+ *   [data-sbek-remove] / [data-sbek-move="-1|1"] inside [data-sbek-row]
+ *   [data-sbek-platform] + [data-sbek-social-icon] / #sbek-social-icons
+ *   [data-sbek-media-field] with [data-sbek-media-input|preview|select|remove|warning]
+ *   [data-sbek-term-color] with [data-sbek-term-color-auto|input|reset]
  */
 ( function () {
 	'use strict';
@@ -20,10 +25,56 @@
 
 	const l10n = window.sbekThemeOptions || {};
 
+	/* ── Unsaved changes ──────────────────────────────────────────────── */
+
+	// Compare the submittable form data with a snapshot taken on load, so the
+	// hint disappears again when a change is undone. Demo-content controls
+	// are actions, not settings.
+	const serialize = () => {
+		const parts = [];
+		new FormData( form ).forEach( ( value, key ) => {
+			if ( ! key.startsWith( 'sbek_demo' ) && 'sbek_tab' !== key ) {
+				parts.push( key + '=' + value );
+			}
+		} );
+		return parts.join( '&' );
+	};
+
+	const dirtyHint = form.querySelector( '[data-sbek-dirty-hint]' );
+	let snapshot = null;
+	let dirty = false;
+	let submitting = false;
+
+	const refreshDirty = () => {
+		if ( null === snapshot ) {
+			return;
+		}
+		dirty = serialize() !== snapshot;
+		if ( dirtyHint ) {
+			dirtyHint.hidden = ! dirty;
+		}
+	};
+
+	form.addEventListener( 'input', refreshDirty );
+	form.addEventListener( 'change', refreshDirty );
+
+	// Any real submit (this form, or the separate Reset design form) leaves on purpose.
+	document.addEventListener( 'submit', () => {
+		submitting = true;
+	} );
+
+	window.addEventListener( 'beforeunload', ( event ) => {
+		if ( dirty && ! submitting ) {
+			event.preventDefault();
+			event.returnValue = '';
+		}
+	} );
+
 	/* ── Tabs ─────────────────────────────────────────────────────────── */
 
 	const tabs = Array.from( form.querySelectorAll( '[data-sbek-tab]' ) );
 	const panels = Array.from( form.querySelectorAll( '[data-sbek-panel]' ) );
+	const saveControls = Array.from( form.querySelectorAll( '[data-sbek-save]' ) );
 	const currentTab = form.querySelector( '[data-sbek-current-tab]' );
 	const slugs = tabs.map( ( tab ) => tab.dataset.sbekTab );
 
@@ -43,6 +94,11 @@
 		} );
 		panels.forEach( ( panel ) => {
 			panel.hidden = panel.dataset.sbekPanel !== slug;
+		} );
+
+		// The Tools tab only has actions; nothing there is saved by the form.
+		saveControls.forEach( ( control ) => {
+			control.hidden = 'tools' === slug;
 		} );
 
 		currentTab.value = slug;
@@ -74,7 +130,22 @@
 		} );
 	} );
 
+	// Drop one-shot notice flags (?updated=1, ?design_reset=1) so a reload
+	// doesn't show "saved" again.
+	const url = new URL( window.location.href );
+	if ( url.searchParams.has( 'updated' ) || url.searchParams.has( 'design_reset' ) ) {
+		url.searchParams.delete( 'updated' );
+		url.searchParams.delete( 'design_reset' );
+		history.replaceState( null, '', url.pathname + url.search + url.hash );
+	}
+
 	activate( window.location.hash.slice( 1 ), { updateHash: false } );
+
+	// The inline boot rule kept other tabs hidden until now.
+	const bootStyle = document.getElementById( 'sbek-tab-boot' );
+	if ( bootStyle ) {
+		bootStyle.remove();
+	}
 
 	// A field that fails browser validation inside a hidden tab can't be
 	// focused, so the browser would block the submit silently — reveal it.
@@ -85,33 +156,17 @@
 		}
 	}, true );
 
-	/* ── Unsaved-changes hint ─────────────────────────────────────────── */
-
-	const dirtyHint = form.querySelector( '[data-sbek-dirty-hint]' );
-	const markDirty = () => {
-		if ( dirtyHint ) {
-			dirtyHint.hidden = false;
-		}
-	};
-	// Tools (demo content) controls are actions, not settings.
-	const markDirtyFrom = ( event ) => {
-		if ( ! event.target.closest( '[data-sbek-demo]' ) ) {
-			markDirty();
-		}
-	};
-	form.addEventListener( 'input', markDirtyFrom );
-	form.addEventListener( 'change', markDirtyFrom );
-
 	/* ── Repeatable rows ──────────────────────────────────────────────── */
 
-	const counters = {};
-
-	function nextIndex( group ) {
-		if ( undefined === counters[ group ] ) {
-			const rows = form.querySelector( `[data-sbek-rows="${ group }"]` );
-			counters[ group ] = rows ? rows.querySelectorAll( '[data-sbek-row]' ).length : 0;
-		}
-		return counters[ group ]++;
+	// Keep indexes 0..n-1 in DOM order, so the saved order is what you see.
+	function reindex( rows ) {
+		const group = rows.dataset.sbekRows;
+		const pattern = new RegExp( '\\[' + group + '\\]\\[[^\\]]+\\]' );
+		rows.querySelectorAll( '[data-sbek-row]' ).forEach( ( row, index ) => {
+			row.querySelectorAll( '[name]' ).forEach( ( input ) => {
+				input.name = input.name.replace( pattern, '[' + group + '][' + index + ']' );
+			} );
+		} );
 	}
 
 	form.querySelectorAll( '[data-sbek-add]' ).forEach( ( button ) => {
@@ -124,14 +179,14 @@
 			}
 
 			const row = template.content.firstElementChild.cloneNode( true );
-			const index = nextIndex( group );
+			const index = rows.querySelectorAll( '[data-sbek-row]' ).length;
 			row.querySelectorAll( '[data-name]' ).forEach( ( input ) => {
 				input.name = input.dataset.name.replace( '__i__', String( index ) );
 				input.removeAttribute( 'data-name' );
 			} );
 
 			rows.appendChild( row );
-			markDirty();
+			refreshDirty();
 			const first = row.querySelector( 'input' );
 			if ( first ) {
 				first.focus();
@@ -141,10 +196,44 @@
 
 	form.addEventListener( 'click', ( event ) => {
 		const remove = event.target.closest( '[data-sbek-remove]' );
-		const row = remove && remove.closest( '[data-sbek-row]' );
-		if ( row ) {
+		const move = event.target.closest( '[data-sbek-move]' );
+		const row = ( remove || move ) && ( remove || move ).closest( '[data-sbek-row]' );
+		if ( ! row ) {
+			return;
+		}
+		const rows = row.parentElement;
+
+		if ( remove ) {
 			row.remove();
-			markDirty();
+		} else {
+			const up = '-1' === move.dataset.sbekMove;
+			const sibling = up ? row.previousElementSibling : row.nextElementSibling;
+			if ( ! sibling ) {
+				return;
+			}
+			rows.insertBefore( up ? row : sibling, up ? sibling : row );
+			move.focus(); // Moving the node drops focus in some browsers.
+		}
+
+		reindex( rows );
+		refreshDirty();
+	} );
+
+	// Social rows: the brand icon follows the platform name as it is typed.
+	const iconTemplate = document.getElementById( 'sbek-social-icons' );
+	const aliases = l10n.socialIcons || {};
+
+	form.addEventListener( 'input', ( event ) => {
+		const platform = event.target.closest( '[data-sbek-platform]' );
+		const row = platform && platform.closest( '[data-sbek-row]' );
+		const slot = row && row.querySelector( '[data-sbek-social-icon]' );
+		if ( ! slot || ! iconTemplate ) {
+			return;
+		}
+		const name = aliases[ platform.value.trim().toLowerCase() ] || 'link';
+		const icon = iconTemplate.content.querySelector( `[data-icon="${ name }"]` );
+		if ( icon ) {
+			slot.innerHTML = icon.innerHTML;
 		}
 	} );
 
@@ -167,6 +256,9 @@
 
 	const setVar = ( name, value ) => preview && preview.style.setProperty( name, value );
 
+	// Categories without their own color follow the brand color.
+	const termColors = Array.from( form.querySelectorAll( '[data-sbek-term-color]' ) );
+
 	function applyColor( field, value ) {
 		const variable = field.dataset.previewVar;
 		setVar( variable, value );
@@ -174,6 +266,12 @@
 			const isDefault = value.toLowerCase() === ( preview.dataset.defaultBrand || '' ).toLowerCase();
 			setVar( '--p-brand-dark', isDefault ? preview.dataset.defaultBrandDark : darken( value, 0.15 ) );
 			setVar( '--p-on-brand', readableOn( value ) );
+			termColors.forEach( ( box ) => {
+				box.dataset.brand = value;
+				if ( 'auto' === box.dataset.state ) {
+					box.querySelector( '[data-sbek-term-color-input]' ).value = value;
+				}
+			} );
 		} else if ( '--p-top' === variable ) {
 			setVar( '--p-on-top', readableOn( value ) );
 		} else if ( '--p-footer' === variable ) {
@@ -207,7 +305,25 @@
 		} );
 		reset.addEventListener( 'click', () => {
 			set( picker.dataset.default, null );
-			markDirty();
+			refreshDirty();
+		} );
+	} );
+
+	termColors.forEach( ( box ) => {
+		const auto = box.querySelector( '[data-sbek-term-color-auto]' );
+		const input = box.querySelector( '[data-sbek-term-color-input]' );
+		const reset = box.querySelector( '[data-sbek-term-color-reset]' );
+
+		input.addEventListener( 'input', () => {
+			auto.value = '0';
+			box.dataset.state = 'custom';
+		} );
+		reset.addEventListener( 'click', () => {
+			auto.value = '1';
+			input.value = box.dataset.brand;
+			box.dataset.state = 'auto';
+			refreshDirty();
+			input.focus();
 		} );
 	} );
 
@@ -231,6 +347,23 @@
 
 	form.querySelectorAll( '[data-sbek-font]' ).forEach( ( select ) => select.addEventListener( 'change', applyFonts ) );
 
+	function setPreviewLogo( src ) {
+		const box = form.querySelector( '[data-sbek-preview-logo]' );
+		if ( ! box ) {
+			return;
+		}
+		const img = box.querySelector( '[data-sbek-preview-logo-img]' );
+		const text = box.querySelector( '[data-sbek-preview-logo-text]' );
+		if ( src ) {
+			img.src = src;
+		} else {
+			img.removeAttribute( 'src' );
+		}
+		img.hidden = ! src;
+		text.hidden = Boolean( src );
+		box.classList.toggle( 'has-image', Boolean( src ) );
+	}
+
 	/* ── Inline confirmations (no blocking browser dialogs) ───────────── */
 
 	form.addEventListener( 'click', ( event ) => {
@@ -242,7 +375,11 @@
 		}
 		const trigger = box.querySelector( '[data-sbek-confirm-open]' );
 		const prompt = box.querySelector( '[data-sbek-confirm-prompt]' );
+		const note = box.querySelector( '[data-sbek-confirm-dirty]' );
 		const opening = Boolean( open );
+		if ( note ) {
+			note.hidden = ! dirty;
+		}
 		trigger.hidden = opening;
 		prompt.hidden = ! opening;
 		( opening ? prompt.querySelector( 'button' ) : trigger ).focus();
@@ -330,9 +467,28 @@
 
 	form.querySelectorAll( '[data-sbek-media-field]' ).forEach( ( field ) => {
 		const input = field.querySelector( '[data-sbek-media-input]' );
-		const preview = field.querySelector( '[data-sbek-media-preview]' );
+		const image = field.querySelector( '[data-sbek-media-preview]' );
 		const remove = field.querySelector( '[data-sbek-media-remove]' );
+		const warning = field.querySelector( '[data-sbek-media-warning]' );
+		const role = field.dataset.sbekMediaRole || '';
 		let frame = null;
+
+		const warn = ( text ) => {
+			if ( warning ) {
+				warning.textContent = text;
+				warning.hidden = ! text;
+			}
+		};
+
+		// Same rule as sbek_site_icon_problem(): square (±2px), at least 512px.
+		const iconProblem = ( attachment ) => {
+			const w = attachment.width || 0;
+			const h = attachment.height || 0;
+			if ( 'site_icon' !== role || ! w || ! h || ( Math.abs( w - h ) <= 2 && Math.min( w, h ) >= 512 ) ) {
+				return '';
+			}
+			return ( l10n.iconSize || '' ).replace( '%1$d', w ).replace( '%2$d', h );
+		};
 
 		const open = () => {
 			if ( ! window.wp || ! window.wp.media ) {
@@ -347,12 +503,21 @@
 				} );
 				frame.on( 'select', () => {
 					const attachment = frame.state().get( 'selection' ).first().toJSON();
+					const problem = iconProblem( attachment );
+					warn( problem );
+					if ( problem ) {
+						return; // Keep the current icon; the server would refuse it anyway.
+					}
+
 					const sizes = attachment.sizes || {};
 					const thumb = sizes.medium || sizes.large || sizes.full || attachment;
 					input.value = attachment.id;
-					preview.src = thumb.url || attachment.url;
+					image.src = thumb.url || attachment.url;
 					field.dataset.state = 'filled';
-					markDirty();
+					if ( 'logo' === role ) {
+						setPreviewLogo( image.src );
+					}
+					refreshDirty();
 				} );
 				frame.on( 'open', () => {
 					if ( input.value ) {
@@ -370,10 +535,17 @@
 		if ( remove ) {
 			remove.addEventListener( 'click', () => {
 				input.value = '';
-				preview.removeAttribute( 'src' );
+				image.removeAttribute( 'src' );
 				field.dataset.state = 'empty';
-				markDirty();
+				warn( '' );
+				if ( 'logo' === role ) {
+					setPreviewLogo( '' );
+				}
+				refreshDirty();
 			} );
 		}
 	} );
+
+	// Everything is wired: this is the "saved" state to compare against.
+	snapshot = serialize();
 }() );

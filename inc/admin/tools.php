@@ -1,6 +1,6 @@
 <?php
 /**
- * Theme Option tools: demo content import/removal buttons and "reset design".
+ * Sbek Theme tools: demo content import/removal buttons and "reset design".
  *
  * Demo content runs in batches through admin-ajax.php (action `sbek_demo`):
  * the browser asks for `start`, then calls `next` until the job reports done,
@@ -78,7 +78,7 @@ add_action( 'wp_ajax_sbek_demo', 'sbek_ajax_demo' );
 
 /**
  * Restore the Design tab (colors + fonts) to the theme defaults. Nothing else
- * in Theme Option is touched.
+ * in Sbek Theme is touched.
  */
 function sbek_reset_design(): void {
 	if ( ! current_user_can( 'manage_options' ) ) {
@@ -126,13 +126,17 @@ function sbek_design_is_default(): bool {
  * @param string $question      Confirmation question.
  * @param string $confirm_html  Trusted markup of the confirming button.
  * @param bool   $disabled      Disable the trigger.
+ * @param string $dirty_note    Extra warning shown only while the page has unsaved changes.
  */
-function sbek_confirm_control( string $trigger_label, string $question, string $confirm_html, bool $disabled = false ): void {
+function sbek_confirm_control( string $trigger_label, string $question, string $confirm_html, bool $disabled = false, string $dirty_note = '' ): void {
 	?>
 	<div class="sbek-confirm" data-sbek-confirm>
 		<button type="button" class="sbek-btn sbek-btn--danger-ghost" data-sbek-confirm-open<?php disabled( $disabled ); ?>><?php echo esc_html( $trigger_label ); ?></button>
 		<div class="sbek-confirm__prompt" data-sbek-confirm-prompt hidden>
 			<span class="sbek-confirm__question"><?php echo esc_html( $question ); ?></span>
+			<?php if ( $dirty_note ) : ?>
+				<span class="sbek-confirm__note" data-sbek-confirm-dirty hidden><?php echo esc_html( $dirty_note ); ?></span>
+			<?php endif; ?>
 			<?php echo $confirm_html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- trusted markup built by callers. ?>
 			<button type="button" class="sbek-btn sbek-btn--plain" data-sbek-confirm-cancel><?php esc_html_e( 'Cancel', 'sbek' ); ?></button>
 		</div>
@@ -146,7 +150,7 @@ function sbek_confirm_control( string $trigger_label, string $question, string $
 function sbek_render_demo_tools(): void {
 	$status = Sbek_Demo_Importer::status();
 
-	sbek_section_open( 'rocket', __( 'Demo content', 'sbek' ), __( 'Sample categories, about 140 Khmer and English posts with images, pages, menus and ad placeholders — handy for previewing the theme. Removing deletes only what the import created; your own content and Theme Option values are kept.', 'sbek' ) );
+	sbek_section_open( 'rocket', __( 'Demo content', 'sbek' ), __( 'Sample categories, about 140 Khmer and English posts with images, pages, menus and ad placeholders — handy for previewing the theme. Removing deletes only what the import created; your own content and Sbek Theme values are kept.', 'sbek' ) );
 	?>
 	<div class="sbek-demo" data-sbek-demo data-state="<?php echo esc_attr( $status['state'] ); ?>">
 		<p class="sbek-demo__status">
@@ -190,7 +194,7 @@ function sbek_render_demo_tools(): void {
 			sbek_option_toggle(
 				'sbek_demo_site_setup',
 				__( 'Also apply the demo site settings', 'sbek' ),
-				__( 'Site title, Khmer language, Phnom Penh time zone, 8 posts per page, /article/123/ links, menus, ad placeholders, privacy page, and Theme Option details (only fields that are still empty). These are not undone by "Remove".', 'sbek' ),
+				__( 'Site title, Khmer language, Phnom Penh time zone, 8 posts per page, /article/123/ links, menus, ad placeholders, privacy page, and Sbek Theme details (only fields that are still empty). These are not undone by "Remove".', 'sbek' ),
 				true
 			);
 			?>

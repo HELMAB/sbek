@@ -21,7 +21,7 @@ The full license text for each family is in `licenses/<family>-OFL.txt`.
 
 `@font-face` rules live in `assets/css/src/fonts.css` (Khmer `unicode-range` only, so Latin
 text falls through to the Latin font stack). Which fonts the site uses is chosen in
-**Theme Option → Design** (`inc/design.php`); browsers download only the families in use.
+**Sbek Theme → Design** (`inc/design.php`); browsers download only the families in use.
 
 To add a font: drop its Khmer-subset woff2 here, add an `@font-face` to `fonts.css`, add an
 entry to `sbek_font_choices()` in `inc/design.php`, list it above, and rebuild CSS.

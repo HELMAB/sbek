@@ -1,6 +1,6 @@
 /*
  * Self-hosted Khmer font subsets (SIL OFL, see assets/fonts/README.md).
- * Declared for every font Theme Option → Design can select; a browser only
+ * Declared for every font Sbek Theme → Design can select; a browser only
  * downloads a file once text actually renders in that family. The Khmer
  * unicode-range lets Latin text fall through to the Latin font stack.
  * Imported by input.css (front end) and admin.css (Design tab preview).
