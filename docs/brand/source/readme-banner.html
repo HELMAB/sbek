@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Sbek — README banner (1280×640 @2x)</title>
+<link rel="stylesheet" href="brand.css">
+<style>
+	.stage { width: 1280px; height: 640px; }
+
+	.copy { position: absolute; top: 52px; left: 64px; width: 560px; }
+	.copy .eyebrow { margin-top: 36px; }
+	.copy .headline { margin-top: 18px; font-size: 54px; }
+	.copy .kh { margin-top: 10px; font-size: 30px; }
+	.copy .lead { margin-top: 12px; font-size: 16px; max-width: 500px; }
+	.copy .pills { margin-top: 22px; }
+
+	.devices { position: absolute; top: 0; left: 0; width: 100%; height: 536px; overflow: hidden; perspective: 2400px; }
+	.tilt {
+		position: absolute;
+		inset: 0;
+		transform-style: preserve-3d;
+		transform: rotateX(14deg) rotateY(-20deg) rotateZ(6deg);
+		transform-origin: 80% 50%;
+	}
+	.b-back  { top: 10px;  left: 790px; width: 600px; opacity: .92; }
+	.b-back img  { height: 380px; }
+	.b-front { top: 230px; left: 690px; width: 640px; }
+	.b-front img { height: 440px; }
+	.ph { top: 250px; left: 650px; width: 180px; }
+	.ph img { height: 350px; }
+
+	.s-lang { top: 60px; left: 1110px; width: 118px; height: 118px; transform: rotate(8deg); }
+	.s-lang b { font-size: 30px; font-family: var(--khmer); font-weight: 400; padding-top: 6px; }
+	.s-lang span { font-size: 10px; }
+	.c-seo { top: 200px; left: 700px; }
+
+	/* stats strip */
+	.stats {
+		position: absolute;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		height: 104px;
+		display: grid;
+		grid-template-columns: repeat(6, 1fr);
+		align-items: center;
+		padding: 0 40px;
+		background: rgba(10, 10, 12, .82);
+		border-top: 1px solid rgba(250, 25, 57, .35);
+		backdrop-filter: blur(6px);
+	}
+	.stat { padding: 0 20px; border-left: 1px solid var(--line); }
+	.stat:first-child { border-left: 0; }
+	.stat b { display: block; font-size: 30px; font-weight: 800; letter-spacing: -.03em; line-height: 1; }
+	.stat b small { font-size: 16px; font-weight: 700; color: #ff4d66; margin-left: 2px; }
+	.stat span { display: block; margin-top: 6px; font-size: 12px; font-weight: 600; color: var(--muted); }
+</style>
+</head>
+<body>
+<div class="stage">
+
+	<div class="devices">
+		<div class="tilt">
+			<div class="browser b-back"><div class="bar"><i></i><i></i><i></i><em>sbek.news/topics/…</em></div><img src="../captures/desktop-topic.png" alt=""></div>
+			<div class="browser b-front"><div class="bar"><i></i><i></i><i></i><em>sbek.news</em></div><img src="../captures/desktop-home.png" alt=""></div>
+		</div>
+		<div class="phone ph"><img src="../captures/mobile-article.png" alt=""></div>
+	</div>
+
+	<div class="sticker s-lang"><b>ខ្មែរ</b><span>+ English<br>no plugin</span></div>
+
+	<div class="card c-seo">
+		<div class="ico"><svg class="i" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg></div>
+		<div><strong>Secure &amp; accessible</strong><span>nonces · escaping · skip links · reduced motion</span></div>
+	</div>
+
+	<div class="copy">
+		<div class="brand">
+			<div class="mark"><span>ស</span></div>
+			<div class="word">Sbek<small>News Theme</small></div>
+		</div>
+		<div class="eyebrow"><i></i>Classic WordPress theme · GPL-2.0</div>
+		<h1 class="headline">The <em>bilingual</em> news theme for Cambodia.</h1>
+		<p class="kh">ព័ត៌មាន <b>ខ្មែរ</b> <span class="en">· English</span></p>
+		<p class="lead">Hero grid, video and colored category blocks, breaking-news ticker, infinite-scroll archives and a clean article page — with one Theme Option panel to run it all.</p>
+		<div class="pills">
+			<span class="pill"><b>WordPress</b> 6.5+</span>
+			<span class="pill"><b>PHP</b> 8.0+</span>
+			<span class="pill"><b>Tailwind CSS</b> v4</span>
+			<span class="pill"><b>Vanilla</b> JS</span>
+			<span class="pill"><b>WP-CLI</b> ready</span>
+		</div>
+	</div>
+
+	<div class="stats">
+		<div class="stat"><b>2</b><span>Languages, no plugin</span></div>
+		<div class="stat"><b>11</b><span>Self-hosted Khmer fonts</span></div>
+		<div class="stat"><b>8<small>KB</small></b><span>CSS, gzipped</span></div>
+		<div class="stat"><b>4<small>KB</small></b><span>JavaScript, gzipped</span></div>
+		<div class="stat"><b>7</b><span>Theme Option tabs</span></div>
+		<div class="stat"><b>140<small>+</small></b><span>One-click demo posts</span></div>
+	</div>
+
+</div>
+</body>
+</html>

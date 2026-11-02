@@ -636,8 +636,6 @@ class Sbek_Demo_Importer {
 
 		$file = wp_tempnam( 'sbek-demo' ) . '.jpg';
 		imagejpeg( $out, $file, 82 );
-		imagedestroy( $img );
-		imagedestroy( $out );
 
 		return $file;
 	}

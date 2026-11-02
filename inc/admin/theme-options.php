@@ -631,6 +631,13 @@ function sbek_render_theme_options_page(): void {
 	);
 	?>
 	<div class="wrap sbek-options">
+		<?php
+		// Decorative welcome banner (source: docs/brand/source/options-banner.html); the tabs below carry the same information.
+		$banner = 'assets/images/theme-options-banner.png';
+		if ( file_exists( SBEK_DIR . '/' . $banner ) ) :
+			?>
+			<img class="sbek-options__banner" src="<?php echo esc_url( add_query_arg( 'ver', filemtime( SBEK_DIR . '/' . $banner ), SBEK_URI . '/' . $banner ) ); ?>" width="2400" height="480" alt="" decoding="async">
+		<?php endif; ?>
 		<form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>" class="sbek-options__form" data-sbek-options-form>
 			<input type="hidden" name="action" value="<?php echo esc_attr( SBEK_SETTINGS_ACTION ); ?>">
 			<input type="hidden" name="sbek_tab" value="general" data-sbek-current-tab>

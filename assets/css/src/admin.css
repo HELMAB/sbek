@@ -322,6 +322,20 @@
 .sbek-options [hidden] { display: none !important; }
 .sbek-options .wp-header-end { margin: 0; border: 0; }
 
+/* Welcome banner (image, 5:1) — hidden on small screens where its text would be unreadable */
+.sbek-options__banner {
+	display: block;
+	width: 100%;
+	height: auto;
+	margin: 12px 0 0;
+	border-radius: 16px;
+	background: #0d0d0f;
+	box-shadow: 0 6px 18px rgba(13, 13, 15, .18);
+}
+@media (max-width: 782px) {
+	.sbek-options__banner { display: none; }
+}
+
 /* Header */
 .sbek-options__header {
 	display: flex;

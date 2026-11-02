@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="docs/brand/readme-banner.png" width="1280" alt="Sbek — the bilingual Khmer / English news theme for WordPress: hero grid, video and category blocks, 11 Khmer fonts, about 8 KB CSS and 4 KB JS">
+</p>
+
 # Sbek — bilingual news theme (Khmer / English)
 
 A fast classic WordPress theme for a Khmer-first news site, with a Sabay-News-style layout: black top bar and sticky red menu, hero grid, video block, colored category blocks with "next" arrows, infinite-scroll archives with a list/grid switch, and a clean article page with a Khmer word-break toggle.
