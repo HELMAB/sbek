@@ -1,62 +1,65 @@
-<?php get_header(); ?>
+<?php
+/**
+ * Search results, with the search box and a category filter on top.
+ *
+ * @package sbek
+ */
 
-<main id="primary" class="site-main container mx-auto px-4 py-8">
+defined( 'ABSPATH' ) || exit;
 
-    <header class="mb-8 border-b-2 border-ink pb-5">
-        <p class="mb-2 text-sm font-bold uppercase tracking-wider text-sbek-red"><?php echo esc_html( t( 'search_results_label' ) ); ?></p>
-        <h1 class="flex items-center gap-3 font-display text-3xl font-extrabold tracking-tight text-ink sm:text-4xl">
-            <span class="inline-block h-8 w-1.5 shrink-0 bg-sbek-red sm:h-9"></span>
-            <?php echo esc_html( get_search_query() ); ?>
-        </h1>
+global $wp_query;
 
-        <div class="mt-5 flex flex-wrap items-center justify-between gap-4">
-            <p class="text-sm text-gray-500">
-                <?php
-                global $wp_query;
-                echo esc_html( sprintf( _n( '%s result', '%s results', (int) $wp_query->found_posts, 'sbek' ), number_format_i18n( (int) $wp_query->found_posts ) ) );
-                ?>
-            </p>
+$sbek_selected_cat = isset( $_GET['cat'] ) ? absint( $_GET['cat'] ) : 0; // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only filter.
+$sbek_categories   = get_categories(
+	array(
+		'hide_empty' => true,
+		'number'     => 50,
+	)
+);
 
-            <form method="get" action="<?php echo esc_url( home_url( '/' ) ); ?>" class="flex items-center gap-2">
-                <input type="hidden" name="s" value="<?php echo esc_attr( get_search_query() ); ?>">
-                <label for="sbek-search-cat" class="text-sm font-semibold text-gray-600"><?php echo esc_html( t( 'filter_by_category' ) ); ?></label>
-                <select id="sbek-search-cat" name="cat" onchange="this.form.submit()" class="rounded-sm border border-gray-300 bg-white px-3 py-2 text-sm font-medium text-ink focus:border-sbek-red focus:outline-none focus:ring-1 focus:ring-sbek-red">
-                    <option value=""><?php echo esc_html( t( 'all_categories' ) ); ?></option>
-                    <?php
-                    $sbek_search_cat = isset( $_GET['cat'] ) ? absint( $_GET['cat'] ) : 0;
-                    foreach ( get_categories( array( 'number' => 30 ) ) as $sbek_search_category ) :
-                        ?>
-                        <option value="<?php echo esc_attr( $sbek_search_category->term_id ); ?>" <?php selected( $sbek_search_cat, $sbek_search_category->term_id ); ?>>
-                            <?php echo esc_html( sbek_term_name( $sbek_search_category ) ); ?>
-                        </option>
-                    <?php endforeach; ?>
-                </select>
-            </form>
-        </div>
-    </header>
+ob_start();
+?>
+<form role="search" method="get" class="search-filter" action="<?php echo esc_url( sbek_home_url() ); ?>">
+	<label class="screen-reader-text" for="sbek-search-query"><?php esc_html_e( 'Search for:', 'sbek' ); ?></label>
+	<input type="search" id="sbek-search-query" name="s" value="<?php echo esc_attr( get_search_query() ); ?>" class="search-filter__input">
+	<label class="screen-reader-text" for="sbek-search-cat"><?php esc_html_e( 'Category', 'sbek' ); ?></label>
+	<select id="sbek-search-cat" name="cat" class="search-filter__select">
+		<option value=""><?php esc_html_e( 'All categories', 'sbek' ); ?></option>
+		<?php foreach ( $sbek_categories as $sbek_category ) : ?>
+			<option value="<?php echo esc_attr( (string) $sbek_category->term_id ); ?>" <?php selected( $sbek_selected_cat, $sbek_category->term_id ); ?>><?php echo esc_html( $sbek_category->name ); ?></option>
+		<?php endforeach; ?>
+	</select>
+	<button type="submit" class="btn"><?php esc_html_e( 'Search', 'sbek' ); ?></button>
+	<p class="search-filter__count">
+		<?php
+		$sbek_found = (int) $wp_query->found_posts;
+		/* translators: %s: number of results. */
+		echo esc_html( sprintf( _n( '%s result', '%s results', $sbek_found, 'sbek' ), number_format_i18n( $sbek_found ) ) );
+		?>
+	</p>
+</form>
+<?php
+$sbek_intro = (string) ob_get_clean();
 
-    <?php if ( have_posts() ) : ?>
-        <div class="mb-12 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-            <?php
-            while ( have_posts() ) :
-                the_post();
-                get_template_part( 'template-parts/content-grid' );
-            endwhile;
-            ?>
-        </div>
-
-        <div class="pagination">
-            <?php
-            the_posts_pagination( array(
-                'mid_size'  => 1,
-                'prev_text' => '&larr;',
-                'next_text' => '&rarr;',
-            ) );
-            ?>
-        </div>
-    <?php else : ?>
-        <?php get_template_part( 'template-parts/content-none' ); ?>
-    <?php endif; ?>
+get_header();
+?>
+<main id="main" class="site-main">
+	<div class="container layout-sidebar">
+		<div class="layout-sidebar__main">
+			<?php
+			get_template_part(
+				'template-parts/feed',
+				null,
+				array(
+					/* translators: %s: search query. */
+					'title' => sprintf( __( 'Search: %s', 'sbek' ), get_search_query( false ) ),
+					'intro' => $sbek_intro,
+				)
+			);
+			?>
+		</div>
+		<?php get_sidebar( null, array( 'boxed' => false ) ); ?>
+	</div>
 </main>
-
-<?php get_footer(); ?>
+<?php
+get_footer();

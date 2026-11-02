@@ -1,10 +1,20 @@
 /*
 Theme Name: Sbek
 Theme URI: https://example.com/sbek
-Author: Senior WP Developer
-Description: A high-performance news theme built with Tailwind CSS.
-Version: 1.0.0
+Author: Sbek
+Description: Khmer-first news, bilingual by design. A fast classic news theme for Khmer / English sites — no translation plugin: / is Khmer, /en/ is English, with linked translations and English category names. Hero grid, video and colored category blocks, breaking-news ticker, infinite-scroll archives with a list/grid switch and a clean article page. One Theme Option panel (7 tabs) sets identity, brand colors, 11 self-hosted Khmer fonts, homepage sections, contact, social and analytics, plus one-click demo import. About 8 KB CSS and 4 KB JS gzipped; built with Tailwind CSS v4 and vanilla JS.
+Version: 2.0.0
+Requires at least: 6.5
+Tested up to: 7.1
+Requires PHP: 8.0
 License: GNU General Public License v2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 Text Domain: sbek
+Domain Path: /languages
+Tags: news, blog, two-columns, right-sidebar, grid-layout, custom-colors, custom-menu, featured-images, post-formats, sticky-post, theme-options, translation-ready
 */
+
+/*
+ * Styles live in assets/css/main.css (built from assets/css/src/input.css).
+ * Theme screenshot and banners: docs/brand/source (render with render.sh).
+ */

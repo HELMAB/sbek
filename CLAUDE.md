@@ -1,76 +1,94 @@
 # CLAUDE.md
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+Guidance for Claude Code (claude.ai/code) when working in this repository.
 
 ## What this is
 
-**Sbek** is a custom WordPress theme (no page builder, no i18n plugin) for a high-performance news site, inspired by Sabay News. This repository *is* the theme — it's dropped into a WordPress install at `wp-content/themes/sbek`, but WordPress core itself lives outside this repo and is not part of it.
+**Sbek** is a custom classic WordPress theme for a bilingual (Khmer primary, English secondary) news site. Its front end ports the Sabay-News-style layout study in `../../../sabay-news-ui` (Next.js): measurements, breakpoints and behaviour come from there. This repo *is* the theme; WordPress core lives outside it.
 
 ## Build & development
 
 ```bash
-npm install        # one-time
-npm run build      # compile + minify Tailwind: assets/css/src/input.css → assets/css/main.css
-npm run watch      # recompile on change during development
-npm run build:admin  # compile the separate wp-admin-only stylesheet: assets/css/src/admin.css → assets/css/admin.css
-npm run watch:admin
+nvm use            # Node 22 (.nvmrc); Tailwind v4 needs Node 20+
+npm install
+npm run build      # assets/css/src/input.css → assets/css/main.css (minified)
+npm run watch
+npm run build:admin  # assets/css/src/admin.css → assets/css/admin.css (Theme Option page + dashboard widget)
 ```
 
-- Styling is **Tailwind CSS v4** via the standalone `@tailwindcss/cli` (no webpack/PostCSS pipeline). Requires **Node 20+** — `.nvmrc` pins the version to use.
-- There is **no `tailwind.config.js`** — theme customization (colors, fonts, animations) lives directly in `@theme { ... }` blocks inside `assets/css/src/input.css` and `assets/css/src/admin.css`.
-- The **`@tailwindcss/typography`** plugin is loaded via `@plugin "@tailwindcss/typography";` in `input.css` (resolved from `node_modules` by the `npx @tailwindcss/cli` package build). Single-post content uses `prose` (`single.php`), themed to the brand via inline `--tw-prose-*` variable overrides + `prose-*` modifiers; a small unlayered rule in `input.css` strips the plugin's blockquote quote glyphs.
-- `admin.css` deliberately imports `tailwindcss/theme.css` + `tailwindcss/utilities.css` (not the full `tailwindcss` package) so Tailwind's preflight/base reset doesn't fight wp-admin's own styles, and scopes its content scanning with `@source`/`source(none)` to only the admin files it actually styles (`inc/admin/site-settings.php`, `inc/admin/dashboard-widget.php`, `assets/js/admin-site-settings.js`) rather than the whole theme.
-- `assets/css/main.css` and `assets/css/admin.css` are gitignored build output — after editing any `.php` template or adding utility classes, rerun the relevant `npm run build*` or the classes won't exist in the stylesheet.
-- JS is vanilla ES6 (`assets/js/`), no bundler.
-- There is no test suite or linter configured for this theme.
+- `main.css` / `admin.css` are gitignored build output — rebuild after editing CSS **or** adding Tailwind utility classes to PHP.
+- `input.css` uses `@import "tailwindcss" source(none)` with explicit `@source` paths (front-end templates only). Components are **plain CSS in `@layer components`** with semantic class names (`.hero-item`, `.section-tab`, `.feed-item`…); Tailwind supplies preflight + utilities. Breakpoints are Bootstrap 3's (768/992/1200) and `container` is redefined via `@utility container` (750/970/1170px).
+- Fonts are self-hosted Khmer subsets (`assets/fonts/`, OFL, licenses in `assets/fonts/licenses/`). `@font-face` rules live in `assets/css/src/fonts.css`, imported by both `input.css` and `admin.css`. Stacks are **Khmer family first** (its Khmer-only `unicode-range` lets Latin fall through to the Latin stack).
+- JS: one deferred vanilla file, `assets/js/theme.js` — modules activate on `data-sbek-*` hooks. No bundler.
+- Translations: after changing strings run
+  `wp i18n make-pot . languages/sbek.pot --domain=sbek --exclude=node_modules,assets/css,inc/cli`,
+  update `languages/km.po`, then `wp i18n make-mo languages/km.po languages/ && wp i18n make-php languages/km.po languages/`.
+- Demo data: `wp sbek demo import` / `wp sbek demo reset --yes` (see below).
+- No test suite / linter is configured. Smoke-test with `php -l`, `wp eval`, and by crawling pages with `WP_DEBUG_LOG` on.
 
-## Theme architecture
+## Architecture
 
-`functions.php` is the entry point and `require`s the `inc/` modules in a deliberate order — **`inc/i18n.php` must load first** because the global `t()` and `sbek_lang()` helpers it defines are used throughout every other module and template. `inc/security.php` loads second (security headers/hardening apply regardless of what else initializes). `inc/` is split by where the code runs: `inc/admin/` holds wp-admin-only screens and meta boxes, `inc/frontend/` holds code that renders on the public site. `inc/i18n.php` and `inc/icons.php` stay at the `inc/` root because both are loaded by, and used from, admin and frontend code alike.
+`functions.php` requires modules in order: **`inc/i18n.php` first** (it routes the URL language and switches the locale at include time), then `inc/security.php`, then the rest. `inc/admin/` = wp-admin screens/meta boxes, `inc/frontend/` = public-site code, `inc/` root = shared. `inc/cli/` loads only under WP-CLI.
 
-### Multilingual system (`inc/i18n.php`, `inc/admin/i18n-admin.php`) — the central design
+### Languages (`inc/i18n.php`, `inc/admin/translation.php`) — read before touching routing, queries or links
 
-A custom, plugin-free i18n layer. Languages are defined by the `SBEK_LANGUAGES` constant (`['en', 'jp']`, default `en`). Understand this before touching routing, queries, or templates:
+- Languages come from `sbek_languages()` (`km` → locale `km`, `en` → `en_US`); default `SBEK_DEFAULT_LANGUAGE = 'km'`.
+- **URLs:** `/` = Khmer (canonical), `/en/…` = English, `/km/…` 301s to canonical. `sbek_bootstrap_language()` runs at include time: reads the prefix, sets `$GLOBALS['sbek_lang']`, strips the prefix from `$_SERVER['REQUEST_URI']` so core routes normally, and calls `switch_to_locale()` so **standard `__()` strings and core strings (dates, comment form) follow the URL**. Only runs for front-end `index.php` requests (not admin/AJAX/cron/CLI/login).
+- **UI strings:** plain `__()` / `esc_html__()` with text domain `sbek`; English source, Khmer in `languages/km.po`. There is no custom `t()` helper anymore.
+- **Links:** on non-default-language pages, link filters (`post_link`, `term_link`, `get_pagenum_link`, …) add the prefix automatically — templates use `get_permalink()` / `get_term_link()` directly. Use `sbek_home_url()` instead of `home_url('/')`, and `sbek_localize_url()` only for hand-built URLs. `sbek_redirect_canonical()` stops core's canonical redirect from looping on prefixed URLs.
+- **Content:** private, hierarchical `language` taxonomy (km/en, `show_in_rest` for the editor panel). `pre_get_posts` scopes every front-end query to the current language (opt out with query var `sbek_all_languages => true`). A post requested in the wrong language redirects to its translation or that language's home. Posts saved without a language get the default (`wp_set_object_terms` — not `wp_set_post_terms`, which would cast slugs to 0 on a hierarchical taxonomy).
+- **Translations:** `_sbek_translation_id` post meta on both posts, managed by the Translation meta box; `sbek_set_translation()` keeps pairs symmetric and releases previous partners. Drives hreflang and the header switcher.
+- **Term names:** category/tag names are Khmer; English goes in term meta `sbek_name_en`. A `get_term` filter swaps names on English pages, so menus, badges and archive titles localize automatically.
+- Adding a language: add it to `sbek_languages()`, ship `languages/{locale}.po/.mo/.l10n.php`, add a `primary-{slug}` menu location (`inc/setup.php`), and install its core language pack.
 
-- **URL scheme:** `/` = English (canonical, no prefix); `/jp/...` = Japanese; `/en/...` 301-redirects to the unprefixed canonical. On `init` priority 1, the language is detected from `REQUEST_URI`, stored in `$GLOBALS['sbek_lang']`, and the `/jp` prefix is *stripped from `$_SERVER['REQUEST_URI']`* so core WordPress parses the URL normally.
-- **Content separation:** a non-public `language` taxonomy tags every post/page. A global `pre_get_posts` filter injects a `tax_query` so the front end only ever shows the current language's posts. `template_redirect` bounces single posts that don't match the active language to that language's homepage (but never the front page itself, to avoid a self-redirect loop on an untagged front page). A `save_post` hook auto-assigns `SBEK_DEFAULT_LANGUAGE` to any post/page saved without a language term — otherwise it would silently vanish from every front-end query and redirect away from its own permalink with no visible error.
-- **Building URLs:** never emit a raw `get_permalink()` in templates — wrap it in `sbek_localize_url()` so the `/jp` prefix is applied for non-default languages.
-- **UI strings:** use `t('key')` (or `t('key', $arg1, ...)` for sprintf), backed by `i18n/strings.php` (a nested `[lang][key] => string` array) — this *replaces* WordPress's `__()`/`_e()` for theme strings.
-- **Translation linking:** posts are paired across languages via a bidirectional `_translation_id` post meta, set through the "Translation" meta box (`inc/admin/i18n-admin.php`), which updates the meta on both posts when saved. This drives `hreflang` tags and `sbek_language_switcher()`. Category/tag names are localized via `name_{lang}` term meta (read with `sbek_term_name()`, written via `created_{taxonomy}`/`edited_{taxonomy}` hooks), skipping the default language.
+### Content model
 
-When adding a language: add its slug to `SBEK_LANGUAGES`, add a top-level block in `i18n/strings.php`, and extend the URL regex / hreflang logic in `inc/i18n.php`.
+- **Categories / tags** (`inc/admin/term-meta.php`): `sbek_color` (accent; badges, tab headers, arrows), `sbek_name_en`, and for categories `sbek_home_order` (1, 2, 3… = homepage block order; none set → all top-level categories).
+- **Post meta** (`inc/admin/custom-fields.php`, registered with `register_post_meta`): `_sbek_trending_score` (0–100, "Popular"), `_sbek_video_url` (oEmbed above the article), `_sbek_source_name` / `_sbek_source_url`, `_sbek_is_sponsored`, `_sbek_is_breaking` (header ticker).
+- **Homepage hero** = sticky posts (then latest). **Video block** = posts in the *Video* post format.
+- **Theme Option** (`inc/admin/theme-options.php`, top-level admin menu, slug `sbek-theme-options`; the old Settings → Options page URL redirects there via a hidden page's `load-` hook). One tabbed page for all site-wide data — **General** (site title/tagline in Khmer = core `blogname`/`blogdescription`, English = `name_en`/`tagline_en`; logo, core `site_icon`, OG image), **Design** (colors and fonts, see below), **Homepage** (toggles `show_ticker`/`show_video`/`show_newsletter`; category table editing `sbek_color`/`sbek_name_en`/`sbek_home_order` term meta), **Contact & Footer** (description, email, phones, address, lat/lng, copyright with `{year}`/`{site}` — text fields have `_en` variants), **Social**, **Integrations** (GA4/GTM, raw header/footer scripts; unfiltered only for `unfiltered_html` users).
+  - Saves via `admin-post.php?action=sbek_save_theme_options` (nonce + `manage_options`) because one form writes the theme option, core options and term meta. The option array is sanitized by `sbek_sanitize_site_settings()` (registered on `init` with `register_setting`, so `update_option()` from anywhere is sanitized); missing toggle keys default to on, so partial updates from code are safe.
+  - Read with `sbek_site_setting( $key )`, `sbek_site_text( $key )` (per-language `*_en` override), `sbek_section_enabled( 'ticker'|'video'|'newsletter' )`, `sbek_copyright_text()`. English title/tagline apply on /en/ via `option_blogname`/`option_blogdescription` filters in `inc/i18n.php`.
+  - Admin assets: `assets/js/admin-theme-options.js` (tabs with hash + ARIA, repeaters, media pickers) and `admin.css` (`npm run build:admin`). The page has a `.wp-header-end` marker so core places notices below the red header.
+- **Widget areas**: `sbek-sidebar`, `sbek-ad-header` (728×90), `sbek-ad-hero` (2×300×250), `sbek-ad-video` (300×250). Empty ad areas render nothing and the layout reclaims the space. (Ad-blockers hide `.ad-area` — expected.)
 
-### Editorial metadata (`inc/admin/custom-fields.php`)
+### Design: colors & fonts (`inc/design.php`, Theme Option → Design)
 
-A "News Metadata" meta box on posts stores post meta: `_sbek_trending_score` (0–100, drives the Trending sidebar), `_sbek_video_url` (renders a play-icon overlay on grid cards), `_sbek_is_sponsored` (advertorial styling), and `_sbek_is_breaking` (breaking-news ticker). Saved via the `save_post` hook, nonce `sbek_save_news_meta`, gated on `edit_post` capability; checkboxes default to `0` when the POST key is absent.
+- Settings `color_brand`, `color_top`, `color_footer`, `font_body`, `font_heading`, `font_latin` (in `sbek_site_settings`). `sbek_design()` returns them validated, plus a derived `brand_dark` (the default red keeps its hand-picked `#d90c16`; custom colors are mixed 15% toward black).
+- **The stylesheet stays static.** `sbek_design_css()` prints one inline `:root{…}` block (attached to `sbek-main`) overriding CSS variables: `--color-menu`, `--color-menu-active`, `--color-rule`, `--color-on-menu`, `--color-top`, `--color-on-top`, `--color-footer`, `--color-footer-fg`, `--color-footer-strong`, `--font-sans`, `--font-strong`, `--font-strong-weight`. Defaults for all of them also exist in `input.css`. Only validated hex values and whitelisted font families go into it.
+- `sbek_readable_on()` picks text on a colored surface: white if it reaches 3:1 (WCAG AA for large/bold UI text), else `#111`. The admin preview JS mirrors this math exactly.
+- **Never hard-code the brand red** in CSS or PHP: use `var(--color-menu)` / `var(--color-on-menu)` in CSS and `sbek_brand_color()` in PHP.
+- Fonts come from `sbek_font_choices()` (role `body` / `heading`; `display` fonts render headings at weight 400, text fonts at 700) and `sbek_latin_font_choices()` (system stacks only). The selected body font is preloaded on Khmer pages. The login screen picks up the brand color too.
 
-### Performance / caching (`inc/frontend/performance.php`)
+### Queries & caching (`inc/queries.php`)
 
-`sbek_get_cached_query( $args, $transient_name, $expiration )` is the standard pattern for sidebar/section queries: it caches only post **IDs** in a transient (900s / 15-min default), then runs a light `post__in` query. Transient names are **per-language** (e.g. `sbek_breaking_news_{$lang}`, `sbek_trending_sidebar_{$lang}`, `sbek_404_popular_{$lang}`, `sbek_related_{$post_id}_{$lang}`) and are flushed on `save_post` via `sbek_clear_transients_on_save()` — match that naming and flushing when adding a new cached query. Note: the related-posts cache is keyed per-post and survives a category change on that post until its TTL expires.
-
-### Security (`inc/security.php`)
-
-Shared by admin and frontend. Defines `DISALLOW_FILE_EDIT` at include time (must happen before capability checks run, not on a hook). Sends baseline security headers (`X-Content-Type-Options`, `X-Frame-Options`, `Referrer-Policy`, `Permissions-Policy`) on `send_headers`. Strips the WP generator meta tag and `?ver=` query strings from enqueued assets (unless `SCRIPT_DEBUG`). Disables XML-RPC. Implements login rate limiting via the `authenticate` filter + transients keyed by hashed IP: 5 failed attempts locks out for 15 minutes.
-
-### Other modules
-
-- `inc/frontend/class-mega-menu-walker.php` — `Sbek_Mega_Menu_Walker` renders a 4-column Tailwind mega-menu (sub-menus are absolutely positioned, shown via `group-hover`). Two nav menus are registered: `menu-1` (English) and `menu-1-jp` (Japanese).
-- `inc/frontend/seo.php` — Open Graph/Twitter card tags on singular views, `NewsMediaOrganization` and `NewsArticle` JSON-LD (sourced from Site Settings: description, logo, socials, phones, lat/lng), and localized sitemap entries added to `robots.txt` for non-default languages.
-- `inc/frontend/integrations.php` — GA4 / GTM / custom header-footer scripts on `wp_head` (priority 20) / `wp_body_open`, sourced from the Options page; GA4 only loads if no GTM ID is set; all output skipped when `is_admin()`.
-- `inc/frontend/search.php` — adds an optional category facet (`?cat=`) to the front-end search query via `pre_get_posts`.
-- `inc/admin/site-settings.php` — the Options page (company info, branding, analytics IDs, repeatable phone/social rows) backing `sbek_site_setting()`. Repeater rows use an `__i__` placeholder swapped by JS when adding rows. Raw header/footer `<script>` fields are capability-gated: only users with `unfiltered_html` can save them unescaped, others get them run through `wp_kses_post()`.
-- `inc/admin/dashboard-widget.php` — admin dashboard widget tracking site-identity setup completeness (logo, OG image, lat+lng, description, phones, socials, GA4/GTM) by reading `sbek_site_setting()` directly; enqueues `admin.css` only on the `index.php` dashboard screen.
-- `inc/icons.php` — `sbek_icon()` inline-SVG helper backed by a registry of Lucide (stroke) and Simple Icons (fill) icon markup; `sbek_social_icon_name()` maps free-text platform labels (e.g. "tik tok") to a known icon name, falling back to a generic link icon.
-- `inc/frontend/comments.php` — `sbek_comment_list_item()` (the `wp_list_comments()` callback) and `sbek_comment_form_args()` (localized, Tailwind-styled `comment_form()` overrides), consumed by the root `comments.php` template, pulled in via `comments_template()` in `single.php`. Comment moderation/spam is entirely native WordPress (Discussion settings).
-- `inc/admin/login.php` — brands `wp-login.php` via hooks only: `login_header` echoes a brand panel, `login_head` injects inline CSS swapping the logo, `login_message`/`login_footer` add copy and placeholder text. Since a literal `wp-login.php` request can't use the `/jp/` URL prefix, language is read from a `?lang=` query var, falling back to a `sbek_login_lang` cookie so the choice persists across lostpassword/register. Core's own field labels/buttons never go through `t()` — they're plain `__()` calls against WordPress's `default` textdomain — so this module additionally registers `gettext` filters (only when Japanese is active) that swap a known list of exact core strings. Extend that list if an untranslated core string shows up.
-- AJAX "Load More" infinite scroll: handler `sbek_ajax_load_more()` in `functions.php` (actions `wp_ajax[_nopriv]_sbek_load_more`), driven by `assets/js/load-more.js` (fetch-based, no jQuery); re-applies the language `tax_query` and renders `template-parts/content-grid.php` per post. Nonce: `sbek_load_more_nonce`.
-- `assets/js/motion.js` — `IntersectionObserver`-driven scroll-reveal for `.scroll-reveal` elements (supports a `data-delay` stagger attribute), a back-to-top button, and clipboard-based copy-link sharing.
+`sbek_cached_post_ids( $name, $args, $ttl )` caches **ID lists** in a transient keyed `sbek_q_{name}_{lang}_v{version}`; `sbek_posts_by_ids()` loads them in one query and primes thumbnail caches. The version (`sbek_cache_version` option) is bumped on post save/status change, sticky changes and term edits — there is no list of keys to flush; add new cached queries by just picking a unique `$name`. Block helpers: `sbek_get_featured_posts()`, `sbek_get_video_posts()`, `sbek_get_category_posts()`, `sbek_get_popular_posts()`, `sbek_get_latest_posts()`, `sbek_get_related_posts()`, `sbek_get_breaking_posts()`, `sbek_get_home_categories()`.
 
 ### Templates
 
-`front-page.php` (homepage grid + per-category sections), `single.php`, `archive.php`, `search.php`, `404.php`, `index.php` (fallback), `header.php`/`footer.php`, `comments.php`, and template parts in `template-parts/`: `content-grid.php` (the standard post card — reads the sponsored/video meta), `content.php` (plain listing fallback), `content-none.php` (empty state). Custom brand utilities: `text-sbek-red` (#d77655), `text-sbek-blue`, `font-khmer`, and `animate-marquee` (breaking-news ticker), all defined in the `@theme` block in `assets/css/src/input.css`.
+- `front-page.php` → `template-parts/home/{featured,video,category}.php`. The hero is **one** set of tiles: CSS grid ≥768px, JS carousel below.
+- `archive.php`, `search.php`, `index.php` → `template-parts/feed.php` (2 lead + list; list/grid switch; infinite scroll = `theme.js` fetching the `rel=next` pagination page (same-origin) and appending its `[data-feed-item]` cards — no AJAX endpoint; plain pagination remains as the no-JS fallback).
+- `single.php` (cover image injected after the first paragraph by `inc/frontend/content.php`; Khmer "show word breaks" toggle when content contains U+200B), `page.php`, `404.php`, `sidebar.php` (`get_sidebar( null, [ 'boxed' => bool ] )`).
+- **No comments:** the theme has no comment UI, and `inc/setup.php` forces `comments_open`/`pings_open` to false (plus hides the comment feed) so nothing can be submitted that nobody would see. Existing comments stay in the database. To bring comments back, restore a `comments.php` + `comments_template()` call and drop those filters.
+- Cards in `template-parts/card/` take a `WP_Post` via `$args['post']` (no global loop juggling).
+- Helpers in `inc/template-tags.php`: `sbek_get_thumb()`, `sbek_get_post_image()`, `sbek_get_category_badge()`, `sbek_section_header()`, `sbek_primary_category()`, `sbek_term_color()`, `sbek_post_date()`, `sbek_get_logo()`, `sbek_ad_area()`. `sbek_get_*` return escaped HTML; others echo.
+- Primary menu: `Sbek_Menu_Walker` (flat; front-page item renders as the house icon; active state from core's `current-*` classes; non-Khmer labels get the Latin face). Locations `primary` (Khmer) and `primary-en`; `sbek_menu_fallback()` shows Home + categories until a menu is assigned.
+
+### Security (`inc/security.php` + per module)
+
+Security headers, no generator tag, XML-RPC off, `/wp/v2/users` hidden from anonymous visitors, login lockout (5 failures/IP → 15 min). Every form: nonce + capability check + sanitize on input (registered meta sanitizers) + escape on output. Newsletter (`inc/frontend/newsletter.php`): honeypot, nonce, per-IP-hash throttle, private CPT readable only by `manage_options`. SEO tags (`inc/frontend/seo.php`) step aside when Yoast/Rank Math/SEOPress/AIOSEO is active. Site-wide concerns (headers, lockout, analytics) would ideally live in a must-use plugin.
+
+### Demo data (`inc/demo/class-sbek-demo-importer.php`, Theme Option → Tools, WP-CLI)
+
+- `Sbek_Demo_Importer` builds/removes the demo set in **resumable batches** (setup → images 6/request → Khmer posts 20/request → English posts → pages → finish; removal: posts 25/request → images 10/request → cleanup), so no single web request can time out. Job state is server-side in the `sbek_demo_job` option; a single-flight lock (`sbek_demo_lock`, 3-minute stale timeout) stops parallel batches. Loaded only in wp-admin and WP-CLI.
+- Everything created is appended to `sbek_demo_manifest` after **every** batch, so removal deletes exactly that (even after an interrupted import) and never pre-existing content. Removal keeps Theme Option and only clears logo / share image / site icon references that pointed at deleted images.
+- With "site settings" on (the default) it also sets permalinks `/article/%post_id%/`, category base `topics`, tag base `article/tag`, the Khmer locale (downloads the core pack), the Phnom Penh timezone, 8 posts/page, the menus, the ad-placeholder widgets and the privacy page, and fills **only empty** Theme Option fields. Site options are not reverted on removal.
+- **Admin:** the Tools tab (`inc/admin/tools.php`) drives it through admin-ajax `sbek_demo` (`task=start|next|abort`, nonce `sbek_demo`, `manage_options`). The JS loops `next` with a progress bar, and on failure offers **Continue** because the job persists.
+- **CLI:** `wp sbek demo import [--skip-site-setup] [--posts=24]`, `wp sbek demo reset --yes`, `wp sbek demo status` (`inc/cli/class-sbek-demo-command.php` just loops the batches).
+- **Reset design** (Design tab) posts to `admin-post.php?action=sbek_reset_design` (nonce, `manage_options`) and restores only the six design keys. Destructive buttons use the inline two-step `sbek_confirm_control()` instead of browser dialogs.
 
 ## Conventions
 
-- All theme functions, hooks, meta keys, and transients are prefixed `sbek_` / `_sbek_`. Text domain is `sbek`.
-- Escape on output (`esc_url`, `esc_html`, `esc_attr`) and wrap permalinks in `sbek_localize_url()`.
+- Prefix everything `sbek_` / `_sbek_` / `Sbek_`; text domain `sbek`.
+- Escape late (`esc_html`, `esc_attr`, `esc_url`, `wp_kses_post`); sanitize early; nonces + `current_user_can()` on every write.
+- Keep templates free of queries where a helper in `inc/queries.php` fits; keep markup semantic and styles in `input.css`.

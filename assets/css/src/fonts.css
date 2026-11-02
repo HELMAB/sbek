@@ -1,0 +1,124 @@
+/*
+ * Self-hosted Khmer font subsets (SIL OFL, see assets/fonts/README.md).
+ * Declared for every font Theme Option → Design can select; a browser only
+ * downloads a file once text actually renders in that family. The Khmer
+ * unicode-range lets Latin text fall through to the Latin font stack.
+ * Imported by input.css (front end) and admin.css (Design tab preview).
+ */
+
+@font-face {
+  font-family: "Battambang";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("../fonts/battambang-khmer-400.woff2") format("woff2");
+  unicode-range: U+1780-17FF, U+19E0-19FF, U+200C-200D, U+25CC;
+}
+
+@font-face {
+  font-family: "Battambang";
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("../fonts/battambang-khmer-700.woff2") format("woff2");
+  unicode-range: U+1780-17FF, U+19E0-19FF, U+200C-200D, U+25CC;
+}
+
+@font-face {
+  font-family: "Kantumruy Pro";
+  font-style: normal;
+  font-weight: 400 700;
+  font-display: swap;
+  src: url("../fonts/kantumruy-pro-khmer-var.woff2") format("woff2");
+  unicode-range: U+1780-17FF, U+19E0-19FF, U+200C-200D, U+25CC;
+}
+
+@font-face {
+  font-family: "Noto Sans Khmer";
+  font-style: normal;
+  font-weight: 400 700;
+  font-display: swap;
+  src: url("../fonts/noto-sans-khmer-khmer-var.woff2") format("woff2");
+  unicode-range: U+1780-17FF, U+19E0-19FF, U+200C-200D, U+25CC;
+}
+
+@font-face {
+  font-family: "Hanuman";
+  font-style: normal;
+  font-weight: 400 700;
+  font-display: swap;
+  src: url("../fonts/hanuman-khmer-var.woff2") format("woff2");
+  unicode-range: U+1780-17FF, U+19E0-19FF, U+200C-200D, U+25CC;
+}
+
+@font-face {
+  font-family: "Nokora";
+  font-style: normal;
+  font-weight: 400 700;
+  font-display: swap;
+  src: url("../fonts/nokora-khmer-var.woff2") format("woff2");
+  unicode-range: U+1780-17FF, U+19E0-19FF, U+200C-200D, U+25CC;
+}
+
+@font-face {
+  font-family: "Suwannaphum";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("../fonts/suwannaphum-khmer-400.woff2") format("woff2");
+  unicode-range: U+1780-17FF, U+19E0-19FF, U+200C-200D, U+25CC;
+}
+
+@font-face {
+  font-family: "Suwannaphum";
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("../fonts/suwannaphum-khmer-700.woff2") format("woff2");
+  unicode-range: U+1780-17FF, U+19E0-19FF, U+200C-200D, U+25CC;
+}
+
+@font-face {
+  font-family: "Siemreap";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("../fonts/siemreap-khmer-400.woff2") format("woff2");
+  unicode-range: U+1780-17FF, U+19E0-19FF, U+200C-200D, U+25CC;
+}
+
+@font-face {
+  font-family: "Koulen";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("../fonts/koulen-khmer-400.woff2") format("woff2");
+  unicode-range: U+1780-17FF, U+19E0-19FF, U+200C-200D, U+25CC;
+}
+
+@font-face {
+  font-family: "Moul";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("../fonts/moul-khmer-400.woff2") format("woff2");
+  unicode-range: U+1780-17FF, U+19E0-19FF, U+200C-200D, U+25CC;
+}
+
+@font-face {
+  font-family: "Bayon";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("../fonts/bayon-khmer-400.woff2") format("woff2");
+  unicode-range: U+1780-17FF, U+19E0-19FF, U+200C-200D, U+25CC;
+}
+
+@font-face {
+  font-family: "Kdam Thmor Pro";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("../fonts/kdam-thmor-pro-khmer-400.woff2") format("woff2");
+  unicode-range: U+1780-17FF, U+19E0-19FF, U+200C-200D, U+25CC;
+}

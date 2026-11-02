@@ -1,62 +1,59 @@
-# Sbek - High-Performance WordPress News Theme
+<p align="center">
+  <img src="docs/brand/readme-banner.png" width="1280" alt="Sbek — the bilingual Khmer / English news theme for WordPress: hero grid, video and category blocks, 11 Khmer fonts, about 8 KB CSS and 4 KB JS">
+</p>
 
-A custom-built WordPress theme designed for high-traffic news portals. Built with a focus on Core Web Vitals, Khmer typography, and editorial control.
+# Sbek — bilingual news theme (Khmer / English)
 
-## 🚀 Key Features
+A fast classic WordPress theme for a Khmer-first news site, with a Sabay-News-style layout: black top bar and sticky red menu, hero grid, video block, colored category blocks with "next" arrows, infinite-scroll archives with a list/grid switch, and a clean article page with a Khmer word-break toggle.
 
-- **Tailwind CSS v4 Framework:** Minimal CSS footprint with a utility-first approach.
-- **Khmer Font Integration:** Pre-configured with *Kantumruy Pro* and *Battambang*.
-- **Editorial Metadata:** Native custom fields for:
-    - `Trending Score` (0-100) for manual sidebar curation.
-    - `Video URL` support with automated "Play" icon overlays.
-    - `Sponsored` flag for advertorial content styling.
-- **Dynamic Components:**
-    - **Mega Menu:** 4-column grid layout for sub-categories.
-    - **Breaking News Ticker:** CSS-animated scrolling marquee.
-    - **Infinite Scroll:** AJAX-powered "Load More" news feed.
-- **Performance Optimized:**
-    - **Transient Caching:** Database query results cached for 15-60 minutes.
-    - **LCP Optimization:** Eager loading for hero images.
-    - **Lightweight:** Zero reliance on heavy page builders or plugins.
+## Features
 
-## 🛠 Tech Stack
+- **Khmer primary, English secondary** without a plugin: `/` is Khmer, `/en/` is English. Standard WordPress i18n (`__()`, `.po/.mo`) plus `switch_to_locale()`, so theme strings, dates and core strings all follow the URL. Translations are linked post-to-post (hreflang + language switcher). Category names have an English field.
+- **Editorial controls:** sticky posts → hero; *Video* post format → video block; per-category accent color and homepage position; trending score; breaking-news ticker; sponsored flag; source name/URL.
+- **Performance:** self-hosted Khmer font subsets, one deferred vanilla-JS file, about 8 KB gzipped CSS and 4 KB JS, ID-only transient caching with automatic invalidation, responsive `srcset` images, hero images downloaded once on every viewport.
+- **Security:** nonces, capability checks and registered meta sanitizers on every write; escaped output; login lockout; hardened headers; a throttled newsletter with a honeypot.
+- **Accessible:** skip link, semantic headings, focus-visible styles, carousel hidden-slide handling, reduced-motion support.
 
-- **PHP:** WordPress 6.x+
-- **Styling:** Tailwind CSS v4
-- **JS:** Vanilla JavaScript (ES6+) for AJAX and interactions.
-- **Build Tool:** Node.js (`@tailwindcss/cli`, Node 20+ required — see `.nvmrc`)
+## Requirements
 
-## 📦 Installation
+WordPress 6.5+, PHP 8.0+, Node 20+ (build only).
 
-1. Navigate to the theme directory:
-   ```bash
-   cd wp-content/themes/sbek
-   ```
-2. Install dependencies:
-   ```bash
-   npm install
-   ```
-3. Compile CSS:
-   ```bash
-   npm run build
-   ```
+## Setup
 
-## 💻 Development
-
-To watch for changes and recompile CSS automatically during development:
 ```bash
-npm run watch
+cd wp-content/themes/wp-sbek-theme
+nvm use && npm install && npm run build && npm run build:admin
+wp theme activate wp-sbek-theme
+wp language core install km          # Khmer core strings (dates, comments, admin)
+wp option update WPLANG km
 ```
 
-## 📁 Project Structure
+Then:
+1. Open **Theme Option** in the admin menu and work through the tabs: site title/tagline (Khmer + English), logo and icon, brand colors and fonts (Design), homepage sections, category colors / English names / homepage order, contact details, socials, analytics.
+2. Build the menus under **Appearance → Menus** (locations *Primary menu (Khmer)* and *(English)*).
+3. Put ad code into the *Ad:* widget areas, if you use ads.
 
-- `assets/css/src/input.css`: The Tailwind entry point.
-- `inc/admin/`: wp-admin-only code — `custom-fields.php` (metadata meta box), `site-settings.php` (Options page), `dashboard-widget.php`, `i18n-admin.php` (Translation meta box), `login.php` (branded `wp-login.php`, styled by `assets/css/login.css`).
-- `inc/frontend/`: code that renders on the public site — `class-mega-menu-walker.php` (custom navigation walker), `performance.php` (transient caching helper), `seo.php` (Open Graph, SEO tags & `NewsArticle`/`NewsMediaOrganization` JSON-LD), `integrations.php` (GA4/GTM output), `comments.php` (comment list + form rendering, used by the root `comments.php` template).
-- `inc/i18n.php`, `inc/icons.php`: shared by both admin and frontend, kept at the `inc/` root.
-- `template-parts/`: Reusable UI components (`content-grid.php` for card layouts, `content.php`/`content-none.php` as the `index.php` fallback).
-- `archive.php`, `search.php`, `404.php`: Standard template-hierarchy fallbacks for category/tag archives, search results, and not-found pages.
-- `languages/`: `.pot` translation template for admin-facing `__()` strings (site content strings use the `t()` system in `i18n/strings.php` instead).
+### Demo content
 
-## ⚖️ License
-GNU General Public License v2 or later.
+Use **Theme Option → Tools → Import demo content** (with a progress bar; **Remove demo content** undoes it). The same is available from the command line:
+
+```bash
+wp sbek demo import       # categories, ~140 posts, images, menus, widgets, settings, permalinks
+wp sbek demo reset --yes  # removes exactly what import created
+wp sbek demo status
+```
+
+To go back to the original colors and fonts, use **Theme Option → Design → Reset design to defaults**.
+
+## Development
+
+```bash
+npm run watch          # front-end CSS
+npm run watch:admin    # admin CSS
+```
+
+See `CLAUDE.md` for the architecture: language routing, caching, templates and conventions.
+
+## License
+
+GNU General Public License v2 or later. Fonts: SIL Open Font License 1.1 (see `assets/fonts/`).

@@ -2,7 +2,7 @@
 /**
  * Admin dashboard widget: "Theme Setup" checklist.
  *
- * Shows, at a glance, which Options page fields are still empty so the user
+ * Shows, at a glance, which Theme Option fields are still empty so the user
  * knows what is left to configure (logo, share image, location, etc.).
  *
  * @package sbek
@@ -34,6 +34,14 @@ function sbek_setup_checklist(): array {
 		[
 			'label' => __( 'Write a company description', 'sbek' ),
 			'done'  => '' !== trim( (string) ( $s['description'] ?? '' ) ),
+		],
+		[
+			'label' => __( 'Add a site icon', 'sbek' ),
+			'done'  => (bool) get_option( 'site_icon' ),
+		],
+		[
+			'label' => __( 'Add a contact email', 'sbek' ),
+			'done'  => '' !== ( $s['email'] ?? '' ),
 		],
 		[
 			'label' => __( 'Add a contact phone number', 'sbek' ),
@@ -92,10 +100,7 @@ function sbek_render_setup_widget(): void {
 	$pct   = $total ? (int) round( ( $done / $total ) * 100 ) : 0;
 	$all   = $done === $total;
 
-	$settings_url = menu_page_url( SBEK_SETTINGS_SLUG, false );
-	if ( ! $settings_url ) {
-		$settings_url = admin_url( 'options-general.php?page=' . SBEK_SETTINGS_SLUG );
-	}
+	$settings_url = sbek_theme_options_url();
 	?>
 	<div class="sbek-setup">
 		<p class="sbek-setup__intro">
@@ -133,7 +138,7 @@ function sbek_render_setup_widget(): void {
 		</ul>
 
 		<a class="sbek-setup__cta" href="<?php echo esc_url( $settings_url ); ?>">
-			<?php echo $all ? esc_html__( 'Review settings', 'sbek' ) : esc_html__( 'Go to Options page', 'sbek' ); ?>
+			<?php echo $all ? esc_html__( 'Review settings', 'sbek' ) : esc_html__( 'Go to Theme Option', 'sbek' ); ?>
 			<?php echo sbek_icon( 'arrow-right', [ 'width' => 15, 'height' => 15 ] ); ?>
 		</a>
 	</div>

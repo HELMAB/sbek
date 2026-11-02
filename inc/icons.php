@@ -15,9 +15,10 @@
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Registry of icon name => [ style, inner SVG markup ] on a 24×24 viewBox.
+ * Registry of icon name => [ style, inner SVG markup, optional viewBox ]
+ * (default viewBox 24×24).
  *
- * @return array<string,array{0:string,1:string}>
+ * @return array<string,array{0:string,1:string,2?:string}>
  */
 function sbek_icon_paths(): array {
 	return [
@@ -44,6 +45,26 @@ function sbek_icon_paths(): array {
 		'chevron-down' => [ 'line', '<path d="m6 9 6 6 6-6"/>' ],
 		'menu'         => [ 'line', '<path d="M4 6h16"/><path d="M4 12h16"/><path d="M4 18h16"/>' ],
 		'x-close'      => [ 'line', '<path d="M18 6 6 18"/><path d="m6 6 12 12"/>' ],
+		'home'          => [ 'line', '<path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8"/><path d="M3 10a2 2 0 0 1 .709-1.528l7-5.999a2 2 0 0 1 2.582 0l7 5.999A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>' ],
+		'chevron-right' => [ 'line', '<path d="m9 18 6-6-6-6"/>' ],
+		'chevron-left'  => [ 'line', '<path d="m15 18-6-6 6-6"/>' ],
+		'clock'         => [ 'line', '<circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/>' ],
+		'message'       => [ 'line', '<path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/>' ],
+		'list'          => [ 'line', '<path d="M3 12h.01"/><path d="M3 18h.01"/><path d="M3 6h.01"/><path d="M8 12h13"/><path d="M8 18h13"/><path d="M8 6h13"/>' ],
+		'grid'          => [ 'line', '<rect width="7" height="7" x="3" y="3" rx="1"/><rect width="7" height="7" x="14" y="3" rx="1"/><rect width="7" height="7" x="14" y="14" rx="1"/><rect width="7" height="7" x="3" y="14" rx="1"/>' ],
+		'loader'        => [ 'line', '<path d="M21 12a9 9 0 1 1-6.219-8.56"/>' ],
+		'at-sign'       => [ 'line', '<circle cx="12" cy="12" r="4"/><path d="M16 8v5a3 3 0 0 0 6 0v-1a10 10 0 1 0-4 8"/>' ],
+		'zap'           => [ 'line', '<path d="M4 14a1 1 0 0 1-.78-1.63l9.9-10.2a.5.5 0 0 1 .86.46l-1.92 6.02A1 1 0 0 0 13 10h7a1 1 0 0 1 .78 1.63l-9.9 10.2a.5.5 0 0 1-.86-.46l1.92-6.02A1 1 0 0 0 11 14z"/>' ],
+		'play'          => [ 'solid', '<path d="M8 5.14v13.72a1 1 0 0 0 1.52.85l11.1-6.86a1 1 0 0 0 0-1.7L9.52 4.29A1 1 0 0 0 8 5.14z"/>' ],
+		// Glyphicons-style "menu-right" chevron used on section tabs (12×20 box).
+		'menu-right'    => [ 'solid', '<path d="M2.2 0 0 2.2 7.6 10 0 17.8 2.2 20 12 10z"/>', '0 0 12 20' ],
+		'sliders'       => [ 'line', '<line x1="21" x2="14" y1="4" y2="4"/><line x1="10" x2="3" y1="4" y2="4"/><line x1="21" x2="12" y1="12" y2="12"/><line x1="8" x2="3" y1="12" y2="12"/><line x1="21" x2="16" y1="20" y2="20"/><line x1="12" x2="3" y1="20" y2="20"/><line x1="14" x2="14" y1="2" y2="6"/><line x1="8" x2="8" y1="10" y2="14"/><line x1="16" x2="16" y1="18" y2="22"/>' ],
+		'layout'        => [ 'line', '<rect width="7" height="9" x="3" y="3" rx="1"/><rect width="7" height="5" x="14" y="3" rx="1"/><rect width="7" height="9" x="14" y="12" rx="1"/><rect width="7" height="5" x="3" y="16" rx="1"/>' ],
+		'globe'         => [ 'line', '<circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/>' ],
+		'palette'       => [ 'line', '<circle cx="13.5" cy="6.5" r=".5" fill="currentColor"/><circle cx="17.5" cy="10.5" r=".5" fill="currentColor"/><circle cx="8.5" cy="7.5" r=".5" fill="currentColor"/><circle cx="6.5" cy="12.5" r=".5" fill="currentColor"/><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z"/>' ],
+		'toggle'        => [ 'line', '<rect width="20" height="12" x="2" y="6" rx="6" ry="6"/><circle cx="16" cy="12" r="2"/>' ],
+		'external-link' => [ 'line', '<path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>' ],
+		'copyright'     => [ 'line', '<circle cx="12" cy="12" r="10"/><path d="M14.83 14.83a4 4 0 1 1 0-5.66"/>' ],
 		'rocket'       => [ 'line', '<path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09"/><path d="M9 12a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.4 22.4 0 0 1-4 2z"/><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 .05 5 .05"/>' ],
 
 		// ── Simple Icons brand logos (solid) ────────────────────────────────
@@ -74,7 +95,9 @@ function sbek_icon( string $name, array $attrs = [] ): string {
 		return '';
 	}
 
-	list( $style, $inner ) = $icons[ $name ];
+	$style   = $icons[ $name ][0];
+	$inner   = $icons[ $name ][1];
+	$viewbox = $icons[ $name ][2] ?? '0 0 24 24';
 
 	$extra_class = isset( $attrs['class'] ) ? ' ' . $attrs['class'] : '';
 	unset( $attrs['class'] );
@@ -95,7 +118,7 @@ function sbek_icon( string $name, array $attrs = [] ): string {
 			'xmlns'       => 'http://www.w3.org/2000/svg',
 			'width'       => 20,
 			'height'      => 20,
-			'viewBox'     => '0 0 24 24',
+			'viewBox'     => $viewbox,
 			'aria-hidden' => 'true',
 			'focusable'   => 'false',
 		],
