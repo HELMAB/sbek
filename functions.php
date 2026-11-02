@@ -32,6 +32,7 @@ $sbek_modules = array(
 	'inc/admin/custom-fields.php',
 	'inc/admin/term-meta.php',
 	'inc/admin/translation.php',
+	'inc/admin/tools.php',
 	'inc/admin/dashboard-widget.php',
 	'inc/admin/login.php',
 
@@ -48,6 +49,11 @@ foreach ( $sbek_modules as $sbek_module ) {
 	require SBEK_DIR . '/' . $sbek_module;
 }
 unset( $sbek_modules, $sbek_module );
+
+// Demo importer: only needed in wp-admin (Theme Option → Tools) and WP-CLI.
+if ( is_admin() || ( defined( 'WP_CLI' ) && WP_CLI ) ) {
+	require SBEK_DIR . '/inc/demo/class-sbek-demo-importer.php';
+}
 
 if ( defined( 'WP_CLI' ) && WP_CLI ) {
 	require SBEK_DIR . '/inc/cli/class-sbek-demo-command.php';

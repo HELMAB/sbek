@@ -78,9 +78,14 @@ npm run build:admin  # assets/css/src/admin.css → assets/css/admin.css (Theme 
 
 Security headers, no generator tag, XML-RPC off, `/wp/v2/users` hidden from anonymous visitors, login lockout (5 failures/IP → 15 min). Every form: nonce + capability check + sanitize on input (registered meta sanitizers) + escape on output. Newsletter (`inc/frontend/newsletter.php`): honeypot, nonce, per-IP-hash throttle, private CPT readable only by `manage_options`. SEO tags (`inc/frontend/seo.php`) step aside when Yoast/Rank Math/SEOPress/AIOSEO is active. Site-wide concerns (headers, lockout, analytics) would ideally live in a must-use plugin.
 
-### Demo data (`inc/cli/class-sbek-demo-command.php`)
+### Demo data (`inc/demo/class-sbek-demo-importer.php`, Theme Option → Tools, WP-CLI)
 
-`wp sbek demo import [--skip-site-setup] [--posts=24]` creates categories/tags (colors, English names, homepage order), GD-generated images, ~120 Khmer + 20 English posts (sticky, video format, breaking, trending, translations linked; comments closed), pages, both menus, ad placeholder widgets and Options-page settings; unless `--skip-site-setup`, it also sets permalinks `/article/%post_id%/`, category base `topics`, tag base `article/tag`, Khmer locale (downloads the core pack), Phnom Penh timezone and 8 posts/page. Everything created is recorded in the `sbek_demo_manifest` option; `wp sbek demo reset --yes` deletes exactly that (site options are left as they are).
+- `Sbek_Demo_Importer` builds/removes the demo set in **resumable batches** (setup → images 6/request → Khmer posts 20/request → English posts → pages → finish; removal: posts 25/request → images 10/request → cleanup), so no single web request can time out. Job state is server-side in the `sbek_demo_job` option; a single-flight lock (`sbek_demo_lock`, 3-minute stale timeout) stops parallel batches. Loaded only in wp-admin and WP-CLI.
+- Everything created is appended to `sbek_demo_manifest` after **every** batch, so removal deletes exactly that (even after an interrupted import) and never pre-existing content. Removal keeps Theme Option and only clears logo / share image / site icon references that pointed at deleted images.
+- With "site settings" on (the default) it also sets permalinks `/article/%post_id%/`, category base `topics`, tag base `article/tag`, the Khmer locale (downloads the core pack), the Phnom Penh timezone, 8 posts/page, the menus, the ad-placeholder widgets and the privacy page, and fills **only empty** Theme Option fields. Site options are not reverted on removal.
+- **Admin:** the Tools tab (`inc/admin/tools.php`) drives it through admin-ajax `sbek_demo` (`task=start|next|abort`, nonce `sbek_demo`, `manage_options`). The JS loops `next` with a progress bar, and on failure offers **Continue** because the job persists.
+- **CLI:** `wp sbek demo import [--skip-site-setup] [--posts=24]`, `wp sbek demo reset --yes`, `wp sbek demo status` (`inc/cli/class-sbek-demo-command.php` just loops the batches).
+- **Reset design** (Design tab) posts to `admin-post.php?action=sbek_reset_design` (nonce, `manage_options`) and restores only the six design keys. Destructive buttons use the inline two-step `sbek_confirm_control()` instead of browser dialogs.
 
 ## Conventions
 

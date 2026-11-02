@@ -31,10 +31,15 @@ Then:
 
 ### Demo content
 
+Use **Theme Option → Tools → Import demo content** (with a progress bar; **Remove demo content** undoes it). The same is available from the command line:
+
 ```bash
 wp sbek demo import       # categories, ~140 posts, images, menus, widgets, settings, permalinks
 wp sbek demo reset --yes  # removes exactly what import created
+wp sbek demo status
 ```
+
+To go back to the original colors and fonts, use **Theme Option → Design → Reset design to defaults**.
 
 ## Development
 

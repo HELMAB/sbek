@@ -318,6 +318,8 @@
 	color: #1f2937;
 }
 .sbek-options .notice { margin: 0 0 16px; }
+/* Component display rules must never beat the hidden attribute. */
+.sbek-options [hidden] { display: none !important; }
 .sbek-options .wp-header-end { margin: 0; border: 0; }
 
 /* Header */
@@ -487,11 +489,13 @@
 .sbek-grid .sbek-media { max-width: none; }
 
 /* Toggle switch rows */
-.sbek-toggle__input {
+.sbek-toggle__input,
+.sbek-options .sbek-toggle__input:disabled { /* beats wp-admin's :disabled opacity */
 	position: absolute;
 	opacity: 0;
 	pointer-events: none;
 }
+.sbek-toggle__input:disabled + .sbek-toggle__label { opacity: .6; cursor: not-allowed; }
 .sbek-toggle__label {
 	display: flex;
 	align-items: flex-start;
@@ -767,3 +771,51 @@
 	font-size: 12.5px;
 	color: var(--p-on-footer);
 }
+
+/* ── Tools: buttons, inline confirm, demo progress ────────────────────── */
+
+.sbek-btn--brand { background: #fa1939; color: #fff; }
+.sbek-btn--brand:hover { background: #d90c16; color: #fff; }
+.sbek-btn--danger { background: #b91c1c; color: #fff; }
+.sbek-btn--danger:hover { background: #991b1b; color: #fff; }
+.sbek-btn--danger-ghost { background: #fff; border-color: #fca5a5; color: #b91c1c; }
+.sbek-btn--danger-ghost:hover { background: #fef2f2; color: #991b1b; }
+.sbek-btn--plain { background: transparent; color: #4b5563; }
+.sbek-btn--plain:hover { background: #f3f4f6; color: #111827; }
+.sbek-btn:disabled { opacity: .5; cursor: not-allowed; }
+
+.sbek-confirm { display: inline-flex; }
+.sbek-confirm__prompt {
+	display: inline-flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 8px;
+	padding: 8px 10px;
+	border: 1px solid #fecaca;
+	border-radius: 10px;
+	background: #fef2f2;
+}
+.sbek-confirm__prompt[hidden] { display: none; }
+.sbek-confirm__question { font-size: 13px; font-weight: 600; color: #991b1b; }
+
+.sbek-demo { display: flex; flex-direction: column; gap: 14px; }
+.sbek-demo__status { margin: 0; font-size: 13.5px; color: #374151; }
+.sbek-demo__actions { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
+.sbek-demo__progress[hidden] { display: none; }
+.sbek-demo__track {
+	height: 10px;
+	overflow: hidden;
+	border-radius: 999px;
+	background: #e9ebef;
+}
+.sbek-demo__fill {
+	display: block;
+	width: 0;
+	height: 100%;
+	border-radius: 999px;
+	background: #fa1939;
+	transition: width .35s ease;
+}
+.sbek-demo__message { margin: 8px 0 0; font-size: 12.5px; color: #4b5563; }
+.sbek-demo.is-error .sbek-demo__message { color: #b91c1c; font-weight: 600; }
+.sbek-demo.is-error .sbek-demo__fill { background: #b91c1c; }

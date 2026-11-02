@@ -12,6 +12,7 @@
  *                    copyright line (each text in Khmer + English).
  *   Social           Social profile links.
  *   Integrations     GA4 / GTM IDs and raw header / footer scripts.
+ *   Tools            Demo content import / removal (inc/admin/tools.php).
  *
  * Storage — the page writes three places in one save:
  *   - option `sbek_site_settings` (theme data; read with sbek_site_setting()),
@@ -253,6 +254,7 @@ function sbek_theme_option_tabs(): array {
 		'contact'      => array( __( 'Contact & Footer', 'sbek' ), 'map-pin' ),
 		'social'       => array( __( 'Social', 'sbek' ), 'share-2' ),
 		'integrations' => array( __( 'Integrations', 'sbek' ), 'trending-up' ),
+		'tools'        => array( __( 'Tools', 'sbek' ), 'rocket' ),
 	);
 }
 
@@ -369,6 +371,10 @@ function sbek_theme_options_assets(): void {
 		array(
 			'mediaTitle'  => __( 'Select image', 'sbek' ),
 			'mediaButton' => __( 'Use this image', 'sbek' ),
+			'ajaxUrl'     => admin_url( 'admin-ajax.php' ),
+			'demoNonce'   => wp_create_nonce( SBEK_DEMO_NONCE ),
+			'demoFailed'  => __( 'Something went wrong. You can continue the job or remove what was created.', 'sbek' ),
+			'demoDone'    => __( 'Done! Reloading…', 'sbek' ),
 		)
 	);
 }
@@ -655,6 +661,15 @@ function sbek_render_theme_options_page(): void {
 					)
 				);
 			}
+			if ( isset( $_GET['design_reset'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- display-only flag.
+				wp_admin_notice(
+					__( 'Design reset to the default colors and fonts.', 'sbek' ),
+					array(
+						'type'        => 'success',
+						'dismissible' => true,
+					)
+				);
+			}
 			?>
 
 			<div class="sbek-options__layout">
@@ -780,6 +795,21 @@ function sbek_render_theme_options_page(): void {
 								sbek_option_font( "{$opt}[font_latin]", __( 'Latin text', 'sbek' ), $design['font_latin'], $font_choices['latin'], 'latin' );
 								?>
 							</div>
+						<?php sbek_section_close(); ?>
+
+						<?php sbek_section_open( 'copyright', __( 'Reset design', 'sbek' ), __( 'Restore the original Sabay red, Battambang and Koulen. Only colors and fonts are reset; everything else in Theme Option stays as it is.', 'sbek' ) ); ?>
+							<?php
+							$is_default = sbek_design_is_default();
+							sbek_confirm_control(
+								__( 'Reset design to defaults', 'sbek' ),
+								__( 'Replace your colors and fonts with the defaults?', 'sbek' ),
+								'<button type="submit" form="sbek-reset-design-form" class="sbek-btn sbek-btn--danger">' . esc_html__( 'Yes, reset', 'sbek' ) . '</button>',
+								$is_default
+							);
+							?>
+							<?php if ( $is_default ) : ?>
+								<p class="sbek-field__help"><?php esc_html_e( 'The design already uses the defaults.', 'sbek' ); ?></p>
+							<?php endif; ?>
 						<?php sbek_section_close(); ?>
 					</section>
 
@@ -937,6 +967,11 @@ function sbek_render_theme_options_page(): void {
 							<?php endif; ?>
 						<?php sbek_section_close(); ?>
 					</section>
+
+					<?php // ── Tools ─────────────────────────────────────────────── ?>
+					<section class="sbek-panel" id="sbek-panel-tools" role="tabpanel" aria-labelledby="sbek-tab-tools" data-sbek-panel="tools">
+						<?php sbek_render_demo_tools(); ?>
+					</section>
 				</div>
 			</div>
 
@@ -944,6 +979,12 @@ function sbek_render_theme_options_page(): void {
 				<span class="sbek-savebar__hint" data-sbek-dirty-hint hidden><?php esc_html_e( 'You have unsaved changes.', 'sbek' ); ?></span>
 				<button type="submit" class="sbek-btn sbek-btn--primary"><?php esc_html_e( 'Save changes', 'sbek' ); ?></button>
 			</div>
+		</form>
+
+		<?php // Separate form: forms can't nest, so the Design tab's button targets it via form="…". ?>
+		<form id="sbek-reset-design-form" method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>" hidden>
+			<input type="hidden" name="action" value="sbek_reset_design">
+			<?php wp_nonce_field( SBEK_RESET_DESIGN_NONCE ); ?>
 		</form>
 	</div>
 

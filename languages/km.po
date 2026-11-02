@@ -51,7 +51,7 @@ msgid "Video"
 msgstr "វីដេអូ"
 
 #. translators: 1: year, 2: site name.
-#: inc/admin/theme-options.php:229
+#: inc/admin/theme-options.php:230
 #, php-format
 msgid "© %1$s %2$s. All rights reserved."
 msgstr "© រក្សាសិទ្ធិគ្រប់យ៉ាងដោយ %2$s ឆ្នាំ%1$s"
@@ -73,7 +73,7 @@ msgid "Follow us"
 msgstr "ជួបគ្នានៅបណ្តាញសង្គម"
 
 #: footer.php:70
-#: inc/admin/theme-options.php:869
+#: inc/admin/theme-options.php:899
 msgid "Contact"
 msgstr "ទំនាក់ទំនង"
 
@@ -210,68 +210,68 @@ msgstr "ព័ត៌មានរហ័ស និងទុកចិត្តប�
 msgid "Write, edit and publish stories for your readers."
 msgstr "សរសេរ កែសម្រួល និងចុះផ្សាយអត្ថបទសម្រាប់អ្នកអាន។"
 
-#: inc/admin/theme-options.php:536
+#: inc/admin/theme-options.php:542
 msgid "Replace"
 msgstr ""
 
-#: inc/admin/theme-options.php:540
-#: inc/admin/theme-options.php:589
+#: inc/admin/theme-options.php:546
+#: inc/admin/theme-options.php:595
 msgid "Remove"
 msgstr ""
 
-#: inc/admin/theme-options.php:556
+#: inc/admin/theme-options.php:562
 msgid "Add"
 msgstr ""
 
-#: inc/admin/theme-options.php:600
+#: inc/admin/theme-options.php:606
 msgid "You do not have permission to access this page."
 msgstr ""
 
-#: inc/admin/theme-options.php:685
+#: inc/admin/theme-options.php:700
 msgid "Branding"
 msgstr ""
 
-#: inc/admin/theme-options.php:889
+#: inc/admin/theme-options.php:919
 msgid "Latitude"
 msgstr ""
 
-#: inc/admin/theme-options.php:890
+#: inc/admin/theme-options.php:920
 msgid "Longitude"
 msgstr ""
 
-#: inc/admin/theme-options.php:863
+#: inc/admin/theme-options.php:893
 msgid "Description (Khmer)"
 msgstr ""
 
-#: inc/admin/theme-options.php:864
+#: inc/admin/theme-options.php:894
 msgid "Description (English)"
 msgstr ""
 
-#: inc/admin/theme-options.php:887
+#: inc/admin/theme-options.php:917
 msgid "Address (Khmer)"
 msgstr ""
 
-#: inc/admin/theme-options.php:888
+#: inc/admin/theme-options.php:918
 msgid "Address (English)"
 msgstr ""
 
-#: inc/admin/theme-options.php:870
+#: inc/admin/theme-options.php:900
 msgid "Contact email"
 msgstr ""
 
-#: inc/admin/theme-options.php:575
+#: inc/admin/theme-options.php:581
 msgid "Platform (e.g. Facebook)"
 msgstr ""
 
-#: inc/admin/theme-options.php:924
+#: inc/admin/theme-options.php:954
 msgid "Google Analytics 4 ID"
 msgstr ""
 
-#: inc/admin/theme-options.php:925
+#: inc/admin/theme-options.php:955
 msgid "Google Tag Manager ID"
 msgstr ""
 
-#: inc/admin/theme-options.php:936
+#: inc/admin/theme-options.php:966
 msgid "Your role cannot save raw scripts; unsafe markup will be stripped on save."
 msgstr ""
 
@@ -294,7 +294,7 @@ msgid "Shown on pages in that language. Leave empty to use the main name."
 msgstr ""
 
 #: inc/admin/term-meta.php:98
-#: inc/admin/theme-options.php:807
+#: inc/admin/theme-options.php:837
 msgid "Homepage position"
 msgstr ""
 
@@ -303,7 +303,7 @@ msgid "1, 2, 3… shows this category as a homepage block in that order. Empty o
 msgstr ""
 
 #: inc/admin/term-meta.php:190
-#: inc/admin/theme-options.php:805
+#: inc/admin/theme-options.php:835
 msgid "Color"
 msgstr ""
 
@@ -427,7 +427,7 @@ msgstr "ព័ត៌មានថ្មីៗ"
 msgid "Search for:"
 msgstr "ស្វែងរក៖"
 
-#: inc/admin/theme-options.php:804
+#: inc/admin/theme-options.php:834
 #: search.php:25
 msgid "Category"
 msgstr "ប្រភេទ"
@@ -570,7 +570,7 @@ msgstr "ទទួលព័ត៌មានសំខាន់ៗតាមអ៊ី
 msgid "Email address"
 msgstr "អាសយដ្ឋានអ៊ីមែល"
 
-#: inc/admin/theme-options.php:760
+#: inc/admin/theme-options.php:775
 #: template-parts/newsletter-form.php:29
 msgid "Subscribe"
 msgstr "ចុះឈ្មោះ"
@@ -595,387 +595,387 @@ msgstr ""
 msgid "Go to Theme Option"
 msgstr ""
 
-#: inc/admin/theme-options.php:250
+#: inc/admin/theme-options.php:251
 msgid "General"
 msgstr ""
 
-#: inc/admin/theme-options.php:252
+#: inc/admin/theme-options.php:253
 msgid "Homepage"
 msgstr ""
 
-#: inc/admin/theme-options.php:253
+#: inc/admin/theme-options.php:254
 msgid "Contact & Footer"
 msgstr ""
 
-#: inc/admin/theme-options.php:254
+#: inc/admin/theme-options.php:255
 msgid "Social"
 msgstr ""
 
-#: inc/admin/theme-options.php:255
+#: inc/admin/theme-options.php:256
 msgid "Integrations"
 msgstr ""
 
-#: inc/admin/theme-options.php:261
+#: inc/admin/theme-options.php:263
 msgid "You do not have permission to change these settings."
 msgstr ""
 
-#: inc/admin/theme-options.php:328
-#: inc/admin/theme-options.php:329
-#: inc/admin/theme-options.php:343
-#: inc/admin/theme-options.php:635
+#: inc/admin/theme-options.php:330
+#: inc/admin/theme-options.php:331
+#: inc/admin/theme-options.php:345
+#: inc/admin/theme-options.php:641
 msgid "Theme Option"
 msgstr ""
 
-#: inc/admin/theme-options.php:370
+#: inc/admin/theme-options.php:372
 msgid "Select image"
 msgstr ""
 
-#: inc/admin/theme-options.php:371
+#: inc/admin/theme-options.php:373
 msgid "Use this image"
 msgstr ""
 
-#: inc/admin/theme-options.php:571
+#: inc/admin/theme-options.php:577
 msgid "Label (e.g. Newsroom)"
 msgstr ""
 
-#: inc/admin/theme-options.php:636
+#: inc/admin/theme-options.php:642
 msgid "Everything your site shows outside of articles — identity, homepage sections, contact details, social links and tracking — in one place."
 msgstr ""
 
-#: inc/admin/theme-options.php:641
+#: inc/admin/theme-options.php:647
 msgid "View site"
 msgstr ""
 
-#: inc/admin/theme-options.php:643
-#: inc/admin/theme-options.php:945
+#: inc/admin/theme-options.php:649
+#: inc/admin/theme-options.php:980
 msgid "Save changes"
 msgstr ""
 
-#: inc/admin/theme-options.php:651
+#: inc/admin/theme-options.php:657
 msgid "Theme options saved."
 msgstr ""
 
-#: inc/admin/theme-options.php:661
+#: inc/admin/theme-options.php:676
 msgid "Theme Option sections"
 msgstr ""
 
-#: inc/admin/theme-options.php:674
+#: inc/admin/theme-options.php:689
 msgid "Site identity"
 msgstr ""
 
-#: inc/admin/theme-options.php:674
+#: inc/admin/theme-options.php:689
 msgid "The name and tagline shown in browser tabs, search results and the footer. English versions are used on /en/ pages; leave them empty to reuse the Khmer text."
 msgstr ""
 
-#: inc/admin/theme-options.php:677
+#: inc/admin/theme-options.php:692
 msgid "Site title (Khmer)"
 msgstr ""
 
-#: inc/admin/theme-options.php:678
+#: inc/admin/theme-options.php:693
 msgid "Site title (English)"
 msgstr ""
 
-#: inc/admin/theme-options.php:679
+#: inc/admin/theme-options.php:694
 msgid "Tagline (Khmer)"
 msgstr ""
 
-#: inc/admin/theme-options.php:680
+#: inc/admin/theme-options.php:695
 msgid "Tagline (English)"
 msgstr ""
 
-#: inc/admin/theme-options.php:685
+#: inc/admin/theme-options.php:700
 msgid "Logo for the header and footer, the browser/app icon, and the image used when a page without its own picture is shared."
 msgstr ""
 
-#: inc/admin/theme-options.php:688
+#: inc/admin/theme-options.php:703
 msgid "Logo"
 msgstr ""
 
-#: inc/admin/theme-options.php:689
+#: inc/admin/theme-options.php:704
 msgid "Choose a logo"
 msgstr ""
 
-#: inc/admin/theme-options.php:689
+#: inc/admin/theme-options.php:704
 msgid "PNG or JPG, square works best"
 msgstr ""
 
-#: inc/admin/theme-options.php:692
+#: inc/admin/theme-options.php:707
 msgid "Site icon"
 msgstr ""
 
-#: inc/admin/theme-options.php:693
+#: inc/admin/theme-options.php:708
 msgid "Choose an icon"
 msgstr ""
 
-#: inc/admin/theme-options.php:693
+#: inc/admin/theme-options.php:708
 msgid "Square, at least 512×512px"
 msgstr ""
 
-#: inc/admin/theme-options.php:696
+#: inc/admin/theme-options.php:711
 msgid "Default share image"
 msgstr ""
 
-#: inc/admin/theme-options.php:697
+#: inc/admin/theme-options.php:712
 msgid "Choose an image"
 msgstr ""
 
-#: inc/admin/theme-options.php:697
+#: inc/admin/theme-options.php:712
 msgid "JPG or PNG, 1200×630px"
 msgstr ""
 
-#: inc/admin/theme-options.php:788
+#: inc/admin/theme-options.php:818
 msgid "Sections"
 msgstr ""
 
-#: inc/admin/theme-options.php:788
+#: inc/admin/theme-options.php:818
 msgid "Turn site-wide sections on or off. The hero grid shows sticky posts (then the latest)."
 msgstr ""
 
-#: inc/admin/theme-options.php:791
+#: inc/admin/theme-options.php:821
 msgid "Breaking-news ticker"
 msgstr ""
 
-#: inc/admin/theme-options.php:791
+#: inc/admin/theme-options.php:821
 msgid "Scrolling bar under the menu with posts marked \"Breaking news\"."
 msgstr ""
 
-#: inc/admin/theme-options.php:792
+#: inc/admin/theme-options.php:822
 msgid "Video block"
 msgstr ""
 
-#: inc/admin/theme-options.php:792
+#: inc/admin/theme-options.php:822
 msgid "Homepage block listing posts in the \"Video\" post format."
 msgstr ""
 
-#: inc/admin/theme-options.php:793
+#: inc/admin/theme-options.php:823
 msgid "Newsletter signup"
 msgstr ""
 
-#: inc/admin/theme-options.php:793
+#: inc/admin/theme-options.php:823
 msgid "Email signup form in the footer."
 msgstr ""
 
-#: inc/admin/theme-options.php:798
+#: inc/admin/theme-options.php:828
 msgid "Category blocks"
 msgstr ""
 
-#: inc/admin/theme-options.php:798
+#: inc/admin/theme-options.php:828
 msgid "Each category's accent color (badges, headers, arrows), its English name, and its position on the homepage. Position 1, 2, 3… shows it as a block in that order; leave empty to hide it."
 msgstr ""
 
-#: inc/admin/theme-options.php:806
+#: inc/admin/theme-options.php:836
 msgid "English name"
 msgstr ""
 
 #. translators: %s: number of posts.
-#: inc/admin/theme-options.php:823
+#: inc/admin/theme-options.php:853
 #, php-format
 msgid "%s post"
 msgid_plural "%s posts"
 msgstr[0] ""
 
-#: inc/admin/theme-options.php:825
+#: inc/admin/theme-options.php:855
 msgid "Edit"
 msgstr ""
 
 #. translators: %s: category.
-#: inc/admin/theme-options.php:829
+#: inc/admin/theme-options.php:859
 #, php-format
 msgid "Color for %s"
 msgstr ""
 
 #. translators: %s: category.
-#: inc/admin/theme-options.php:832
+#: inc/admin/theme-options.php:862
 #, php-format
 msgid "English name for %s"
 msgstr ""
 
 #. translators: %s: category.
-#: inc/admin/theme-options.php:835
+#: inc/admin/theme-options.php:865
 #, php-format
 msgid "Homepage position for %s"
 msgstr ""
 
-#: inc/admin/theme-options.php:843
+#: inc/admin/theme-options.php:873
 msgid "No categories yet."
 msgstr ""
 
-#: inc/admin/theme-options.php:843
+#: inc/admin/theme-options.php:873
 msgid "Add one"
 msgstr ""
 
-#: inc/admin/theme-options.php:847
+#: inc/admin/theme-options.php:877
 msgid "Elsewhere in WordPress"
 msgstr ""
 
-#: inc/admin/theme-options.php:847
+#: inc/admin/theme-options.php:877
 msgid "Site data that has its own dedicated screen."
 msgstr ""
 
-#: inc/admin/theme-options.php:849
+#: inc/admin/theme-options.php:879
 msgid "Menus (Khmer and English)"
 msgstr ""
 
-#: inc/admin/theme-options.php:850
+#: inc/admin/theme-options.php:880
 msgid "Ad slots and sidebar widgets"
 msgstr ""
 
-#: inc/admin/theme-options.php:851
+#: inc/admin/theme-options.php:881
 msgid "Sticky posts (homepage hero)"
 msgstr ""
 
-#: inc/admin/theme-options.php:852
+#: inc/admin/theme-options.php:882
 msgid "Language, time zone and date format"
 msgstr ""
 
-#: inc/admin/theme-options.php:853
+#: inc/admin/theme-options.php:883
 msgid "Permalinks"
 msgstr ""
 
-#: inc/admin/theme-options.php:860
+#: inc/admin/theme-options.php:890
 msgid "About"
 msgstr ""
 
-#: inc/admin/theme-options.php:860
+#: inc/admin/theme-options.php:890
 msgid "Short description in the footer's \"About us\" column, also used for SEO and structured data."
 msgstr ""
 
-#: inc/admin/theme-options.php:869
+#: inc/admin/theme-options.php:899
 msgid "Shown in the footer and in structured data. Add as many phone numbers as you need."
 msgstr ""
 
-#: inc/admin/theme-options.php:872
+#: inc/admin/theme-options.php:902
 msgid "Phone numbers"
 msgstr ""
 
-#: inc/admin/theme-options.php:884
+#: inc/admin/theme-options.php:914
 msgid "Address & location"
 msgstr ""
 
-#: inc/admin/theme-options.php:884
+#: inc/admin/theme-options.php:914
 msgid "Postal address for the footer; coordinates for maps and structured data."
 msgstr ""
 
-#: inc/admin/theme-options.php:895
+#: inc/admin/theme-options.php:925
 msgid "Copyright line"
 msgstr ""
 
-#: inc/admin/theme-options.php:895
+#: inc/admin/theme-options.php:925
 msgid "Leave empty for the default. You can use {year} and {site}."
 msgstr ""
 
-#: inc/admin/theme-options.php:898
+#: inc/admin/theme-options.php:928
 msgid "Copyright (Khmer)"
 msgstr ""
 
-#: inc/admin/theme-options.php:899
+#: inc/admin/theme-options.php:929
 msgid "Copyright (English)"
 msgstr ""
 
-#: inc/admin/theme-options.php:907
+#: inc/admin/theme-options.php:937
 msgid "Social profiles"
 msgstr ""
 
-#: inc/admin/theme-options.php:907
+#: inc/admin/theme-options.php:937
 msgid "Icons in the footer and \"sameAs\" links in structured data. Known platforms (Facebook, Instagram, YouTube, TikTok, Telegram, X, LinkedIn, WhatsApp) get their own icon."
 msgstr ""
 
-#: inc/admin/theme-options.php:921
+#: inc/admin/theme-options.php:951
 msgid "Analytics"
 msgstr ""
 
-#: inc/admin/theme-options.php:921
+#: inc/admin/theme-options.php:951
 msgid "Google Analytics 4 loads only when no Tag Manager container is set."
 msgstr ""
 
-#: inc/admin/theme-options.php:930
+#: inc/admin/theme-options.php:960
 msgid "Custom code"
 msgstr ""
 
-#: inc/admin/theme-options.php:930
+#: inc/admin/theme-options.php:960
 msgid "Raw HTML/JS added to every public page. Only paste code from sources you trust."
 msgstr ""
 
-#: inc/admin/theme-options.php:932
+#: inc/admin/theme-options.php:962
 msgid "Before </head>"
 msgstr ""
 
-#: inc/admin/theme-options.php:933
+#: inc/admin/theme-options.php:963
 msgid "Before </body>"
 msgstr ""
 
-#: inc/admin/theme-options.php:944
+#: inc/admin/theme-options.php:979
 msgid "You have unsaved changes."
 msgstr ""
 
-#: inc/admin/theme-options.php:251
+#: inc/admin/theme-options.php:252
 msgid "Design"
 msgstr ""
 
 #. translators: %s: field label.
-#: inc/admin/theme-options.php:476
+#: inc/admin/theme-options.php:482
 #, php-format
 msgid "%s (hex)"
 msgstr ""
 
 #. translators: %s: field label.
-#: inc/admin/theme-options.php:477
+#: inc/admin/theme-options.php:483
 msgid "Reset"
 msgstr ""
 
-#: inc/admin/theme-options.php:744
+#: inc/admin/theme-options.php:759
 msgid "Live preview"
 msgstr ""
 
-#: inc/admin/theme-options.php:765
+#: inc/admin/theme-options.php:780
 msgid "Colors"
 msgstr ""
 
-#: inc/admin/theme-options.php:765
+#: inc/admin/theme-options.php:780
 msgid "Text on these colors switches between white and dark automatically, so it always stays readable."
 msgstr ""
 
-#: inc/admin/theme-options.php:768
+#: inc/admin/theme-options.php:783
 msgid "Brand color"
 msgstr ""
 
-#: inc/admin/theme-options.php:768
+#: inc/admin/theme-options.php:783
 msgid "Menu bar, buttons, ticker label, links and accents. The darker hover shade is derived from it."
 msgstr ""
 
-#: inc/admin/theme-options.php:769
+#: inc/admin/theme-options.php:784
 msgid "Top bar"
 msgstr ""
 
-#: inc/admin/theme-options.php:769
+#: inc/admin/theme-options.php:784
 msgid "Logo bar on desktop and the menu bar on mobile."
 msgstr ""
 
-#: inc/admin/theme-options.php:770
+#: inc/admin/theme-options.php:785
 msgid "Footer"
 msgstr ""
 
-#: inc/admin/theme-options.php:770
+#: inc/admin/theme-options.php:785
 msgid "Footer background."
 msgstr ""
 
-#: inc/admin/theme-options.php:775
+#: inc/admin/theme-options.php:790
 msgid "Fonts"
 msgstr ""
 
-#: inc/admin/theme-options.php:775
+#: inc/admin/theme-options.php:790
 msgid "Khmer fonts are hosted on this site (no Google requests); visitors only download the fonts you pick. Latin text (English, numbers) uses the Latin font."
 msgstr ""
 
-#: inc/admin/theme-options.php:778
+#: inc/admin/theme-options.php:793
 msgid "Khmer body text"
 msgstr ""
 
-#: inc/admin/theme-options.php:779
+#: inc/admin/theme-options.php:794
 msgid "Khmer headings & menu"
 msgstr ""
 
-#: inc/admin/theme-options.php:780
+#: inc/admin/theme-options.php:795
 msgid "Latin text"
 msgstr ""
 
@@ -1033,4 +1033,208 @@ msgstr ""
 
 #: inc/design.php:58
 msgid "Georgia (serif)"
+msgstr ""
+
+#: inc/admin/theme-options.php:257
+msgid "Tools"
+msgstr ""
+
+#: inc/admin/theme-options.php:376
+msgid "Something went wrong. You can continue the job or remove what was created."
+msgstr ""
+
+#: inc/admin/theme-options.php:377
+msgid "Done! Reloading…"
+msgstr ""
+
+#: inc/admin/theme-options.php:666
+msgid "Design reset to the default colors and fonts."
+msgstr ""
+
+#: inc/admin/theme-options.php:800
+msgid "Reset design"
+msgstr ""
+
+#: inc/admin/theme-options.php:800
+msgid "Restore the original Sabay red, Battambang and Koulen. Only colors and fonts are reset; everything else in Theme Option stays as it is."
+msgstr ""
+
+#: inc/admin/theme-options.php:804
+msgid "Reset design to defaults"
+msgstr ""
+
+#: inc/admin/theme-options.php:805
+msgid "Replace your colors and fonts with the defaults?"
+msgstr ""
+
+#: inc/admin/theme-options.php:806
+msgid "Yes, reset"
+msgstr ""
+
+#: inc/admin/theme-options.php:811
+msgid "The design already uses the defaults."
+msgstr ""
+
+#: inc/admin/tools.php:25
+#: inc/admin/tools.php:85
+msgid "You do not have permission to do this."
+msgstr ""
+
+#: inc/admin/tools.php:48
+msgid "Starting import…"
+msgstr ""
+
+#: inc/admin/tools.php:48
+msgid "Starting removal…"
+msgstr ""
+
+#: inc/admin/tools.php:63
+msgid "Job cancelled. Anything already created can still be removed."
+msgstr ""
+
+#: inc/admin/tools.php:137
+msgid "Cancel"
+msgstr ""
+
+#: inc/admin/tools.php:149
+msgid "Demo content"
+msgstr ""
+
+#: inc/admin/tools.php:149
+msgid "Sample categories, about 140 Khmer and English posts with images, pages, menus and ad placeholders — handy for previewing the theme. Removing deletes only what the import created; your own content and Theme Option values are kept."
+msgstr ""
+
+#. translators: 1: "import" or "removal", 2: percent.
+#: inc/admin/tools.php:158
+#, php-format
+msgid "An unfinished %1$s stopped at %2$d%%. Continue it, or remove what was created so far."
+msgstr ""
+
+#: inc/admin/tools.php:159
+msgid "import"
+msgstr ""
+
+#: inc/admin/tools.php:159
+msgid "removal"
+msgstr ""
+
+#. translators: 1: date, 2: posts and pages, 3: images.
+#: inc/admin/tools.php:167
+#, php-format
+msgid "Installed %1$s: %2$d posts and pages, %3$d images."
+msgstr ""
+
+#. translators: 1: posts and pages, 2: images.
+#: inc/admin/tools.php:177
+#, php-format
+msgid "An incomplete import left %1$d posts and pages and %2$d images. Remove them before importing again."
+msgstr ""
+
+#: inc/admin/tools.php:183
+#: inc/demo/class-sbek-demo-importer.php:121
+msgid "No demo content is installed."
+msgstr ""
+
+#: inc/admin/tools.php:192
+msgid "Also apply the demo site settings"
+msgstr ""
+
+#: inc/admin/tools.php:193
+msgid "Site title, Khmer language, Phnom Penh time zone, 8 posts per page, /article/123/ links, menus, ad placeholders, privacy page, and Theme Option details (only fields that are still empty). These are not undone by \"Remove\"."
+msgstr ""
+
+#: inc/admin/tools.php:206
+#: inc/admin/tools.php:208
+msgid "Continue"
+msgstr ""
+
+#: inc/admin/tools.php:206
+msgid "Import demo content"
+msgstr ""
+
+#: inc/admin/tools.php:214
+msgid "Remove demo content"
+msgstr ""
+
+#: inc/admin/tools.php:215
+msgid "Delete all demo posts, pages, images, categories, menus and widgets?"
+msgstr ""
+
+#: inc/admin/tools.php:216
+msgid "Yes, remove"
+msgstr ""
+
+#: inc/demo/class-sbek-demo-importer.php:77
+msgid "Another demo-content job is still in progress. Continue or remove it first."
+msgstr ""
+
+#: inc/demo/class-sbek-demo-importer.php:82
+msgid "Demo content is already installed. Remove it first to import again."
+msgstr ""
+
+#: inc/demo/class-sbek-demo-importer.php:85
+msgid "The PHP GD extension is required to generate the demo images."
+msgstr ""
+
+#: inc/demo/class-sbek-demo-importer.php:96
+msgid "No administrator account found to author the demo posts."
+msgstr ""
+
+#: inc/demo/class-sbek-demo-importer.php:146
+#: inc/demo/class-sbek-demo-importer.php:166
+msgid "A batch is already running in another request. Please wait a moment."
+msgstr ""
+
+#: inc/demo/class-sbek-demo-importer.php:162
+msgid "There is no demo-content job to run."
+msgstr ""
+
+#: inc/demo/class-sbek-demo-importer.php:222
+msgid "Site options and categories ready."
+msgstr ""
+
+#. translators: 1: images done, 2: total images.
+#: inc/demo/class-sbek-demo-importer.php:236
+#, php-format
+msgid "Generated images %1$d of %2$d."
+msgstr ""
+
+#. translators: 1: posts done, 2: total posts.
+#: inc/demo/class-sbek-demo-importer.php:248
+#, php-format
+msgid "Created Khmer posts %1$d of %2$d."
+msgstr ""
+
+#. translators: 1: posts done, 2: total posts.
+#: inc/demo/class-sbek-demo-importer.php:260
+#, php-format
+msgid "Created English posts %1$d of %2$d."
+msgstr ""
+
+#: inc/demo/class-sbek-demo-importer.php:265
+msgid "Created pages."
+msgstr ""
+
+#: inc/demo/class-sbek-demo-importer.php:275
+msgid "Demo content imported."
+msgstr ""
+
+#. translators: 1: deleted count, 2: total.
+#: inc/demo/class-sbek-demo-importer.php:296
+#, php-format
+msgid "Deleted posts and pages %1$d of %2$d."
+msgstr ""
+
+#. translators: 1: deleted count, 2: total.
+#: inc/demo/class-sbek-demo-importer.php:309
+#, php-format
+msgid "Deleted images %1$d of %2$d."
+msgstr ""
+
+#: inc/demo/class-sbek-demo-importer.php:314
+msgid "Demo content removed. Site options such as language and permalinks were left as they are."
+msgstr ""
+
+#: inc/demo/class-sbek-demo-importer.php:511
+msgid "The Khmer core language pack could not be downloaded; theme texts are still translated."
 msgstr ""
