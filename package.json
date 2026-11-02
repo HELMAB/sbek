@@ -1,8 +1,7 @@
 {
   "name": "sbek",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "Sbek WordPress theme build tooling (Tailwind CSS v4).",
   "scripts": {
     "build": "npx @tailwindcss/cli -i ./assets/css/src/input.css -o ./assets/css/main.css --minify",
     "watch": "npx @tailwindcss/cli -i ./assets/css/src/input.css -o ./assets/css/main.css --watch",
@@ -11,10 +10,13 @@
   },
   "keywords": [],
   "author": "",
-  "license": "ISC",
+  "license": "GPL-2.0-or-later",
   "devDependencies": {
     "@tailwindcss/cli": "^4.3.2",
-    "@tailwindcss/typography": "^0.5.20",
     "tailwindcss": "^4.3.2"
+  },
+  "private": true,
+  "engines": {
+    "node": ">=20"
   }
 }

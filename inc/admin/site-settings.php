@@ -46,6 +46,10 @@ function sbek_site_settings_defaults(): array {
 		'lat'            => '',
 		'lng'            => '',
 		'description'    => '',
+		'description_en' => '',
+		'address'        => '',
+		'address_en'     => '',
+		'email'          => '',
 		'phones'         => [],
 		'socials'        => [],
 		'ga4_id'         => '',
@@ -73,7 +77,12 @@ function sbek_sanitize_site_settings( $input ): array {
 	$clean['lat'] = isset( $input['lat'] ) && is_numeric( $input['lat'] ) ? (string) (float) $input['lat'] : '';
 	$clean['lng'] = isset( $input['lng'] ) && is_numeric( $input['lng'] ) ? (string) (float) $input['lng'] : '';
 
-	$clean['description'] = sanitize_textarea_field( $input['description'] ?? '' );
+	foreach ( [ 'description', 'description_en', 'address', 'address_en' ] as $text_key ) {
+		$clean[ $text_key ] = sanitize_textarea_field( (string) ( $input[ $text_key ] ?? '' ) );
+	}
+
+	$email          = sanitize_email( (string) ( $input['email'] ?? '' ) );
+	$clean['email'] = is_email( $email ) ? $email : '';
 
 	// Repeatable phones: drop rows with an empty number.
 	if ( ! empty( $input['phones'] ) && is_array( $input['phones'] ) ) {
@@ -347,11 +356,31 @@ function sbek_render_site_settings_page(): void {
 					</div>
 				<?php sbek_section_close(); ?>
 
-				<!-- Description -->
-				<?php sbek_section_open( 'info', __( 'Company Description', 'sbek' ), __( 'A short summary of your organization for SEO and structured data.', 'sbek' ) ); ?>
-					<textarea name="<?php echo esc_attr( $opt ); ?>[description]" rows="4"
-						class="w-full rounded-md border border-solid border-gray-300 px-3 py-2 text-sm focus:border-sbek-blue focus:outline-hidden"
-						placeholder="<?php esc_attr_e( 'A short description of the company…', 'sbek' ); ?>"><?php echo esc_textarea( $settings['description'] ); ?></textarea>
+				<!-- Description + contact -->
+				<?php sbek_section_open( 'info', __( 'About & Contact', 'sbek' ), __( 'Shown in the site footer and used for SEO / structured data. English fields are used on /en/ pages; leave them empty to reuse the Khmer text.', 'sbek' ) ); ?>
+					<div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+						<?php
+						$text_fields = [
+							'description'    => __( 'Description (Khmer)', 'sbek' ),
+							'description_en' => __( 'Description (English)', 'sbek' ),
+							'address'        => __( 'Address (Khmer)', 'sbek' ),
+							'address_en'     => __( 'Address (English)', 'sbek' ),
+						];
+						foreach ( $text_fields as $text_key => $text_label ) :
+							?>
+							<label class="block">
+								<span class="block text-sm font-semibold mb-1"><?php echo esc_html( $text_label ); ?></span>
+								<textarea name="<?php echo esc_attr( $opt ); ?>[<?php echo esc_attr( $text_key ); ?>]" rows="3"
+									class="w-full rounded-md border border-solid border-gray-300 px-3 py-2 text-sm focus:border-sbek-blue focus:outline-hidden"><?php echo esc_textarea( (string) $settings[ $text_key ] ); ?></textarea>
+							</label>
+						<?php endforeach; ?>
+						<label class="block sm:col-span-2">
+							<span class="block text-sm font-semibold mb-1"><?php esc_html_e( 'Contact email', 'sbek' ); ?></span>
+							<input type="email" name="<?php echo esc_attr( $opt ); ?>[email]"
+								value="<?php echo esc_attr( (string) $settings['email'] ); ?>" placeholder="newsroom@example.com"
+								class="w-full rounded-md border border-solid border-gray-300 px-3 py-2 text-sm focus:border-sbek-blue focus:outline-hidden">
+						</label>
+					</div>
 				<?php sbek_section_close(); ?>
 
 				<!-- Phone numbers (repeatable) -->

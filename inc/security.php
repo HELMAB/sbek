@@ -1,90 +1,107 @@
 <?php
 /**
- * Security hardening for Sbek — shared by admin and frontend requests.
- * Headers, information-disclosure reduction, and login rate limiting.
+ * Security hardening shared by admin and front-end requests: response
+ * headers, information-disclosure reduction and login rate limiting.
+ *
+ * Note: these are site-level concerns. If the site ever switches themes they
+ * disappear with this one — consider moving them to a must-use plugin.
+ *
+ * @package sbek
  */
 
-// Must run at include time (before admin_menu/capability checks), not on a hook.
+defined( 'ABSPATH' ) || exit;
+
+// Must be defined before capability checks run (i.e. at include time).
 if ( ! defined( 'DISALLOW_FILE_EDIT' ) ) {
-    define( 'DISALLOW_FILE_EDIT', true );
+	define( 'DISALLOW_FILE_EDIT', true );
 }
 
 /**
  * Baseline security response headers.
  */
-function sbek_security_headers() {
-    if ( headers_sent() ) {
-        return;
-    }
+function sbek_security_headers(): void {
+	if ( headers_sent() ) {
+		return;
+	}
 
-    header( 'X-Content-Type-Options: nosniff' );
-    header( 'X-Frame-Options: SAMEORIGIN' );
-    header( 'Referrer-Policy: strict-origin-when-cross-origin' );
-    header( 'Permissions-Policy: geolocation=(), microphone=(), camera=()' );
+	header( 'X-Content-Type-Options: nosniff' );
+	header( 'X-Frame-Options: SAMEORIGIN' );
+	header( 'Referrer-Policy: strict-origin-when-cross-origin' );
+	header( 'Permissions-Policy: geolocation=(), microphone=(), camera=()' );
 }
 add_action( 'send_headers', 'sbek_security_headers' );
 
-/**
- * Reduce version-disclosure surface: no generator meta tag, no ?ver= query
- * strings on core-enqueued assets (left alone when SCRIPT_DEBUG is on).
- */
+// No generator meta tag. (Asset ?ver= strings are kept on purpose: they are
+// the cache-busting mechanism, and hiding them doesn't hide the version.)
 remove_action( 'wp_head', 'wp_generator' );
 
-function sbek_remove_asset_version_query( $src ) {
-    if ( ( ! defined( 'SCRIPT_DEBUG' ) || ! SCRIPT_DEBUG ) && $src && false !== strpos( $src, 'ver=' ) ) {
-        $src = remove_query_arg( 'ver', $src );
-    }
-    return $src;
-}
-add_filter( 'script_loader_src', 'sbek_remove_asset_version_query' );
-add_filter( 'style_loader_src', 'sbek_remove_asset_version_query' );
-
-/**
- * Theme doesn't use XML-RPC.
- */
+// The theme doesn't use XML-RPC; it is a common brute-force target.
 add_filter( 'xmlrpc_enabled', '__return_false' );
 
 /**
- * Login rate limiting: lock an IP out for 15 minutes after 5 failed attempts.
+ * Don't let REST user enumeration (/wp/v2/users) leak author logins to
+ * anonymous visitors.
+ *
+ * @param array<string,mixed> $endpoints REST endpoints.
+ * @return array<string,mixed>
  */
-function sbek_login_attempts_key() {
-    $ip = isset( $_SERVER['REMOTE_ADDR'] ) ? sanitize_text_field( wp_unslash( $_SERVER['REMOTE_ADDR'] ) ) : '';
+function sbek_restrict_user_endpoints( array $endpoints ): array {
+	if ( ! is_user_logged_in() ) {
+		unset( $endpoints['/wp/v2/users'], $endpoints['/wp/v2/users/(?P<id>[\d]+)'] );
+	}
 
-    return $ip ? 'sbek_login_attempts_' . md5( $ip ) : '';
+	return $endpoints;
+}
+add_filter( 'rest_endpoints', 'sbek_restrict_user_endpoints' );
+
+// ─── Login rate limiting: 5 failures per IP → 15-minute lockout ────────────────
+
+const SBEK_LOGIN_MAX_ATTEMPTS = 5;
+
+function sbek_login_attempts_key(): string {
+	$ip = isset( $_SERVER['REMOTE_ADDR'] ) ? sanitize_text_field( wp_unslash( $_SERVER['REMOTE_ADDR'] ) ) : '';
+
+	return filter_var( $ip, FILTER_VALIDATE_IP ) ? 'sbek_login_attempts_' . md5( $ip ) : '';
 }
 
+/**
+ * @param WP_User|WP_Error|null $user     Result so far.
+ * @param string                $username Submitted username.
+ * @param string                $password Submitted password.
+ * @return WP_User|WP_Error|null
+ */
 function sbek_check_login_lockout( $user, $username, $password ) {
-    if ( empty( $username ) && empty( $password ) ) {
-        return $user; // Not a login submission (e.g. initial form render).
-    }
+	if ( empty( $username ) && empty( $password ) ) {
+		return $user; // Not a submission (initial form render).
+	}
 
-    $key = sbek_login_attempts_key();
+	$key = sbek_login_attempts_key();
 
-    if ( $key && (int) get_transient( $key ) >= 5 ) {
-        return new WP_Error( 'sbek_too_many_attempts', esc_html( t( 'login_rate_limited' ) ) );
-    }
+	if ( $key && (int) get_transient( $key ) >= SBEK_LOGIN_MAX_ATTEMPTS ) {
+		return new WP_Error(
+			'sbek_too_many_attempts',
+			esc_html__( 'Too many failed login attempts. Please try again in 15 minutes.', 'sbek' )
+		);
+	}
 
-    return $user;
+	return $user;
 }
 add_filter( 'authenticate', 'sbek_check_login_lockout', 30, 3 );
 
-function sbek_record_login_failure() {
-    $key = sbek_login_attempts_key();
+function sbek_record_login_failure(): void {
+	$key = sbek_login_attempts_key();
 
-    if ( ! $key ) {
-        return;
-    }
-
-    $attempts = (int) get_transient( $key );
-    set_transient( $key, $attempts + 1, 15 * MINUTE_IN_SECONDS );
+	if ( $key ) {
+		set_transient( $key, (int) get_transient( $key ) + 1, 15 * MINUTE_IN_SECONDS );
+	}
 }
 add_action( 'wp_login_failed', 'sbek_record_login_failure' );
 
-function sbek_clear_login_attempts() {
-    $key = sbek_login_attempts_key();
+function sbek_clear_login_attempts(): void {
+	$key = sbek_login_attempts_key();
 
-    if ( $key ) {
-        delete_transient( $key );
-    }
+	if ( $key ) {
+		delete_transient( $key );
+	}
 }
 add_action( 'wp_login', 'sbek_clear_login_attempts' );
