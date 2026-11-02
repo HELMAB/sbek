@@ -22,12 +22,13 @@ $sbek_modules = array(
 	'inc/i18n.php',
 	'inc/security.php',
 	'inc/setup.php',
+	'inc/design.php',
 	'inc/icons.php',
 	'inc/queries.php',
 	'inc/template-tags.php',
 
 	// wp-admin screens, meta boxes and term fields.
-	'inc/admin/site-settings.php',
+	'inc/admin/theme-options.php',
 	'inc/admin/custom-fields.php',
 	'inc/admin/term-meta.php',
 	'inc/admin/translation.php',

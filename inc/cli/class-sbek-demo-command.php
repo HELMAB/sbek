@@ -789,7 +789,7 @@ class Sbek_Demo_Command {
 
 	private function save_site_settings(): void {
 		if ( get_option( 'sbek_site_settings' ) ) {
-			WP_CLI::log( 'Options page already configured — left unchanged.' );
+			WP_CLI::log( 'Theme Option already configured — left unchanged.' );
 			return;
 		}
 
@@ -812,6 +812,8 @@ class Sbek_Demo_Command {
 		update_option(
 			'sbek_site_settings',
 			array(
+				'name_en'        => 'Sbek News',
+				'tagline_en'     => 'Fast, trusted news',
 				'logo'           => $logo_id,
 				'og_image'       => $this->image_for( 'technology', 0 ),
 				'lat'            => '11.5564',

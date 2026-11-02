@@ -13,12 +13,12 @@ nvm use            # Node 22 (.nvmrc); Tailwind v4 needs Node 20+
 npm install
 npm run build      # assets/css/src/input.css → assets/css/main.css (minified)
 npm run watch
-npm run build:admin  # assets/css/src/admin.css → assets/css/admin.css (Options page + dashboard widget)
+npm run build:admin  # assets/css/src/admin.css → assets/css/admin.css (Theme Option page + dashboard widget)
 ```
 
 - `main.css` / `admin.css` are gitignored build output — rebuild after editing CSS **or** adding Tailwind utility classes to PHP.
 - `input.css` uses `@import "tailwindcss" source(none)` with explicit `@source` paths (front-end templates only). Components are **plain CSS in `@layer components`** with semantic class names (`.hero-item`, `.section-tab`, `.feed-item`…); Tailwind supplies preflight + utilities. Breakpoints are Bootstrap 3's (768/992/1200) and `container` is redefined via `@utility container` (750/970/1170px).
-- Fonts are self-hosted Khmer subsets (`assets/fonts/`, OFL). Latin text intentionally renders in Arial.
+- Fonts are self-hosted Khmer subsets (`assets/fonts/`, OFL, licenses in `assets/fonts/licenses/`). `@font-face` rules live in `assets/css/src/fonts.css`, imported by both `input.css` and `admin.css`. Stacks are **Khmer family first** (its Khmer-only `unicode-range` lets Latin fall through to the Latin stack).
 - JS: one deferred vanilla file, `assets/js/theme.js` — modules activate on `data-sbek-*` hooks. No bundler.
 - Translations: after changing strings run
   `wp i18n make-pot . languages/sbek.pot --domain=sbek --exclude=node_modules,assets/css,inc/cli`,
@@ -46,8 +46,19 @@ npm run build:admin  # assets/css/src/admin.css → assets/css/admin.css (Option
 - **Categories / tags** (`inc/admin/term-meta.php`): `sbek_color` (accent; badges, tab headers, arrows), `sbek_name_en`, and for categories `sbek_home_order` (1, 2, 3… = homepage block order; none set → all top-level categories).
 - **Post meta** (`inc/admin/custom-fields.php`, registered with `register_post_meta`): `_sbek_trending_score` (0–100, "Popular"), `_sbek_video_url` (oEmbed above the article), `_sbek_source_name` / `_sbek_source_url`, `_sbek_is_sponsored`, `_sbek_is_breaking` (header ticker).
 - **Homepage hero** = sticky posts (then latest). **Video block** = posts in the *Video* post format.
-- **Site settings** (`inc/admin/site-settings.php`, option `sbek_site_settings`, read with `sbek_site_setting()` / `sbek_site_text()` for per-language `*_en` overrides): logo, OG image, description(+_en), address(+_en), email, phones, socials, GA4/GTM, raw header/footer scripts (unfiltered only for `unfiltered_html` users).
+- **Theme Option** (`inc/admin/theme-options.php`, top-level admin menu, slug `sbek-theme-options`; the old Settings → Options page URL redirects there via a hidden page's `load-` hook). One tabbed page for all site-wide data — **General** (site title/tagline in Khmer = core `blogname`/`blogdescription`, English = `name_en`/`tagline_en`; logo, core `site_icon`, OG image), **Design** (colors and fonts, see below), **Homepage** (toggles `show_ticker`/`show_video`/`show_newsletter`; category table editing `sbek_color`/`sbek_name_en`/`sbek_home_order` term meta), **Contact & Footer** (description, email, phones, address, lat/lng, copyright with `{year}`/`{site}` — text fields have `_en` variants), **Social**, **Integrations** (GA4/GTM, raw header/footer scripts; unfiltered only for `unfiltered_html` users).
+  - Saves via `admin-post.php?action=sbek_save_theme_options` (nonce + `manage_options`) because one form writes the theme option, core options and term meta. The option array is sanitized by `sbek_sanitize_site_settings()` (registered on `init` with `register_setting`, so `update_option()` from anywhere is sanitized); missing toggle keys default to on, so partial updates from code are safe.
+  - Read with `sbek_site_setting( $key )`, `sbek_site_text( $key )` (per-language `*_en` override), `sbek_section_enabled( 'ticker'|'video'|'newsletter' )`, `sbek_copyright_text()`. English title/tagline apply on /en/ via `option_blogname`/`option_blogdescription` filters in `inc/i18n.php`.
+  - Admin assets: `assets/js/admin-theme-options.js` (tabs with hash + ARIA, repeaters, media pickers) and `admin.css` (`npm run build:admin`). The page has a `.wp-header-end` marker so core places notices below the red header.
 - **Widget areas**: `sbek-sidebar`, `sbek-ad-header` (728×90), `sbek-ad-hero` (2×300×250), `sbek-ad-video` (300×250). Empty ad areas render nothing and the layout reclaims the space. (Ad-blockers hide `.ad-area` — expected.)
+
+### Design: colors & fonts (`inc/design.php`, Theme Option → Design)
+
+- Settings `color_brand`, `color_top`, `color_footer`, `font_body`, `font_heading`, `font_latin` (in `sbek_site_settings`). `sbek_design()` returns them validated, plus a derived `brand_dark` (the default red keeps its hand-picked `#d90c16`; custom colors are mixed 15% toward black).
+- **The stylesheet stays static.** `sbek_design_css()` prints one inline `:root{…}` block (attached to `sbek-main`) overriding CSS variables: `--color-menu`, `--color-menu-active`, `--color-rule`, `--color-on-menu`, `--color-top`, `--color-on-top`, `--color-footer`, `--color-footer-fg`, `--color-footer-strong`, `--font-sans`, `--font-strong`, `--font-strong-weight`. Defaults for all of them also exist in `input.css`. Only validated hex values and whitelisted font families go into it.
+- `sbek_readable_on()` picks text on a colored surface: white if it reaches 3:1 (WCAG AA for large/bold UI text), else `#111`. The admin preview JS mirrors this math exactly.
+- **Never hard-code the brand red** in CSS or PHP: use `var(--color-menu)` / `var(--color-on-menu)` in CSS and `sbek_brand_color()` in PHP.
+- Fonts come from `sbek_font_choices()` (role `body` / `heading`; `display` fonts render headings at weight 400, text fonts at 700) and `sbek_latin_font_choices()` (system stacks only). The selected body font is preloaded on Khmer pages. The login screen picks up the brand color too.
 
 ### Queries & caching (`inc/queries.php`)
 

@@ -21,7 +21,7 @@ get_header();
 		<?php $sbek_popular = sbek_get_popular_posts( 8 ); ?>
 		<?php if ( $sbek_popular ) : ?>
 			<section class="home-block">
-				<?php sbek_section_header( __( 'Popular articles', 'sbek' ), SBEK_BRAND_COLOR ); ?>
+				<?php sbek_section_header( __( 'Popular articles', 'sbek' ), sbek_brand_color() ); ?>
 				<div class="home-block__body">
 					<div class="card-grid card-grid--four">
 						<?php

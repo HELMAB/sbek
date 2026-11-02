@@ -56,7 +56,7 @@ function sbek_seo_description( WP_Post $post ): string {
 /**
  * Output NewsMediaOrganization JSON-LD structured data (site-wide).
  *
- * Built from the values collected on the Options page: description, logo,
+ * Built from the values collected in Theme Option: description, logo,
  * socials (sameAs), phones (contactPoint), and lat/lng (location).
  */
 function sbek_organization_jsonld() {

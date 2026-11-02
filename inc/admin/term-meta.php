@@ -115,7 +115,7 @@ function sbek_term_field_input( string $taxonomy, string $key, array $field, $va
 
 	switch ( $field['type'] ) {
 		case 'color':
-			printf( '<input type="color" %s value="%s">', $attrs, esc_attr( (string) ( $value ?: SBEK_BRAND_COLOR ) ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $attrs escaped above.
+			printf( '<input type="color" %s value="%s">', $attrs, esc_attr( (string) ( $value ?: sbek_brand_color() ) ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $attrs escaped above.
 			break;
 		case 'number':
 			printf( '<input type="number" min="0" step="1" %s value="%s" class="small-text">', $attrs, esc_attr( $value ? (string) $value : '' ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $attrs escaped above.

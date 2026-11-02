@@ -20,7 +20,7 @@
 defined( 'ABSPATH' ) || exit;
 
 $sbek_title = (string) ( $args['title'] ?? '' );
-$sbek_color = (string) ( $args['color'] ?? SBEK_BRAND_COLOR );
+$sbek_color = (string) ( $args['color'] ?? sbek_brand_color() );
 
 ob_start();
 ?>

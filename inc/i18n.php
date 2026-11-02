@@ -513,6 +513,27 @@ function sbek_localize_term_name( $term ) {
 add_filter( 'get_term', 'sbek_localize_term_name' );
 
 /**
+ * English site title / tagline (Theme Option → General) on /en/ pages.
+ * Affects <title>, the logo alt text, the footer and structured data.
+ *
+ * @param mixed  $value  Option value.
+ * @param string $option Option name.
+ * @return mixed
+ */
+function sbek_localize_site_identity( $value, string $option ) {
+	if ( ! sbek_is_routed_request() || sbek_is_default_lang() || ! function_exists( 'sbek_site_setting' ) ) {
+		return $value;
+	}
+
+	$key        = 'blogname' === $option ? 'name_' : 'tagline_';
+	$translated = trim( (string) sbek_site_setting( $key . sbek_lang(), '' ) );
+
+	return '' !== $translated ? $translated : $value;
+}
+add_filter( 'option_blogname', 'sbek_localize_site_identity', 10, 2 );
+add_filter( 'option_blogdescription', 'sbek_localize_site_identity', 10, 2 );
+
+/**
  * Read a site setting with a per-language override (e.g. `description_en`).
  */
 function sbek_site_text( string $key ): string {

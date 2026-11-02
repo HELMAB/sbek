@@ -16,7 +16,9 @@ get_header();
 
 	<div class="container">
 		<?php
-		get_template_part( 'template-parts/home/video', null, array( 'posts' => sbek_get_video_posts( 11 ) ) );
+		if ( sbek_section_enabled( 'video' ) ) {
+			get_template_part( 'template-parts/home/video', null, array( 'posts' => sbek_get_video_posts( 11 ) ) );
+		}
 
 		foreach ( sbek_get_home_categories() as $sbek_category ) {
 			get_template_part(

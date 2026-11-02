@@ -34,19 +34,6 @@ function sbek_enqueue_assets(): void {
 add_action( 'wp_enqueue_scripts', 'sbek_enqueue_assets' );
 
 /**
- * Preload the Khmer body font (self-hosted, see assets/fonts) and tint the
- * mobile browser UI with the menu red.
- */
-function sbek_head_hints(): void {
-	printf(
-		'<link rel="preload" href="%s" as="font" type="font/woff2" crossorigin>' . "\n",
-		esc_url( SBEK_URI . '/assets/fonts/battambang-khmer-400.woff2' )
-	);
-	echo '<meta name="theme-color" content="#fa1939">' . "\n";
-}
-add_action( 'wp_head', 'sbek_head_hints', 1 );
-
-/**
  * The emoji polyfill (inline script + stylesheet on every page) isn't needed
  * by any modern browser.
  */

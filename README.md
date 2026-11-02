@@ -25,10 +25,9 @@ wp option update WPLANG km
 ```
 
 Then:
-1. Fill in **Settings → Options page**: logo, description, address, email, socials.
-2. Give categories a color, an English name and a homepage position under **Posts → Categories**.
-3. Build the menus under **Appearance → Menus** (locations *Primary menu (Khmer)* and *(English)*).
-4. Put ad code into the *Ad:* widget areas, if you use ads.
+1. Open **Theme Option** in the admin menu and work through the tabs: site title/tagline (Khmer + English), logo and icon, brand colors and fonts (Design), homepage sections, category colors / English names / homepage order, contact details, socials, analytics.
+2. Build the menus under **Appearance → Menus** (locations *Primary menu (Khmer)* and *(English)*).
+3. Put ad code into the *Ad:* widget areas, if you use ads.
 
 ### Demo content
 

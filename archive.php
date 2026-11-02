@@ -8,7 +8,7 @@
 defined( 'ABSPATH' ) || exit;
 
 $sbek_object = get_queried_object();
-$sbek_color  = SBEK_BRAND_COLOR;
+$sbek_color  = sbek_brand_color();
 $sbek_url    = '';
 
 if ( $sbek_object instanceof WP_Term ) {
@@ -18,7 +18,7 @@ if ( $sbek_object instanceof WP_Term ) {
 
 	if ( 'post_format' === $sbek_object->taxonomy ) {
 		$sbek_title = get_post_format_string( str_replace( 'post-format-', '', $sbek_object->slug ) );
-		$sbek_color = '#f2272f';
+		$sbek_color = sbek_brand_color();
 		if ( 'post-format-video' === $sbek_object->slug ) {
 			$sbek_title = __( 'Video', 'sbek' );
 		}

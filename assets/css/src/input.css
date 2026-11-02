@@ -18,33 +18,9 @@
 @source "../../../inc/frontend";
 @source "../../../inc/template-tags.php";
 @source "../../js/theme.js";
+@source "../../../inc/design.php";
 
-/* ─── Fonts (self-hosted Khmer subsets; Latin falls back to Arial) ─────────── */
-
-@font-face {
-  font-family: "Battambang";
-  font-style: normal;
-  font-weight: 400;
-  font-display: swap;
-  src: url("../fonts/battambang-khmer-400.woff2") format("woff2");
-  unicode-range: U+1780-17FF, U+19E0-19FF, U+200C-200D, U+25CC;
-}
-@font-face {
-  font-family: "Battambang";
-  font-style: normal;
-  font-weight: 700;
-  font-display: swap;
-  src: url("../fonts/battambang-khmer-700.woff2") format("woff2");
-  unicode-range: U+1780-17FF, U+19E0-19FF, U+200C-200D, U+25CC;
-}
-@font-face {
-  font-family: "Koulen";
-  font-style: normal;
-  font-weight: 400;
-  font-display: swap;
-  src: url("../fonts/koulen-khmer-400.woff2") format("woff2");
-  unicode-range: U+1780-17FF, U+19E0-19FF, U+200C-200D, U+25CC;
-}
+@import "./fonts.css";
 
 /* ─── Design tokens ──────────────────────────────────────────────────────────── */
 
@@ -61,10 +37,11 @@
   --color-thumb: #161616;
   --color-rule: #e4242c;
 
-  /* Khmer webfonts carry no Latin glyphs: Arial first renders Latin text in
-     Arial and lets Khmer code points fall through to Battambang / Koulen. */
-  --font-sans: Arial, "Battambang", Helvetica, sans-serif;
-  --font-strong: Arial, "Koulen", Helvetica, sans-serif;
+  /* Khmer family first: its @font-face unicode-range covers only Khmer, so
+     Latin characters fall through to the Latin stack (Arial by default).
+     Theme Option → Design overrides these (inc/design.php). */
+  --font-sans: "Battambang", Arial, Helvetica, sans-serif;
+  --font-strong: "Koulen", Arial, Helvetica, sans-serif;
 
   /* Bootstrap 3 breakpoints only. */
   --breakpoint-sm: initial;
@@ -78,6 +55,12 @@
 
 :root {
   --cat: var(--color-menu);
+  /* Defaults for the Design settings (overridden inline by inc/design.php). */
+  --color-on-menu: #fff;
+  --color-on-top: #fff;
+  --color-footer-strong: #ddd;
+  --font-latin: Arial, Helvetica, sans-serif;
+  --font-strong-weight: 400;
   --admin-bar: var(--wp-admin--admin-bar--height, 0px);
 }
 
@@ -179,14 +162,14 @@
     padding: 10px 20px;
     border: 0;
     background: var(--color-menu);
-    color: #fff;
+    color: var(--color-on-menu);
     font-size: 14px;
     line-height: 1.4;
     transition: background-color 0.2s;
   }
   .btn:hover {
     background: var(--color-menu-active);
-    color: #fff;
+    color: var(--color-on-menu);
   }
 
   .spin {
@@ -224,9 +207,10 @@
   }
   .site-logo--text {
     font-family: var(--font-strong);
+    font-weight: var(--font-strong-weight);
     font-size: 28px;
     line-height: 1.2;
-    color: #fff;
+    color: var(--color-on-top);
   }
   .top-bar__logo .site-logo--text {
     padding: 20px 0;
@@ -310,7 +294,7 @@
     width: 22px;
     height: 2px;
     border-radius: 1px;
-    background: #fff;
+    background: var(--color-on-top);
   }
 
   .menu-bar__panel {
@@ -360,19 +344,19 @@
   .menu-link {
     display: block;
     padding: 10px 15px;
-    font-family: "Koulen", Arial, Helvetica, sans-serif;
+    font-family: var(--font-strong);
     font-size: 18px;
-    font-weight: 400;
+    font-weight: var(--font-strong-weight);
     line-height: 22px;
-    color: rgb(255 255 255 / 0.8);
+    color: color-mix(in srgb, var(--color-on-top) 80%, transparent);
     white-space: nowrap;
     transition: all 0.3s;
   }
   .menu-link:hover {
-    color: #fff;
+    color: var(--color-on-top);
   }
   .menu-link--latin {
-    font-family: Arial, Helvetica, sans-serif;
+    font-family: var(--font-latin);
   }
   .menu-link__icon {
     display: block;
@@ -383,6 +367,10 @@
     .menu-link {
       height: 50px;
       padding: 14px 15px;
+      color: color-mix(in srgb, var(--color-on-menu) 80%, transparent);
+    }
+    .menu-link:hover {
+      color: var(--color-on-menu);
     }
     .menu-item--home .menu-link {
       display: flex;
@@ -394,7 +382,7 @@
   }
   .menu-item.is-active > .menu-link {
     background: var(--color-menu-active);
-    color: #fff;
+    color: var(--color-on-menu);
     text-shadow: 1px 1px 1px rgb(0 0 0 / 0.4);
   }
 
@@ -420,14 +408,16 @@
     justify-content: center;
     border: 0;
     background: transparent;
-    color: rgb(255 255 255 / 0.85);
+    color: color-mix(in srgb, var(--color-on-top) 85%, transparent);
   }
   .menu-tools__search:hover,
   .menu-tools__search[aria-expanded="true"] {
-    color: #fff;
+    color: var(--color-on-top);
   }
   @media (min-width: 768px) {
-    .menu-tools__search { height: 50px; }
+    .menu-tools__search { height: 50px; color: color-mix(in srgb, var(--color-on-menu) 85%, transparent); }
+    .menu-tools__search:hover,
+    .menu-tools__search[aria-expanded="true"] { color: var(--color-on-menu); }
     .menu-tools__search[aria-expanded="true"] { background: var(--color-menu-active); }
   }
 
@@ -444,17 +434,19 @@
     border-radius: 2px;
     font-size: 13px;
     line-height: 20px;
-    color: rgb(255 255 255 / 0.8);
+    color: color-mix(in srgb, var(--color-on-top) 80%, transparent);
   }
   .lang-switch a:hover {
-    color: #fff;
+    color: var(--color-on-top);
   }
   .lang-switch a.is-active {
-    background: rgb(255 255 255 / 0.15);
-    color: #fff;
+    background: color-mix(in srgb, var(--color-on-top) 15%, transparent);
+    color: var(--color-on-top);
   }
   @media (min-width: 768px) {
-    .lang-switch a.is-active { background: var(--color-menu-active); }
+    .lang-switch a { color: color-mix(in srgb, var(--color-on-menu) 80%, transparent); }
+    .lang-switch a:hover { color: var(--color-on-menu); }
+    .lang-switch a.is-active { background: var(--color-menu-active); color: var(--color-on-menu); }
   }
 
   .menu-search {
@@ -490,7 +482,7 @@
     justify-content: center;
     border: 0;
     background: var(--color-menu);
-    color: #fff;
+    color: var(--color-on-menu);
   }
   .search-form__submit:hover {
     background: var(--color-menu-active);
@@ -518,7 +510,7 @@
     height: 24px;
     padding: 0 10px;
     background: var(--color-menu);
-    color: #fff;
+    color: var(--color-on-menu);
     font-size: 12px;
     font-weight: 700;
   }
@@ -784,7 +776,7 @@
     color: #fff;
     font-family: var(--font-strong);
     font-size: 18px;
-    font-weight: 400;
+    font-weight: var(--font-strong-weight);
     line-height: 28.8px;
     white-space: nowrap;
   }
@@ -1101,7 +1093,7 @@
   }
   .pager__next--related {
     right: -40px;
-    color: #9e0910;
+    color: var(--color-menu-active);
   }
   .pager__next--related:hover {
     color: var(--color-menu-active);
@@ -1306,7 +1298,7 @@
   .feed__pagination a.page-numbers:hover {
     border-color: var(--color-menu);
     background: var(--color-menu);
-    color: #fff;
+    color: var(--color-on-menu);
   }
   .feed.is-infinite .feed__pagination {
     display: none;
@@ -1388,7 +1380,7 @@
     color: #333;
     font-family: var(--font-strong);
     font-size: 20px;
-    font-weight: 400;
+    font-weight: var(--font-strong-weight);
     line-height: 1.4;
   }
   .rule-title::after,
@@ -1447,7 +1439,7 @@
   .sidebar__widgets .wp-block-search__button {
     border: 0;
     background: var(--color-menu);
-    color: #fff;
+    color: var(--color-on-menu);
   }
   .sidebar__widgets ul {
     margin: 0;
@@ -1594,12 +1586,12 @@
     transition: all 0.3s ease-in;
   }
   .switch__input:checked + .switch__track {
-    border-color: #ed1f37;
-    background: #ed1f37;
+    border-color: var(--color-menu);
+    background: var(--color-menu);
   }
   .switch__input:checked + .switch__track::before {
     right: -1px;
-    border-color: #ed1f37;
+    border-color: var(--color-menu);
   }
   .switch__input:focus-visible + .switch__track {
     outline: 2px solid var(--color-menu);
@@ -1694,7 +1686,7 @@
   .tag-list a {
     display: block;
     padding: 4px 10px;
-    background: #f15b63;
+    background: color-mix(in srgb, var(--color-menu) 72%, #fff);
     color: #fff;
     font-size: 14px;
     line-height: 22.4px;
@@ -1820,6 +1812,7 @@
     margin: 0;
     color: var(--color-menu);
     font-family: var(--font-strong);
+    font-weight: var(--font-strong-weight);
     font-size: 60px;
     line-height: 1;
   }
@@ -1853,13 +1846,13 @@
     margin: 0 0 11px;
   }
   .site-footer strong {
-    color: #ddd;
+    color: var(--color-footer-strong);
   }
   .site-footer a {
     color: var(--color-footer-fg);
   }
   .site-footer a:hover {
-    color: #fff;
+    color: var(--color-footer-strong);
   }
   .site-footer__grid {
     display: grid;
@@ -1882,13 +1875,14 @@
   }
   .site-footer__logo .site-logo--text {
     font-size: 32px;
+    color: var(--color-footer-strong);
   }
   .site-footer__title {
     margin: 0 0 20px;
     color: var(--color-footer-fg);
     font-family: var(--font-strong);
     font-size: 20px;
-    font-weight: 400;
+    font-weight: var(--font-strong-weight);
     line-height: 22px;
   }
   .site-footer__contact {
@@ -1928,10 +1922,10 @@
     min-width: 0;
     height: 38px;
     padding: 0 10px;
-    border: 1px solid #333;
+    border: 1px solid color-mix(in srgb, var(--color-footer-fg) 30%, var(--color-footer));
     border-right: 0;
-    background: #1a1a1a;
-    color: #fff;
+    background: color-mix(in srgb, var(--color-footer-fg) 10%, var(--color-footer));
+    color: var(--color-footer-strong);
     font: inherit;
   }
   .newsletter__submit {
@@ -1939,7 +1933,7 @@
     padding: 0 14px;
     border: 0;
     background: var(--color-menu);
-    color: #fff;
+    color: var(--color-on-menu);
     font-weight: 700;
   }
   .newsletter__submit:hover {

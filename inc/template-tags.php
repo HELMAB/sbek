@@ -10,7 +10,6 @@
 
 defined( 'ABSPATH' ) || exit;
 
-const SBEK_BRAND_COLOR = '#fa1939';
 
 // ─── Terms ─────────────────────────────────────────────────────────────────────
 
@@ -44,12 +43,12 @@ function sbek_primary_category( $post = null ): ?WP_Term {
  */
 function sbek_term_color( ?WP_Term $term ): string {
 	if ( ! $term ) {
-		return SBEK_BRAND_COLOR;
+		return sbek_brand_color();
 	}
 
 	$color = sanitize_hex_color( (string) get_term_meta( $term->term_id, 'sbek_color', true ) );
 
-	return $color ?: SBEK_BRAND_COLOR;
+	return $color ?: sbek_brand_color();
 }
 
 /**
@@ -57,7 +56,7 @@ function sbek_term_color( ?WP_Term $term ): string {
  * section headers and arrows).
  */
 function sbek_color_style( string $hex ): string {
-	return '--cat:' . ( sanitize_hex_color( $hex ) ?: SBEK_BRAND_COLOR ) . ';';
+	return '--cat:' . ( sanitize_hex_color( $hex ) ?: sbek_brand_color() ) . ';';
 }
 
 // ─── Dates ─────────────────────────────────────────────────────────────────────
@@ -185,7 +184,7 @@ function sbek_section_header( string $label, string $color, string $url = '', st
 }
 
 /**
- * Site logo <img> (Options page logo, else the site name as text).
+ * Site logo <img> (Theme Option logo, else the site name as text).
  *
  * @param string $class Extra classes on the <img>/<span>.
  * @param int    $size  Rendered height in px.

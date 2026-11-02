@@ -21,12 +21,7 @@ $sbek_privacy_url = get_privacy_policy_url();
 				<a href="<?php echo esc_url( sbek_home_url() ); ?>" class="site-footer__logo" rel="home">
 					<?php echo sbek_get_logo( '', 60 ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped in helper. ?>
 				</a>
-				<p>
-					<?php
-					/* translators: 1: year, 2: site name. */
-					echo esc_html( sprintf( __( '© %1$s %2$s. All rights reserved.', 'sbek' ), wp_date( 'Y' ), get_bloginfo( 'name' ) ) );
-					?>
-				</p>
+				<p><?php echo esc_html( sbek_copyright_text() ); ?></p>
 				<?php if ( $sbek_privacy_url ) : ?>
 					<p><strong><a href="<?php echo esc_url( $sbek_privacy_url ); ?>"><?php esc_html_e( 'Privacy Policy', 'sbek' ); ?></a></strong></p>
 				<?php endif; ?>
@@ -43,7 +38,11 @@ $sbek_privacy_url = get_privacy_policy_url();
 				<?php if ( '' !== trim( $sbek_description ) ) : ?>
 					<p><?php echo esc_html( $sbek_description ); ?></p>
 				<?php endif; ?>
-				<?php get_template_part( 'template-parts/newsletter-form' ); ?>
+				<?php
+				if ( sbek_section_enabled( 'newsletter' ) ) {
+					get_template_part( 'template-parts/newsletter-form' );
+				}
+				?>
 			</div>
 
 			<div class="site-footer__col site-footer__col--social">

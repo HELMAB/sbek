@@ -19,7 +19,7 @@ if ( ! $sbek_posts ) {
 $sbek_video_url = get_post_format_link( 'video' );
 ?>
 <section class="home-block" aria-label="<?php esc_attr_e( 'Video', 'sbek' ); ?>">
-	<?php sbek_section_header( __( 'Video', 'sbek' ), '#f2272f', $sbek_video_url ? $sbek_video_url : '' ); ?>
+	<?php sbek_section_header( __( 'Video', 'sbek' ), sbek_brand_color(), $sbek_video_url ? $sbek_video_url : '' ); ?>
 	<div class="home-block__body">
 		<div class="video-block">
 			<div class="video-block__top">

@@ -9,7 +9,7 @@
 defined( 'ABSPATH' ) || exit;
 
 $sbek_menu_location = sbek_is_default_lang() ? 'primary' : 'primary-' . sbek_lang();
-$sbek_breaking      = sbek_get_breaking_posts();
+$sbek_breaking      = sbek_section_enabled( 'ticker' ) ? sbek_get_breaking_posts() : array();
 ?>
 <!doctype html>
 <html <?php language_attributes(); ?>>
