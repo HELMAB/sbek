@@ -60,14 +60,16 @@ function sbek_color_style( string $hex ): string {
 }
 
 /**
- * Whether a post is flagged "Sponsored / advertorial".
+ * Whether a post is flagged "Sponsored / advertorial". The theme has no such
+ * field itself; a plugin answers through the `sbek_is_sponsored` filter (the
+ * Sbek Companion plugin's News details box does).
  *
  * @param WP_Post|int $post Post.
  */
 function sbek_is_sponsored( $post ): bool {
 	$post = get_post( $post );
 
-	return $post && (bool) get_post_meta( $post->ID, '_sbek_is_sponsored', true );
+	return $post && (bool) apply_filters( 'sbek_is_sponsored', false, $post );
 }
 
 /**
@@ -275,13 +277,13 @@ function sbek_section_header( string $label, string $color, string $url = '', st
 }
 
 /**
- * Site logo <img> (Sbek Theme logo, else the site name as text).
+ * Site logo <img> (the custom logo, else the site name as text).
  *
  * @param string $class Extra classes on the <img>/<span>.
  * @param int    $size  Rendered height in px.
  */
 function sbek_get_logo( string $class = '', int $size = 82 ): string {
-	$logo_id = function_exists( 'sbek_site_setting' ) ? absint( sbek_site_setting( 'logo', 0 ) ) : 0;
+	$logo_id = absint( get_theme_mod( 'custom_logo', 0 ) );
 
 	if ( $logo_id ) {
 		$html = wp_get_attachment_image(

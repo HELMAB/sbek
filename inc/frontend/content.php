@@ -20,7 +20,9 @@ function sbek_inject_cover_image( string $content ): string {
 
 	$post = get_post();
 
-	if ( ! $post || ! has_post_thumbnail( $post ) || get_post_meta( $post->ID, '_sbek_video_url', true ) ) {
+	// A plugin that puts a video above the text (`sbek_has_lead_video`) gets
+	// no second picture inside it.
+	if ( ! $post || ! has_post_thumbnail( $post ) || apply_filters( 'sbek_has_lead_video', false, $post ) ) {
 		return $content;
 	}
 
@@ -29,10 +31,9 @@ function sbek_inject_cover_image( string $content ): string {
 	$caption      = wp_get_attachment_caption( $thumbnail_id );
 
 	$figure = '<figure class="article__cover">'
-		. wp_get_attachment_image(
-			$thumbnail_id,
+		. get_the_post_thumbnail(
+			$post,
 			'large',
-			false,
 			array(
 				'alt'           => '' !== $alt ? $alt : get_the_title( $post ),
 				'sizes'         => '(max-width: 767px) 100vw, 730px',

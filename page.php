@@ -22,6 +22,11 @@ get_header();
 					wp_link_pages();
 					?>
 				</div>
+				<?php
+				if ( comments_open() || get_comments_number() ) {
+					comments_template();
+				}
+				?>
 			</article>
 		<?php endwhile; ?>
 		<?php get_sidebar( null, array( 'boxed' => true ) ); ?>

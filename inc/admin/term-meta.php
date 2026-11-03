@@ -1,31 +1,18 @@
 <?php
 /**
- * Category / tag fields:
+ * Category / tag display fields:
  *   sbek_color       Accent color (badges, section headers, arrows).
- *   sbek_name_{lang} Translated name for each non-default language.
  *   sbek_home_order  Homepage block position (categories; empty/0 = hidden).
+ *
+ * Plugins can add fields to the same forms through `sbek_term_form_fields`
+ * (the Sbek Companion plugin adds English names and descriptions); this file
+ * renders and saves whatever that filter returns, using each key's
+ * registered term-meta sanitizer.
  *
  * @package sbek
  */
 
 defined( 'ABSPATH' ) || exit;
-
-/**
- * Translated-name meta keys, one per non-default language.
- *
- * @return array<string,string> meta key => language label
- */
-function sbek_term_name_fields(): array {
-	$fields = array();
-
-	foreach ( sbek_languages() as $slug => $language ) {
-		if ( SBEK_DEFAULT_LANGUAGE !== $slug ) {
-			$fields[ 'sbek_name_' . $slug ] = $language['label'];
-		}
-	}
-
-	return $fields;
-}
 
 function sbek_register_term_meta(): void {
 	foreach ( array( 'category', 'post_tag' ) as $taxonomy ) {
@@ -40,31 +27,6 @@ function sbek_register_term_meta(): void {
 				'show_in_rest'      => true,
 			)
 		);
-
-		foreach ( array_keys( sbek_term_name_fields() ) as $key ) {
-			register_term_meta(
-				$taxonomy,
-				str_replace( 'sbek_name_', 'sbek_description_', $key ),
-				array(
-					'type'              => 'string',
-					'single'            => true,
-					'sanitize_callback' => 'sanitize_textarea_field',
-					'auth_callback'     => static fn( $allowed, $meta_key, $term_id ): bool => current_user_can( 'edit_term', $term_id ),
-					'show_in_rest'      => true,
-				)
-			);
-			register_term_meta(
-				$taxonomy,
-				$key,
-				array(
-					'type'              => 'string',
-					'single'            => true,
-					'sanitize_callback' => 'sanitize_text_field',
-					'auth_callback'     => static fn( $allowed, $meta_key, $term_id ): bool => current_user_can( 'edit_term', $term_id ),
-					'show_in_rest'      => true,
-				)
-			);
-		}
 	}
 
 	register_term_meta(
@@ -95,21 +57,6 @@ function sbek_term_form_fields( string $taxonomy ): array {
 		),
 	);
 
-	foreach ( sbek_term_name_fields() as $key => $label ) {
-		$fields[ $key ] = array(
-			/* translators: %s: language name. */
-			'label'       => sprintf( __( 'Name (%s)', 'sbek' ), $label ),
-			'type'        => 'text',
-			'description' => __( 'Shown on pages in that language. Leave empty to use the main name.', 'sbek' ),
-		);
-		$fields[ str_replace( 'sbek_name_', 'sbek_description_', $key ) ] = array(
-			/* translators: %s: language name. */
-			'label'       => sprintf( __( 'Description (%s)', 'sbek' ), $label ),
-			'type'        => 'textarea',
-			'description' => __( 'Shown under the archive title on pages in that language. Leave empty to show no description there.', 'sbek' ),
-		);
-	}
-
 	if ( 'category' === $taxonomy ) {
 		$fields['sbek_home_order'] = array(
 			'label'       => __( 'Homepage position', 'sbek' ),
@@ -122,7 +69,12 @@ function sbek_term_form_fields( string $taxonomy ): array {
 		);
 	}
 
-	return $fields;
+	/**
+	 * Fields on the category / tag forms: key => [ label, type
+	 * (color|text|textarea|number), description ]. Each key must be
+	 * registered term meta (its sanitizer runs on save).
+	 */
+	return (array) apply_filters( 'sbek_term_form_fields', $fields, $taxonomy );
 }
 
 /**

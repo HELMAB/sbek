@@ -1,0 +1,57 @@
+/*
+ * Block editor styles (add_editor_style() in inc/setup.php): the article
+ * body's fonts, size and colors, so posts look in the editor the way they
+ * read on the site. WordPress scopes these rules to the editor canvas.
+ * The Design settings' variables are added inline (inc/design.php).
+ * Build: npm run build:editor → assets/css/editor.css.
+ */
+
+@import "./fonts.css";
+
+body {
+  color: #222;
+  font-family: var(--font-sans, "Battambang", Arial, Helvetica, sans-serif);
+  font-size: 14px;
+  line-height: 24px;
+}
+
+.editor-post-title__input,
+.wp-block-post-title {
+  color: #333;
+  font-family: var(--font-strong, "Koulen", Arial, Helvetica, sans-serif);
+  font-size: 28px;
+  font-weight: var(--font-strong-weight, 400);
+  line-height: 1.4;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  color: #333;
+  font-family: var(--font-strong, "Koulen", Arial, Helvetica, sans-serif);
+  font-weight: var(--font-strong-weight, 400);
+  line-height: 1.4;
+}
+
+a {
+  color: var(--color-menu, #fa1939);
+}
+
+.wp-block {
+  max-width: 730px;
+}
+.wp-block[data-align="wide"],
+.wp-block[data-align="full"] {
+  max-width: none;
+}
+
+blockquote {
+  margin-left: 0;
+  padding-left: 15px;
+  border-left: 3px solid var(--color-menu, #fa1939);
+  color: #555;
+}
+
+figcaption,
+.wp-caption-text {
+  color: #777;
+  font-size: 13px;
+}

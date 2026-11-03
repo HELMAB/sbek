@@ -1,8 +1,9 @@
 <?php
 /**
- * Site footer: brand + legal, about + newsletter, social + contact, then a
- * row of footer links (menu location `footer` / `footer-{lang}`; until one
- * is assigned, the privacy policy link shows in the brand column instead).
+ * Site footer: brand + legal, about (+ `sbek_footer_about` hook), social +
+ * contact, then a row of footer links (menu location from
+ * sbek_menu_location( 'footer' ); until one is assigned, the privacy policy
+ * link shows in the brand column instead).
  *
  * @package sbek
  */
@@ -15,9 +16,8 @@ $sbek_email       = sanitize_email( (string) sbek_site_setting( 'email', '' ) );
 $sbek_address     = sbek_site_text( 'address' );
 $sbek_description = sbek_site_text( 'description' );
 $sbek_privacy_url = get_privacy_policy_url();
-$sbek_footer_menu = sbek_is_default_lang() ? 'footer' : 'footer-' . sbek_lang();
+$sbek_footer_menu = sbek_menu_location( 'footer' );
 $sbek_has_links   = has_nav_menu( $sbek_footer_menu );
-$sbek_newsletter  = sbek_section_enabled( 'newsletter' );
 ?>
 <footer id="footer" class="site-footer">
 	<div class="container">
@@ -44,9 +44,11 @@ $sbek_newsletter  = sbek_section_enabled( 'newsletter' );
 					<p><?php echo esc_html( $sbek_description ); ?></p>
 				<?php endif; ?>
 				<?php
-				if ( $sbek_newsletter ) {
-					get_template_part( 'template-parts/newsletter-form' );
-				}
+				/**
+				 * More content for the "About us" column (a plugin's newsletter
+				 * signup, for example).
+				 */
+				do_action( 'sbek_footer_about' );
 				?>
 			</div>
 

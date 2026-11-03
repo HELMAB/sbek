@@ -34,6 +34,16 @@ function sbek_enqueue_assets(): void {
 add_action( 'wp_enqueue_scripts', 'sbek_enqueue_assets' );
 
 /**
+ * Core's reply-to-comment script, where threaded replies are possible.
+ */
+function sbek_enqueue_comment_reply(): void {
+	if ( is_singular() && comments_open() && get_option( 'thread_comments' ) ) {
+		wp_enqueue_script( 'comment-reply' );
+	}
+}
+add_action( 'wp_enqueue_scripts', 'sbek_enqueue_comment_reply' );
+
+/**
  * Tiny blocking script at the top of <head>: flags JS support (`sbek-js`,
  * which switches the desktop menu to one row + "More") and restores the
  * saved list/grid feed view (`sbek-grid`) before first paint, so a grid
@@ -45,18 +55,3 @@ function sbek_head_boot_script(): void {
 	);
 }
 add_action( 'wp_head', 'sbek_head_boot_script', 1 );
-
-/**
- * The emoji polyfill (inline script + stylesheet on every page) isn't needed
- * by any modern browser.
- */
-function sbek_disable_emoji(): void {
-	remove_action( 'wp_head', 'print_emoji_detection_script', 7 );
-	remove_action( 'wp_print_styles', 'print_emoji_styles' );
-	remove_action( 'admin_print_scripts', 'print_emoji_detection_script' );
-	remove_action( 'admin_print_styles', 'print_emoji_styles' );
-	remove_filter( 'the_content_feed', 'wp_staticize_emoji' );
-	remove_filter( 'comment_text_rss', 'wp_staticize_emoji' );
-	remove_filter( 'wp_mail', 'wp_staticize_emoji_for_email' );
-}
-add_action( 'init', 'sbek_disable_emoji' );

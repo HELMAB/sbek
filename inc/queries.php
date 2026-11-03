@@ -1,11 +1,13 @@
 <?php
 /**
- * Cached content queries for the homepage blocks, sidebars and related posts.
+ * Content queries for the homepage blocks, sidebars and related posts.
  *
- * Pattern: the expensive WP_Query runs with `fields => ids` and only the ID
- * list is cached (transient, per language). Keys embed a site-wide cache
- * version that is bumped whenever content changes, so there's no list of
- * transient names to keep in sync — stale entries simply expire.
+ * Pattern: each block runs an ID-only WP_Query through sbek_post_ids(), then
+ * loads the posts in one query (sbek_posts_by_ids()). sbek_post_ids() has two
+ * hooks so a plugin can cache the ID lists — the Sbek Companion plugin does:
+ *   `sbek_pre_post_ids`     filter: return an int[] to skip the query;
+ *   `sbek_post_ids_queried` action: the fresh result, to store.
+ * Every query has a unique `$name` describing its shape, to key such caches.
  *
  * @package sbek
  */
@@ -15,84 +17,42 @@ defined( 'ABSPATH' ) || exit;
 /** Maximum number of category blocks on the homepage. */
 const SBEK_HOME_BLOCK_LIMIT = 6;
 
-// ─── Cache versioning ──────────────────────────────────────────────────────────
-
-function sbek_cache_version(): int {
-	return (int) get_option( 'sbek_cache_version', 1 );
-}
-
-function sbek_bump_cache_version(): void {
-	static $bumped = false; // Once per request is enough.
-
-	if ( ! $bumped ) {
-		$bumped = true;
-		update_option( 'sbek_cache_version', sbek_cache_version() + 1, true );
-	}
-}
-
-/**
- * @param int     $post_id Post ID.
- * @param WP_Post $post    Post object.
- */
-function sbek_bump_cache_on_save( int $post_id, WP_Post $post ): void {
-	if ( wp_is_post_revision( $post_id ) || wp_is_post_autosave( $post_id ) || ! in_array( $post->post_type, array( 'post', 'page' ), true ) ) {
-		return;
-	}
-
-	sbek_bump_cache_version();
-}
-add_action( 'save_post', 'sbek_bump_cache_on_save', 99, 2 );
-
-/**
- * @param string  $new_status New status.
- * @param string  $old_status Old status.
- * @param WP_Post $post       Post.
- */
-function sbek_bump_cache_on_status( string $new_status, string $old_status, WP_Post $post ): void {
-	if ( $new_status !== $old_status && 'post' === $post->post_type ) {
-		sbek_bump_cache_version();
-	}
-}
-add_action( 'transition_post_status', 'sbek_bump_cache_on_status', 10, 3 );
-
-foreach ( array( 'deleted_post', 'update_option_sticky_posts', 'edited_category', 'delete_category', 'edited_post_tag', 'delete_post_tag' ) as $sbek_hook ) {
-	add_action( $sbek_hook, 'sbek_bump_cache_version' );
-}
-unset( $sbek_hook );
-
 // ─── Core helpers ──────────────────────────────────────────────────────────────
 
 /**
- * Run (or read from cache) an ID-only post query in the current language.
+ * Run an ID-only post query (or take the IDs a plugin cached for it).
  *
- * @param string              $name Unique cache name for this query shape.
+ * @param string              $name Unique name for this query shape.
  * @param array<string,mixed> $args WP_Query args.
- * @param int                 $ttl  Cache lifetime in seconds.
+ * @param int                 $ttl  How long the result may be reused, in
+ *                                  seconds (a hint for caching plugins).
  * @return int[]
  */
-function sbek_cached_post_ids( string $name, array $args, int $ttl = 15 * MINUTE_IN_SECONDS ): array {
-	$key = sprintf( 'sbek_q_%s_%s_v%d', $name, sbek_lang(), sbek_cache_version() );
-	$ids = get_transient( $key );
+function sbek_post_ids( string $name, array $args, int $ttl = 15 * MINUTE_IN_SECONDS ): array {
+	$ids = apply_filters( 'sbek_pre_post_ids', null, $name, $args, $ttl );
 
-	if ( ! is_array( $ids ) ) {
-		$query = new WP_Query(
-			array_merge(
-				array(
-					'post_type'              => 'post',
-					'post_status'            => 'publish',
-					'ignore_sticky_posts'    => true,
-					'no_found_rows'          => true,
-					'update_post_meta_cache' => false,
-					'update_post_term_cache' => false,
-				),
-				$args,
-				array( 'fields' => 'ids' )
-			)
-		);
-
-		$ids = array_map( 'intval', $query->posts );
-		set_transient( $key, $ids, $ttl );
+	if ( is_array( $ids ) ) {
+		return array_map( 'intval', $ids );
 	}
+
+	$query = new WP_Query(
+		array_merge(
+			array(
+				'post_type'              => 'post',
+				'post_status'            => 'publish',
+				'ignore_sticky_posts'    => true,
+				'no_found_rows'          => true,
+				'update_post_meta_cache' => false,
+				'update_post_term_cache' => false,
+			),
+			$args,
+			array( 'fields' => 'ids' )
+		)
+	);
+
+	$ids = array_map( 'intval', $query->posts );
+
+	do_action( 'sbek_post_ids_queried', $ids, $name, $args, $ttl );
 
 	return $ids;
 }
@@ -117,7 +77,7 @@ function sbek_posts_by_ids( array $ids ): array {
 			'posts_per_page'      => count( $ids ),
 			'ignore_sticky_posts' => true,
 			'no_found_rows'       => true,
-			'sbek_all_languages'  => true, // IDs are already language-scoped.
+			'sbek_all_languages'  => true, // For multilingual plugins: the IDs are already scoped.
 		)
 	);
 
@@ -140,7 +100,7 @@ function sbek_fill_with_latest( array $ids, int $limit, array $exclude = array()
 		return array_slice( $ids, 0, $limit );
 	}
 
-	$latest = sbek_cached_post_ids( 'latest_' . ( $limit + count( $exclude ) ), array( 'posts_per_page' => $limit + count( $exclude ) ) );
+	$latest = sbek_post_ids( 'latest_' . ( $limit + count( $exclude ) ), array( 'posts_per_page' => $limit + count( $exclude ) ) );
 
 	foreach ( $latest as $id ) {
 		if ( count( $ids ) >= $limit ) {
@@ -166,7 +126,7 @@ function sbek_get_featured_posts( int $limit = 4 ): array {
 	$ids    = array();
 
 	if ( $sticky ) {
-		$ids = sbek_cached_post_ids(
+		$ids = sbek_post_ids(
 			'featured_' . $limit,
 			array(
 				'post__in'       => $sticky,
@@ -185,7 +145,7 @@ function sbek_get_featured_posts( int $limit = 4 ): array {
  */
 function sbek_get_video_posts( int $limit = 11 ): array {
 	return sbek_posts_by_ids(
-		sbek_cached_post_ids(
+		sbek_post_ids(
 			'video_' . $limit,
 			array(
 				'posts_per_page' => $limit,
@@ -208,7 +168,7 @@ function sbek_get_video_posts( int $limit = 11 ): array {
  */
 function sbek_get_category_posts( int $term_id, int $limit ): array {
 	return sbek_posts_by_ids(
-		sbek_cached_post_ids(
+		sbek_post_ids(
 			"cat_{$term_id}_{$limit}",
 			array(
 				'cat'            => $term_id,
@@ -219,7 +179,9 @@ function sbek_get_category_posts( int $term_id, int $limit ): array {
 }
 
 /**
- * Editor-ranked posts (`_sbek_trending_score`), topped up with the latest.
+ * Editor-ranked posts (post meta `_sbek_trending_score`, set by the Sbek
+ * Companion plugin), topped up with the latest — so without scores this is
+ * simply the latest posts.
  *
  * @return WP_Post[]
  */
@@ -237,7 +199,7 @@ function sbek_get_popular_posts( int $limit = 6 ): array {
 		);
 	}
 
-	$ids = sbek_cached_post_ids(
+	$ids = sbek_post_ids(
 		"popular_{$limit}_{$days}",
 		$args + array(
 			'posts_per_page' => $limit,
@@ -279,7 +241,7 @@ function sbek_get_related_posts( int $post_id, int $limit = 12 ): array {
 	$ids      = array();
 
 	if ( $category ) {
-		$ids = sbek_cached_post_ids(
+		$ids = sbek_post_ids(
 			"related_{$post_id}_{$limit}",
 			array(
 				'cat'            => $category->term_id,
@@ -294,10 +256,11 @@ function sbek_get_related_posts( int $post_id, int $limit = 12 ): array {
 }
 
 /**
- * Posts flagged "Breaking" for the header ticker (none → no ticker). A flag
- * expires `breaking_hours` (Sbek Theme → Homepage) after publication, so
- * stale stories leave the ticker on their own. The 5-minute cache keeps that
- * expiry close to on time.
+ * Posts flagged "Breaking" (post meta `_sbek_is_breaking`, set by the Sbek
+ * Companion plugin) for the header ticker; none → no ticker. A flag expires
+ * `breaking_hours` (Sbek Theme → Homepage) after publication, so stale
+ * stories leave the ticker on their own (a 5-minute cache hint keeps that
+ * close to on time).
  *
  * @return WP_Post[]
  */
@@ -318,7 +281,7 @@ function sbek_get_breaking_posts( int $limit = 5 ): array {
 		);
 	}
 
-	return sbek_posts_by_ids( sbek_cached_post_ids( "breaking_{$limit}_{$hours}", $args, 5 * MINUTE_IN_SECONDS ) );
+	return sbek_posts_by_ids( sbek_post_ids( "breaking_{$limit}_{$hours}", $args, 5 * MINUTE_IN_SECONDS ) );
 }
 
 /**

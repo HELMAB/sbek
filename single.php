@@ -2,8 +2,13 @@
 /**
  * Single article: blurred cover backdrop, breadcrumb, headline + meta, body
  * (cover image injected after the first paragraph, see
- * inc/frontend/content.php), source / author, share links, tags, related
- * stories; sidebar on the right.
+ * inc/frontend/content.php), byline, tags, related stories, comments;
+ * sidebar on the right.
+ *
+ * Plugin hooks (the Sbek Companion plugin uses them for the video embed, the
+ * source line and the share buttons):
+ *   sbek_before_article_content( WP_Post $post )
+ *   sbek_article_footer( WP_Post $post )
  *
  * @package sbek
  */
@@ -16,17 +21,12 @@ while ( have_posts() ) :
 	the_post();
 
 	$sbek_post      = get_post();
-	$sbek_url       = get_permalink();
 	$sbek_title     = get_the_title();
-	$sbek_source    = (string) get_post_meta( $sbek_post->ID, '_sbek_source_name', true );
-	$sbek_source_to = (string) get_post_meta( $sbek_post->ID, '_sbek_source_url', true );
-	$sbek_video     = (string) get_post_meta( $sbek_post->ID, '_sbek_video_url', true );
 	$sbek_sponsored = sbek_is_sponsored( $sbek_post );
-	$sbek_share_txt = wp_strip_all_tags( $sbek_title );
 	// "Updated" only for real edits, not typo fixes right after publishing.
-	$sbek_updated   = get_post_modified_time( 'U', true ) - get_post_time( 'U', true ) > HOUR_IN_SECONDS;
-	$sbek_tags      = get_the_tags();
-	$sbek_has_zwsp  = false !== strpos( $sbek_post->post_content, "\u{200B}" );
+	$sbek_updated  = get_post_modified_time( 'U', true ) - get_post_time( 'U', true ) > HOUR_IN_SECONDS;
+	$sbek_tags     = get_the_tags();
+	$sbek_has_zwsp = false !== strpos( $sbek_post->post_content, "\u{200B}" );
 	?>
 	<main id="main" class="site-main site-main--article">
 		<?php if ( has_post_thumbnail() ) : ?>
@@ -83,16 +83,7 @@ while ( have_posts() ) :
 					</div>
 				<?php endif; ?>
 
-				<?php if ( $sbek_video ) : ?>
-					<?php $sbek_embed = wp_oembed_get( $sbek_video, array( 'width' => 730 ) ); ?>
-					<figure class="article__video">
-						<?php if ( $sbek_embed ) : ?>
-							<?php echo $sbek_embed; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- oEmbed HTML from WordPress' provider allow-list. ?>
-						<?php else : ?>
-							<a href="<?php echo esc_url( $sbek_video ); ?>" target="_blank" rel="noopener noreferrer" class="btn"><?php esc_html_e( 'Watch the video', 'sbek' ); ?></a>
-						<?php endif; ?>
-					</figure>
-				<?php endif; ?>
+				<?php do_action( 'sbek_before_article_content', $sbek_post ); ?>
 
 				<div class="article__content entry-content" data-sbek-article-body>
 					<?php
@@ -107,16 +98,6 @@ while ( have_posts() ) :
 				</div>
 
 				<footer class="article__footer">
-					<?php if ( $sbek_source ) : ?>
-						<p>
-							<?php esc_html_e( 'Source:', 'sbek' ); ?>
-							<?php if ( $sbek_source_to ) : ?>
-								<a href="<?php echo esc_url( $sbek_source_to ); ?>" target="_blank" rel="<?php echo esc_attr( 'noopener noreferrer ' . ( $sbek_sponsored ? 'sponsored' : 'nofollow' ) ); ?>"><?php echo esc_html( $sbek_source ); ?></a>
-							<?php else : ?>
-								<?php echo esc_html( $sbek_source ); ?>
-							<?php endif; ?>
-						</p>
-					<?php endif; ?>
 					<?php if ( sbek_section_enabled( 'byline' ) ) : ?>
 						<p>
 							<?php
@@ -125,38 +106,7 @@ while ( have_posts() ) :
 							?>
 						</p>
 					<?php endif; ?>
-
-					<?php
-					$sbek_share = array(
-						'fb'       => array( 'facebook', __( 'Share on Facebook', 'sbek' ), 'https://www.facebook.com/sharer/sharer.php?u=' . rawurlencode( $sbek_url ) ),
-						'telegram' => array( 'telegram', __( 'Share on Telegram', 'sbek' ), 'https://t.me/share/url?url=' . rawurlencode( $sbek_url ) . '&text=' . rawurlencode( $sbek_share_txt ) ),
-						'x'        => array( 'x', __( 'Share on X', 'sbek' ), 'https://twitter.com/intent/tweet?url=' . rawurlencode( $sbek_url ) . '&text=' . rawurlencode( $sbek_share_txt ) ),
-						'mail'     => array( 'at-sign', __( 'Share by email', 'sbek' ), 'mailto:?subject=' . rawurlencode( $sbek_share_txt ) . '&body=' . rawurlencode( $sbek_url ) ),
-					);
-					?>
-					<ul class="share-links" aria-label="<?php esc_attr_e( 'Share', 'sbek' ); ?>">
-						<li class="share-links__native-item" hidden>
-							<button type="button" class="share-links__native" data-sbek-share data-url="<?php echo esc_url( $sbek_url ); ?>" data-title="<?php echo esc_attr( $sbek_share_txt ); ?>">
-								<?php echo sbek_icon( 'share-2', array( 'width' => 15, 'height' => 15 ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- static SVG. ?>
-								<span class="screen-reader-text"><?php esc_html_e( 'Share…', 'sbek' ); ?></span>
-							</button>
-						</li>
-						<?php foreach ( $sbek_share as $sbek_share_key => $sbek_share_item ) : ?>
-							<li>
-								<a class="share-links__<?php echo esc_attr( $sbek_share_key ); ?>" href="<?php echo esc_url( $sbek_share_item[2] ); ?>"<?php echo 'mail' === $sbek_share_key ? '' : ' target="_blank" rel="noopener noreferrer"'; ?>>
-									<?php echo sbek_icon( $sbek_share_item[0], array( 'width' => 15, 'height' => 15 ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- static SVG. ?>
-									<span class="screen-reader-text"><?php echo esc_html( $sbek_share_item[1] ); ?></span>
-								</a>
-							</li>
-						<?php endforeach; ?>
-						<li>
-							<button type="button" class="share-links__copy" data-sbek-copy="<?php echo esc_url( $sbek_url ); ?>" data-copied="<?php esc_attr_e( 'Link copied', 'sbek' ); ?>">
-								<?php echo sbek_icon( 'link', array( 'width' => 15, 'height' => 15 ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- static SVG. ?>
-								<span class="screen-reader-text"><?php esc_html_e( 'Copy link', 'sbek' ); ?></span>
-							</button>
-						</li>
-					</ul>
-					<p class="share-links__status screen-reader-text" role="status" data-sbek-copy-status></p>
+					<?php do_action( 'sbek_article_footer', $sbek_post ); ?>
 				</footer>
 
 				<?php if ( $sbek_tags ) : ?>
@@ -173,6 +123,12 @@ while ( have_posts() ) :
 				<div class="article__section">
 					<?php get_template_part( 'template-parts/related', null, array( 'posts' => sbek_get_related_posts( $sbek_post->ID, 12 ) ) ); ?>
 				</div>
+
+				<?php
+				if ( comments_open() || get_comments_number() ) {
+					comments_template();
+				}
+				?>
 			</article>
 
 			<?php get_sidebar( null, array( 'boxed' => true ) ); ?>

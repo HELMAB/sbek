@@ -1,14 +1,16 @@
 /**
  * Sbek Theme page: tabs, repeatable rows (phones / socials), media pickers,
- * category colors, the Design live preview, inline confirmations, demo
- * import and unsaved-changes tracking. Vanilla JS; wp.media comes from
- * wp_enqueue_media().
+ * category colors, the Design live preview, inline confirmations and
+ * unsaved-changes tracking. Vanilla JS; wp.media comes from
+ * wp_enqueue_media(). Plugins add their own scripts for their tabs (the
+ * Sbek Companion demo import, for one).
  *
  * Markup contract:
  *   [data-sbek-tabs] [data-sbek-tab="slug"]   tab links (href="#slug")
  *   [data-sbek-panel="slug"]                  tab panels
  *   [data-sbek-current-tab]                   hidden input: tab to return to after saving
- *   [data-sbek-save]                          save controls (hidden on the Tools tab)
+ *   [data-sbek-save]                          save controls (hidden on tabs marked
+ *                                             data-sbek-no-save, e.g. Tools)
  *   [data-sbek-add="group"] / [data-sbek-rows="group"] / #sbek-tmpl-group
  *   [data-sbek-remove] / [data-sbek-move="-1|1"] inside [data-sbek-row]
  *   [data-sbek-platform] + [data-sbek-social-icon] / #sbek-social-icons
@@ -77,6 +79,13 @@
 	const saveControls = Array.from( form.querySelectorAll( '[data-sbek-save]' ) );
 	const currentTab = form.querySelector( '[data-sbek-current-tab]' );
 	const slugs = tabs.map( ( tab ) => tab.dataset.sbekTab );
+	// Panels with only actions (e.g. Tools): nothing there is saved by the form.
+	const noSave = {};
+	panels.forEach( ( panel ) => {
+		if ( panel.hasAttribute( 'data-sbek-no-save' ) ) {
+			noSave[ panel.dataset.sbekPanel ] = true;
+		}
+	} );
 
 	function activate( slug, { focus = false, updateHash = true } = {} ) {
 		if ( ! slugs.includes( slug ) ) {
@@ -96,9 +105,8 @@
 			panel.hidden = panel.dataset.sbekPanel !== slug;
 		} );
 
-		// The Tools tab only has actions; nothing there is saved by the form.
 		saveControls.forEach( ( control ) => {
-			control.hidden = 'tools' === slug;
+			control.hidden = !! noSave[ slug ];
 		} );
 
 		currentTab.value = slug;
@@ -384,84 +392,6 @@
 		prompt.hidden = ! opening;
 		( opening ? prompt.querySelector( 'button' ) : trigger ).focus();
 	} );
-
-	/* ── Demo content: batched import / removal ───────────────────────── */
-
-	const demo = form.querySelector( '[data-sbek-demo]' );
-
-	if ( demo ) {
-		const progress = demo.querySelector( '[data-sbek-demo-progress]' );
-		const fill = demo.querySelector( '[data-sbek-demo-fill]' );
-		const message = demo.querySelector( '[data-sbek-demo-message]' );
-		const siteSetup = demo.querySelector( 'input[type="checkbox"][name="sbek_demo_site_setup"]' );
-
-		const show = ( percent, text ) => {
-			progress.hidden = false;
-			if ( null !== percent ) {
-				fill.style.width = percent + '%';
-			}
-			message.textContent = text;
-		};
-
-		const setBusy = ( busy ) => {
-			demo.classList.toggle( 'is-busy', busy );
-			demo.querySelectorAll( 'button, input' ).forEach( ( el ) => {
-				el.disabled = busy;
-			} );
-		};
-
-		const call = async ( data ) => {
-			const body = new FormData();
-			body.append( 'action', 'sbek_demo' );
-			body.append( '_ajax_nonce', l10n.demoNonce );
-			Object.keys( data ).forEach( ( key ) => body.append( key, data[ key ] ) );
-
-			const response = await fetch( l10n.ajaxUrl, { method: 'POST', credentials: 'same-origin', body } );
-			const json = await response.json().catch( () => null );
-			if ( ! json || ! json.success ) {
-				throw new Error( ( json && json.data && json.data.message ) || l10n.demoFailed );
-			}
-			return json.data;
-		};
-
-		const run = async ( kind ) => {
-			setBusy( true );
-			demo.classList.remove( 'is-error' );
-
-			try {
-				let step = 'continue' === kind
-					? { done: false, progress: 0, message: '…' }
-					: await call( { task: 'start', type: kind, site_setup: siteSetup && siteSetup.checked ? '1' : '' } );
-				show( step.progress, step.message );
-
-				while ( ! step.done ) {
-					step = await call( { task: 'next' } );
-					show( step.progress, step.message );
-				}
-
-				show( 100, step.message + ' ' + ( l10n.demoDone || '' ) );
-				window.setTimeout( () => window.location.reload(), 1200 );
-			} catch ( error ) {
-				show( null, error.message );
-				demo.classList.add( 'is-error' );
-				setBusy( false );
-
-				// The job is kept server-side: offer to continue where it stopped.
-				const primary = demo.querySelector( '[data-sbek-demo-run="import"], [data-sbek-demo-run="continue"]' );
-				if ( primary && 'reset' !== kind ) {
-					primary.dataset.sbekDemoRun = 'continue';
-					primary.textContent = primary.dataset.continueLabel || primary.textContent;
-				}
-			}
-		};
-
-		demo.addEventListener( 'click', ( event ) => {
-			const button = event.target.closest( '[data-sbek-demo-run]' );
-			if ( button ) {
-				run( button.dataset.sbekDemoRun );
-			}
-		} );
-	}
 
 	/* ── Media pickers ────────────────────────────────────────────────── */
 

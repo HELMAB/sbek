@@ -1,6 +1,6 @@
 <?php
 /**
- * Theme supports, menus, widget areas, image sizes and upgrade routine.
+ * Theme supports, menus, widget areas, image sizes and the logo migration.
  *
  * @package sbek
  */
@@ -17,8 +17,27 @@ function sbek_setup(): void {
 	add_theme_support( 'post-formats', array( 'video' ) ); // Drives the homepage video block.
 	add_theme_support(
 		'html5',
-		array( 'search-form', 'gallery', 'caption', 'style', 'script', 'navigation-widgets' )
+		array( 'search-form', 'comment-form', 'comment-list', 'gallery', 'caption', 'style', 'script', 'navigation-widgets' )
 	);
+	add_theme_support(
+		'custom-logo',
+		array(
+			'height'      => 192,
+			'width'       => 192,
+			'flex-height' => true,
+			'flex-width'  => true,
+		)
+	);
+	add_theme_support(
+		'custom-background',
+		array(
+			'default-color' => 'f6f6f6', // --color-page in input.css.
+		)
+	);
+	add_theme_support( 'wp-block-styles' );
+	add_theme_support( 'align-wide' );
+	add_theme_support( 'editor-styles' );
+	add_editor_style( 'assets/css/editor.css' );
 
 	// 16:9 crops used by the cards. WordPress builds srcsets from these plus
 	// the core sizes, so each card ships the smallest file that fits.
@@ -27,10 +46,8 @@ function sbek_setup(): void {
 
 	register_nav_menus(
 		array(
-			'primary'    => __( 'Primary menu (Khmer)', 'sbek' ),
-			'primary-en' => __( 'Primary menu (English)', 'sbek' ),
-			'footer'     => __( 'Footer links (Khmer)', 'sbek' ),
-			'footer-en'  => __( 'Footer links (English)', 'sbek' ),
+			'primary' => __( 'Primary menu', 'sbek' ),
+			'footer'  => __( 'Footer links', 'sbek' ),
 		)
 	);
 }
@@ -79,28 +96,29 @@ function sbek_widgets_init(): void {
 add_action( 'widgets_init', 'sbek_widgets_init' );
 
 /**
- * One-off data setup on activation and on theme version changes.
+ * Earlier versions stored the logo in the theme option (`logo`); it now is
+ * the core custom logo, editable here, in the Customizer and on the Sbek
+ * Theme page. Copy it over once and drop the old key.
  */
-function sbek_maybe_upgrade(): void {
-	if ( get_option( 'sbek_theme_version' ) === SBEK_VERSION ) {
+function sbek_migrate_logo(): void {
+	$settings = get_option( 'sbek_site_settings' );
+
+	if ( ! is_array( $settings ) || ! array_key_exists( 'logo', $settings ) ) {
 		return;
 	}
 
-	sbek_ensure_language_terms();
-
-	// 1.x shipped an en/jp layout: drop the obsolete Japanese term.
-	$jp = get_term_by( 'slug', 'jp', 'language' );
-	if ( $jp instanceof WP_Term ) {
-		wp_delete_term( $jp->term_id, 'language' );
+	$logo = absint( $settings['logo'] );
+	if ( $logo && ! get_theme_mod( 'custom_logo' ) && wp_attachment_is_image( $logo ) ) {
+		set_theme_mod( 'custom_logo', $logo );
 	}
 
-	update_option( 'sbek_theme_version', SBEK_VERSION, false );
+	unset( $settings['logo'] );
+	update_option( 'sbek_site_settings', $settings );
 }
-add_action( 'init', 'sbek_maybe_upgrade', 20 );
-add_action( 'after_switch_theme', 'sbek_maybe_upgrade' );
+add_action( 'after_setup_theme', 'sbek_migrate_logo', 20 );
 
 /**
- * Language + layout hooks on <body>.
+ * Language hook on <body> (`lang-km`, `lang-en`).
  *
  * @param string[] $classes Body classes.
  * @return string[]
@@ -111,19 +129,6 @@ function sbek_body_classes( array $classes ): array {
 	return $classes;
 }
 add_filter( 'body_class', 'sbek_body_classes' );
-
-/**
- * The theme has no comment UI, so refuse new comments and pingbacks rather
- * than silently collecting submissions (spam) that nobody can see. Existing
- * comments stay in the database untouched.
- */
-add_filter( 'comments_open', '__return_false', 20 );
-add_filter( 'pings_open', '__return_false', 20 );
-
-/**
- * Hide the comment feed links from <head> (automatic-feed-links adds them).
- */
-add_filter( 'feed_links_show_comments_feed', '__return_false' );
 
 /**
  * Trim the auto-excerpt marker to a plain ellipsis.

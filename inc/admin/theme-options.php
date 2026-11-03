@@ -1,27 +1,35 @@
 <?php
 /**
- * "Sbek Theme" admin page — one place to edit all site-wide data the theme
+ * Appearance → Sbek Theme: one page for the site-wide data the theme
  * displays, organised in tabs:
  *
- *   General          Site title / tagline (Khmer = core options, English =
- *                    theme option), logo, site icon, default share image.
+ *   General          Site title / tagline and site icon (core settings), logo
+ *                    (core custom logo).
  *   Design           Brand / top-bar / footer colors and fonts (inc/design.php).
- *   Homepage         Section toggles (ticker, video block, newsletter) and the
- *                    category blocks: color, English name, homepage position.
- *   Contact & Footer About text, email, phones, address, map location,
- *                    copyright line (each text in Khmer + English).
- *   Social           Social profile links.
- *   Integrations     GA4 / GTM IDs and raw header / footer scripts.
- *   Tools            Demo content import / removal (inc/admin/tools.php).
+ *   Homepage         Section toggles (ticker, video block), freshness windows,
+ *                    article byline, and the category blocks (color, position).
+ *   Contact & Footer About text, email, phones, address, copyright line.
+ *   Social           Social profile links (footer icons).
  *
- * Storage — the page writes three places in one save:
- *   - option `sbek_site_settings` (theme data; read with sbek_site_setting()),
- *     sanitized by the callback registered with register_setting();
- *   - core options `blogname`, `blogdescription`, `site_icon`;
- *   - category term meta (`sbek_color`, `sbek_name_en`, `sbek_home_order`),
- *     sanitized by the callbacks registered in inc/admin/term-meta.php.
- * That's why it saves through admin-post.php (nonce + manage_options) rather
- * than options.php, which can only save registered options of one group.
+ * Storage — the page writes up to three places in one save:
+ *   - option `sbek_site_settings`, the theme's single option (read with
+ *     sbek_site_setting()), sanitized by the callback registered with
+ *     register_setting();
+ *   - the `custom_logo` theme mod, and — for users who can manage options —
+ *     the core options `blogname`, `blogdescription`, `site_icon`, which the
+ *     fields are labelled as;
+ *   - category term meta (`sbek_color`, `sbek_home_order`), sanitized by the
+ *     callbacks registered in inc/admin/term-meta.php.
+ * That's why it saves through admin-post.php (nonce + edit_theme_options)
+ * rather than options.php, which can only save registered options of one group.
+ *
+ * Plugins extend the page (the Sbek Companion plugin adds English texts,
+ * sharing, newsletter, integrations and tools):
+ *   sbek_theme_option_tabs           filter  slug => [ label, icon, no_save? ]
+ *   sbek_theme_options_panel_{slug}  action  cards at the end of a tab ( $settings )
+ *   sbek_theme_options_enqueue       action  page assets
+ *   sbek_theme_options_save          filter  save own fields; returns "not saved" messages
+ *   sbek_theme_options_saved         action  after everything was saved
  *
  * @package sbek
  */
@@ -41,11 +49,6 @@ const SBEK_SETTINGS_ACTION = 'sbek_save_theme_options';
  */
 function sbek_site_settings_defaults(): array {
 	return array(
-		// General.
-		'name_en'         => '',
-		'tagline_en'      => '',
-		'logo'            => 0,
-		'og_image'        => 0,
 		// Design (validated again on output by sbek_design()).
 		'color_brand'     => SBEK_BRAND_COLOR,
 		'color_top'       => SBEK_TOPBAR_COLOR,
@@ -56,28 +59,17 @@ function sbek_site_settings_defaults(): array {
 		// Homepage.
 		'show_ticker'     => 1,
 		'show_video'      => 1,
-		'show_newsletter' => 1,
 		'show_byline'     => 1,
 		'breaking_hours'  => 48,
 		'popular_days'    => 7,
 		// Contact & footer.
 		'description'     => '',
-		'description_en'  => '',
 		'email'           => '',
 		'phones'          => array(),
 		'address'         => '',
-		'address_en'      => '',
-		'lat'             => '',
-		'lng'             => '',
 		'copyright'       => '',
-		'copyright_en'    => '',
 		// Social.
 		'socials'         => array(),
-		// Integrations.
-		'ga4_id'          => '',
-		'gtm_id'          => '',
-		'header_scripts'  => '',
-		'footer_scripts'  => '',
 	);
 }
 
@@ -108,24 +100,10 @@ function sbek_sanitize_site_settings( $input ): array {
 	$input = is_array( $input ) ? $input : array();
 	$clean = sbek_site_settings_defaults();
 
-	foreach ( array( 'name_en', 'tagline_en', 'copyright', 'copyright_en' ) as $key ) {
-		$clean[ $key ] = sanitize_text_field( (string) ( $input[ $key ] ?? '' ) );
-	}
+	$clean['copyright'] = sanitize_text_field( (string) ( $input['copyright'] ?? '' ) );
 
-	// Tracking IDs: only well-formed ones, or the snippet would load nothing.
-	foreach ( sbek_tracking_id_patterns() as $key => $pattern ) {
-		$id            = strtoupper( sanitize_text_field( (string) ( $input[ $key ] ?? '' ) ) );
-		$clean[ $key ] = preg_match( $pattern, $id ) ? $id : '';
-	}
-
-	foreach ( array( 'description', 'description_en', 'address', 'address_en' ) as $key ) {
+	foreach ( array( 'description', 'address' ) as $key ) {
 		$clean[ $key ] = sanitize_textarea_field( (string) ( $input[ $key ] ?? '' ) );
-	}
-
-	// Images must be image attachments.
-	foreach ( array( 'logo', 'og_image' ) as $key ) {
-		$id            = absint( $input[ $key ] ?? 0 );
-		$clean[ $key ] = ( $id && wp_attachment_is_image( $id ) ) ? $id : 0;
 	}
 
 	// Design: hex colors only; fonts only from the whitelist for their role.
@@ -148,7 +126,7 @@ function sbek_sanitize_site_settings( $input ): array {
 
 	// Toggles: the form always sends 0/1 (hidden input + checkbox); a missing
 	// key (e.g. a partial update from code) keeps the default "on".
-	foreach ( array( 'show_ticker', 'show_video', 'show_newsletter', 'show_byline' ) as $key ) {
+	foreach ( array( 'show_ticker', 'show_video', 'show_byline' ) as $key ) {
 		$clean[ $key ] = array_key_exists( $key, $input ) ? (int) (bool) $input[ $key ] : 1;
 	}
 
@@ -161,12 +139,6 @@ function sbek_sanitize_site_settings( $input ): array {
 
 	$email          = sanitize_email( (string) ( $input['email'] ?? '' ) );
 	$clean['email'] = is_email( $email ) ? $email : '';
-
-	// Coordinates: valid ranges only.
-	$lat          = $input['lat'] ?? '';
-	$lng          = $input['lng'] ?? '';
-	$clean['lat'] = is_numeric( $lat ) && abs( (float) $lat ) <= 90 ? (string) (float) $lat : '';
-	$clean['lng'] = is_numeric( $lng ) && abs( (float) $lng ) <= 180 ? (string) (float) $lng : '';
 
 	foreach ( (array) ( $input['phones'] ?? array() ) as $row ) {
 		$number = sanitize_text_field( (string) ( $row['number'] ?? '' ) );
@@ -188,27 +160,7 @@ function sbek_sanitize_site_settings( $input ): array {
 		}
 	}
 
-	// Raw scripts only for users allowed to post unfiltered HTML (admins on
-	// single site, super admins on multisite); others get them kses-filtered.
-	$can_raw = current_user_can( 'unfiltered_html' );
-	foreach ( array( 'header_scripts', 'footer_scripts' ) as $key ) {
-		$value         = (string) ( $input[ $key ] ?? '' );
-		$clean[ $key ] = $can_raw ? $value : wp_kses_post( $value );
-	}
-
 	return $clean;
-}
-
-/**
- * Accepted formats of the tracking IDs (upper-cased before matching).
- *
- * @return array<string,string> setting key => regex.
- */
-function sbek_tracking_id_patterns(): array {
-	return array(
-		'ga4_id' => '/^G-[A-Z0-9]{4,}$/',
-		'gtm_id' => '/^GTM-[A-Z0-9]{4,}$/',
-	);
 }
 
 /**
@@ -225,27 +177,6 @@ function sbek_settings_input_problems( array $input ): array {
 	if ( '' !== $email && ! is_email( sanitize_email( $email ) ) ) {
 		/* translators: %s: submitted value. */
 		$problems[] = sprintf( __( 'Contact email: “%s” is not a valid email address.', 'sbek' ), $email );
-	}
-
-	foreach ( array( 'lat' => 90, 'lng' => 180 ) as $key => $max ) {
-		$value = trim( (string) ( $input[ $key ] ?? '' ) );
-		if ( '' !== $value && ( ! is_numeric( $value ) || abs( (float) $value ) > $max ) ) {
-			$problems[] = 'lat' === $key
-				? __( 'Latitude must be a number between -90 and 90.', 'sbek' )
-				: __( 'Longitude must be a number between -180 and 180.', 'sbek' );
-		}
-	}
-
-	$examples = array(
-		'ga4_id' => array( __( 'Google Analytics 4 ID', 'sbek' ), 'G-XXXXXXXXXX' ),
-		'gtm_id' => array( __( 'Google Tag Manager ID', 'sbek' ), 'GTM-XXXXXXX' ),
-	);
-	foreach ( sbek_tracking_id_patterns() as $key => $pattern ) {
-		$value = strtoupper( trim( (string) ( $input[ $key ] ?? '' ) ) );
-		if ( '' !== $value && ! preg_match( $pattern, $value ) ) {
-			/* translators: 1: field label, 2: example ID. */
-			$problems[] = sprintf( __( '%1$s must look like %2$s.', 'sbek' ), $examples[ $key ][0], $examples[ $key ][1] );
-		}
 	}
 
 	foreach ( (array) ( $input['socials'] ?? array() ) as $row ) {
@@ -312,18 +243,9 @@ function sbek_site_setting( ?string $key = null, $default = null ) {
 }
 
 /**
- * URL of a media setting (logo, og_image), or '' when unset.
- */
-function sbek_site_setting_image_url( string $key, string $size = 'full' ): string {
-	$id = absint( sbek_site_setting( $key, 0 ) );
-
-	return $id ? (string) wp_get_attachment_image_url( $id, $size ) : '';
-}
-
-/**
  * Whether a homepage/footer section is switched on in Sbek Theme.
  *
- * @param string $section ticker | video | newsletter | byline.
+ * @param string $section ticker | video | byline.
  */
 function sbek_section_enabled( string $section ): bool {
 	return (bool) sbek_site_setting( 'show_' . $section, 1 );
@@ -353,24 +275,25 @@ function sbek_copyright_text(): string {
 // ─── 2. Save handler ───────────────────────────────────────────────────────────
 
 /**
- * Tabs shown on the page: slug => [ label, icon ].
+ * Tabs shown on the page: slug => [ label, icon, no_save? ]. `no_save`
+ * marks tabs with only actions (the Save button hides there).
  *
- * @return array<string,array{0:string,1:string}>
+ * @return array<string,array{0:string,1:string,2?:bool}>
  */
 function sbek_theme_option_tabs(): array {
-	return array(
-		'general'      => array( __( 'General', 'sbek' ), 'sliders' ),
-		'design'       => array( __( 'Design', 'sbek' ), 'palette' ),
-		'homepage'     => array( __( 'Homepage', 'sbek' ), 'layout' ),
-		'contact'      => array( __( 'Contact & Footer', 'sbek' ), 'map-pin' ),
-		'social'       => array( __( 'Social', 'sbek' ), 'share-2' ),
-		'integrations' => array( __( 'Integrations', 'sbek' ), 'trending-up' ),
-		'tools'        => array( __( 'Tools', 'sbek' ), 'rocket' ),
+	$tabs = array(
+		'general'  => array( __( 'General', 'sbek' ), 'sliders' ),
+		'design'   => array( __( 'Design', 'sbek' ), 'palette' ),
+		'homepage' => array( __( 'Homepage', 'sbek' ), 'layout' ),
+		'contact'  => array( __( 'Contact & Footer', 'sbek' ), 'map-pin' ),
+		'social'   => array( __( 'Social', 'sbek' ), 'share-2' ),
 	);
+
+	return (array) apply_filters( 'sbek_theme_option_tabs', $tabs );
 }
 
 function sbek_save_theme_options(): void {
-	if ( ! current_user_can( 'manage_options' ) ) {
+	if ( ! current_user_can( 'edit_theme_options' ) ) {
 		wp_die( esc_html__( 'You do not have permission to change these settings.', 'sbek' ), 403 );
 	}
 
@@ -383,8 +306,22 @@ function sbek_save_theme_options(): void {
 	$problems = sbek_settings_input_problems( $settings );
 	update_option( SBEK_SETTINGS_OPTION, $settings );
 
-	// 2. Core site identity.
+	// 2. Site identity: the custom logo (a theme mod) and, for users who may
+	// change site-wide options, the core title / tagline / icon fields.
 	$core = isset( $_POST['sbek_core'] ) && is_array( $_POST['sbek_core'] ) ? wp_unslash( $_POST['sbek_core'] ) : array(); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- sanitized per key below.
+
+	if ( isset( $core['custom_logo'] ) ) {
+		$logo = absint( $core['custom_logo'] );
+		if ( $logo && wp_attachment_is_image( $logo ) ) {
+			set_theme_mod( 'custom_logo', $logo );
+		} else {
+			remove_theme_mod( 'custom_logo' );
+		}
+	}
+
+	if ( ! current_user_can( 'manage_options' ) ) {
+		$core = array();
+	}
 
 	if ( isset( $core['blogname'] ) ) {
 		update_option( 'blogname', sanitize_text_field( (string) $core['blogname'] ) );
@@ -419,7 +356,6 @@ function sbek_save_theme_options(): void {
 		// brand change still reaches this category.
 		$values = array(
 			'sbek_color'      => empty( $fields['color_auto'] ) ? (string) sanitize_hex_color( (string) ( $fields['color'] ?? '' ) ) : '',
-			'sbek_name_en'    => sanitize_text_field( (string) ( $fields['name_en'] ?? '' ) ),
 			'sbek_home_order' => absint( $fields['home_order'] ?? 0 ),
 		);
 
@@ -432,9 +368,10 @@ function sbek_save_theme_options(): void {
 		}
 	}
 
-	if ( function_exists( 'sbek_bump_cache_version' ) ) {
-		sbek_bump_cache_version(); // Homepage blocks read these values.
-	}
+	// 4. Plugins' fields (nonce and capability are checked above).
+	$problems = (array) apply_filters( 'sbek_theme_options_save', $problems );
+
+	do_action( 'sbek_theme_options_saved' );
 
 	$tab = isset( $_POST['sbek_tab'] ) ? sanitize_key( wp_unslash( $_POST['sbek_tab'] ) ) : '';
 	$tab = isset( sbek_theme_option_tabs()[ $tab ] ) ? $tab : 'general';
@@ -443,7 +380,7 @@ function sbek_save_theme_options(): void {
 		set_transient( sbek_settings_problems_key(), $problems, 5 * MINUTE_IN_SECONDS );
 	}
 
-	wp_safe_redirect( add_query_arg( array( 'page' => SBEK_SETTINGS_SLUG, 'updated' => 1 ), admin_url( 'admin.php' ) ) . '#' . $tab );
+	wp_safe_redirect( add_query_arg( 'updated', 1, sbek_theme_options_url() ) . '#' . $tab );
 	exit;
 }
 add_action( 'admin_post_' . SBEK_SETTINGS_ACTION, 'sbek_save_theme_options' );
@@ -458,60 +395,53 @@ function sbek_settings_problems_key(): string {
 // ─── 3. Menu, legacy URL, assets ───────────────────────────────────────────────
 
 function sbek_theme_options_menu(): void {
-	$hook = add_menu_page(
+	$hook = add_theme_page(
 		__( 'Sbek Theme', 'sbek' ),
 		__( 'Sbek Theme', 'sbek' ),
-		'manage_options',
+		'edit_theme_options',
 		SBEK_SETTINGS_SLUG,
-		'sbek_render_theme_options_page',
-		'dashicons-admin-customizer',
-		61 // Right after Appearance.
+		'sbek_render_theme_options_page'
 	);
 
-	add_action( "admin_print_styles-{$hook}", 'sbek_theme_options_assets' );
-
-	// Old bookmarks (Settings → Options page) land on the new page. The slug
-	// must stay registered — wp-admin refuses unknown pages before any hook we
-	// could redirect from — so register it, redirect on its load hook (before
-	// output), and hide it from the menu.
-	$legacy = add_submenu_page( 'options-general.php', __( 'Sbek Theme', 'sbek' ), __( 'Sbek Theme', 'sbek' ), 'manage_options', 'sbek-site-settings', '__return_null' );
-	add_action( "load-{$legacy}", 'sbek_redirect_legacy_options_url' );
-	remove_submenu_page( 'options-general.php', 'sbek-site-settings' );
+	if ( $hook ) {
+		add_action( "admin_print_styles-{$hook}", 'sbek_theme_options_assets' );
+	}
 }
 add_action( 'admin_menu', 'sbek_theme_options_menu' );
 
-function sbek_redirect_legacy_options_url(): void {
-	wp_safe_redirect( sbek_theme_options_url() );
-	exit;
+function sbek_theme_options_url( string $tab = '' ): string {
+	return admin_url( 'themes.php?page=' . SBEK_SETTINGS_SLUG ) . ( $tab ? '#' . $tab : '' );
 }
 
-function sbek_theme_options_url( string $tab = '' ): string {
-	return admin_url( 'admin.php?page=' . SBEK_SETTINGS_SLUG ) . ( $tab ? '#' . $tab : '' );
+/**
+ * Register the admin stylesheet everywhere in wp-admin (enqueued only on this
+ * page here; plugins can enqueue `sbek-admin` for their own Sbek screens).
+ */
+function sbek_register_admin_style(): void {
+	wp_register_style( 'sbek-admin', SBEK_URI . '/assets/css/admin.css', array(), sbek_asset_version( 'assets/css/admin.css' ) );
 }
+add_action( 'admin_enqueue_scripts', 'sbek_register_admin_style', 5 );
 
 function sbek_theme_options_assets(): void {
 	wp_enqueue_media(); // wp.media for the image pickers.
 
-	$css = 'assets/css/admin.css';
-	$js  = 'assets/js/admin-theme-options.js';
+	$js = 'assets/js/admin-theme-options.js';
 
-	wp_enqueue_style( 'sbek-admin', SBEK_URI . '/' . $css, array(), (string) ( file_exists( SBEK_DIR . '/' . $css ) ? filemtime( SBEK_DIR . '/' . $css ) : SBEK_VERSION ) );
-	wp_enqueue_script( 'sbek-theme-options', SBEK_URI . '/' . $js, array( 'media-editor' ), (string) ( file_exists( SBEK_DIR . '/' . $js ) ? filemtime( SBEK_DIR . '/' . $js ) : SBEK_VERSION ), true );
+	wp_enqueue_style( 'sbek-admin' );
+	wp_enqueue_script( 'sbek-theme-options', SBEK_URI . '/' . $js, array( 'media-editor' ), sbek_asset_version( $js ), true );
 	wp_localize_script(
 		'sbek-theme-options',
 		'sbekThemeOptions',
 		array(
 			'mediaTitle'  => __( 'Select image', 'sbek' ),
 			'mediaButton' => __( 'Use this image', 'sbek' ),
-			'ajaxUrl'     => admin_url( 'admin-ajax.php' ),
-			'demoNonce'   => wp_create_nonce( SBEK_DEMO_NONCE ),
-			'demoFailed'  => __( 'Something went wrong. You can continue the job or remove what was created.', 'sbek' ),
-			'demoDone'    => __( 'Done! Reloading…', 'sbek' ),
 			'socialIcons' => sbek_social_icon_aliases(),
 			/* translators: 1: width, 2: height in pixels. */
 			'iconSize'    => __( 'This image is %1$d×%2$dpx. The site icon must be square and at least 512×512px, so it will not be saved.', 'sbek' ),
 		)
 	);
+
+	do_action( 'sbek_theme_options_enqueue' );
 }
 
 // ─── 4. Field helpers ──────────────────────────────────────────────────────────
@@ -771,7 +701,7 @@ function sbek_render_social_assets(): void {
 // ─── 5. Page ───────────────────────────────────────────────────────────────────
 
 function sbek_render_theme_options_page(): void {
-	if ( ! current_user_can( 'manage_options' ) ) {
+	if ( ! current_user_can( 'edit_theme_options' ) ) {
 		wp_die( esc_html__( 'You do not have permission to access this page.', 'sbek' ) );
 	}
 
@@ -827,7 +757,7 @@ function sbek_render_theme_options_page(): void {
 			<header class="sbek-options__header">
 				<div class="sbek-options__titles">
 					<h1 class="sbek-options__title"><?php esc_html_e( 'Sbek Theme', 'sbek' ); ?></h1>
-					<p class="sbek-options__subtitle"><?php esc_html_e( 'Everything your site shows outside of articles — identity, homepage sections, contact details, social links and tracking — in one place.', 'sbek' ); ?></p>
+					<p class="sbek-options__subtitle"><?php esc_html_e( 'Everything your site shows outside of articles — identity, design, homepage sections, contact details and social links — in one place.', 'sbek' ); ?></p>
 				</div>
 				<div class="sbek-options__actions">
 					<a class="sbek-btn sbek-btn--ghost" href="<?php echo esc_url( home_url( '/' ) ); ?>" target="_blank" rel="noopener">
@@ -886,33 +816,33 @@ function sbek_render_theme_options_page(): void {
 
 					<?php // ── General ───────────────────────────────────────────── ?>
 					<section class="sbek-panel" id="sbek-panel-general" role="tabpanel" aria-labelledby="sbek-tab-general" data-sbek-panel="general">
-						<?php sbek_section_open( 'globe', __( 'Site identity', 'sbek' ), __( 'The name and tagline shown in browser tabs, search results and the footer. English versions are used on /en/ pages; leave them empty to reuse the Khmer text.', 'sbek' ) ); ?>
-							<div class="sbek-grid sbek-grid--2">
-								<?php
-								sbek_option_input( 'sbek_core[blogname]', __( 'Site title (Khmer)', 'sbek' ), (string) get_option( 'blogname' ) );
-								sbek_option_input( "{$opt}[name_en]", __( 'Site title (English)', 'sbek' ), (string) $s['name_en'], array( 'placeholder' => (string) get_option( 'blogname' ) ) );
-								sbek_option_input( 'sbek_core[blogdescription]', __( 'Tagline (Khmer)', 'sbek' ), (string) get_option( 'blogdescription' ) );
-								sbek_option_input( "{$opt}[tagline_en]", __( 'Tagline (English)', 'sbek' ), (string) $s['tagline_en'] );
-								?>
-							</div>
-						<?php sbek_section_close(); ?>
+						<?php if ( current_user_can( 'manage_options' ) ) : ?>
+							<?php sbek_section_open( 'globe', __( 'Site identity', 'sbek' ), __( 'The name and tagline shown in browser tabs, search results and the footer. These are WordPress\'s own settings (also under Settings → General); saving here changes them there too.', 'sbek' ) ); ?>
+								<div class="sbek-grid sbek-grid--2">
+									<?php
+									sbek_option_input( 'sbek_core[blogname]', __( 'Site title', 'sbek' ), (string) get_option( 'blogname' ) );
+									sbek_option_input( 'sbek_core[blogdescription]', __( 'Tagline', 'sbek' ), (string) get_option( 'blogdescription' ) );
+									?>
+								</div>
+							<?php sbek_section_close(); ?>
+						<?php endif; ?>
 
-						<?php sbek_section_open( 'image', __( 'Branding', 'sbek' ), __( 'Logo for the header and footer, the browser/app icon, and the image used when a page without its own picture is shared.', 'sbek' ) ); ?>
+						<?php sbek_section_open( 'image', __( 'Branding', 'sbek' ), __( 'Logo for the header and footer, and the browser/app icon. Both are WordPress settings, also editable under Appearance → Customize → Site Identity.', 'sbek' ) ); ?>
 							<div class="sbek-grid sbek-grid--3">
 								<div class="sbek-field">
 									<span class="sbek-field__label"><?php esc_html_e( 'Logo', 'sbek' ); ?></span>
-									<?php sbek_render_media_field( "{$opt}[logo]", (int) $s['logo'], __( 'Choose a logo', 'sbek' ), __( 'PNG or JPG, square works best', 'sbek' ), 'logo' ); ?>
+									<?php sbek_render_media_field( 'sbek_core[custom_logo]', absint( get_theme_mod( 'custom_logo', 0 ) ), __( 'Choose a logo', 'sbek' ), __( 'PNG or JPG, square works best', 'sbek' ), 'logo' ); ?>
 								</div>
-								<div class="sbek-field">
-									<span class="sbek-field__label"><?php esc_html_e( 'Site icon', 'sbek' ); ?></span>
-									<?php sbek_render_media_field( 'sbek_core[site_icon]', (int) get_option( 'site_icon' ), __( 'Choose an icon', 'sbek' ), __( 'Square, at least 512×512px', 'sbek' ), 'site_icon' ); ?>
-								</div>
-								<div class="sbek-field">
-									<span class="sbek-field__label"><?php esc_html_e( 'Default share image', 'sbek' ); ?></span>
-									<?php sbek_render_media_field( "{$opt}[og_image]", (int) $s['og_image'], __( 'Choose an image', 'sbek' ), __( 'JPG or PNG, 1200×630px', 'sbek' ) ); ?>
-								</div>
+								<?php if ( current_user_can( 'manage_options' ) ) : ?>
+									<div class="sbek-field">
+										<span class="sbek-field__label"><?php esc_html_e( 'Site icon', 'sbek' ); ?></span>
+										<?php sbek_render_media_field( 'sbek_core[site_icon]', (int) get_option( 'site_icon' ), __( 'Choose an icon', 'sbek' ), __( 'Square, at least 512×512px', 'sbek' ), 'site_icon' ); ?>
+									</div>
+								<?php endif; ?>
 							</div>
 						<?php sbek_section_close(); ?>
+
+						<?php do_action( 'sbek_theme_options_panel_general', $s ); ?>
 					</section>
 
 					<?php
@@ -958,7 +888,7 @@ function sbek_render_theme_options_page(): void {
 					<section class="sbek-panel" id="sbek-panel-design" role="tabpanel" aria-labelledby="sbek-tab-design" data-sbek-panel="design">
 						<div class="sbek-preview" data-sbek-preview data-default-brand="<?php echo esc_attr( SBEK_BRAND_COLOR ); ?>" data-default-brand-dark="<?php echo esc_attr( SBEK_BRAND_DARK ); ?>" style="<?php echo esc_attr( $preview_vars ); ?>" aria-label="<?php esc_attr_e( 'Live preview', 'sbek' ); ?>">
 							<div class="sbek-preview__top">
-								<?php $preview_logo = sbek_site_setting_image_url( 'logo', 'medium' ); ?>
+								<?php $preview_logo = (string) wp_get_attachment_image_url( absint( get_theme_mod( 'custom_logo', 0 ) ), 'medium' ); ?>
 								<span class="sbek-preview__logo<?php echo $preview_logo ? ' has-image' : ''; ?>" data-sbek-preview-logo>
 									<img src="<?php echo esc_url( $preview_logo ); ?>" alt="" data-sbek-preview-logo-img<?php echo $preview_logo ? '' : ' hidden'; ?>>
 									<span data-sbek-preview-logo-text<?php echo $preview_logo ? ' hidden' : ''; ?>><?php echo esc_html( mb_substr( (string) get_option( 'blogname' ), 0, 2 ) ); ?></span>
@@ -1016,6 +946,8 @@ function sbek_render_theme_options_page(): void {
 								<p class="sbek-field__help"><?php esc_html_e( 'The design already uses the defaults.', 'sbek' ); ?></p>
 							<?php endif; ?>
 						<?php sbek_section_close(); ?>
+
+						<?php do_action( 'sbek_theme_options_panel_design', $s ); ?>
 					</section>
 
 					<?php // ── Homepage ──────────────────────────────────────────── ?>
@@ -1076,7 +1008,7 @@ function sbek_render_theme_options_page(): void {
 							__( 'Category blocks', 'sbek' ),
 							sprintf(
 								/* translators: %d: maximum number of homepage blocks. */
-								__( 'Each category\'s accent color (badges, headers, arrows), its English name, and its homepage position. Positions 1, 2, 3… show categories as blocks in that order, up to %d; categories without posts are skipped.', 'sbek' ),
+								__( 'Each category\'s accent color (badges, headers, arrows) and its homepage position. Positions 1, 2, 3… show categories as blocks in that order, up to %d; categories without posts are skipped.', 'sbek' ),
 								SBEK_HOME_BLOCK_LIMIT
 							)
 						);
@@ -1096,7 +1028,6 @@ function sbek_render_theme_options_page(): void {
 											<tr>
 												<th scope="col"><?php esc_html_e( 'Category', 'sbek' ); ?></th>
 												<th scope="col"><?php esc_html_e( 'Color', 'sbek' ); ?></th>
-												<th scope="col"><?php esc_html_e( 'English name', 'sbek' ); ?></th>
 												<th scope="col"><?php esc_html_e( 'Homepage position', 'sbek' ); ?></th>
 											</tr>
 										</thead>
@@ -1143,9 +1074,6 @@ function sbek_render_theme_options_page(): void {
 														</div>
 													</td>
 													<td>
-														<input type="text" class="sbek-input" name="<?php echo esc_attr( $base . '[name_en]' ); ?>" value="<?php echo esc_attr( (string) get_term_meta( $category->term_id, 'sbek_name_en', true ) ); ?>" aria-label="<?php echo esc_attr( sprintf( /* translators: %s: category. */ __( 'English name for %s', 'sbek' ), $category->name ) ); ?>">
-													</td>
-													<td>
 														<input type="number" min="0" step="1" class="sbek-input sbek-input--short" name="<?php echo esc_attr( $base . '[home_order]' ); ?>" value="<?php echo esc_attr( $order ? (string) $order : '' ); ?>" placeholder="—" aria-label="<?php echo esc_attr( sprintf( /* translators: %s: category. */ __( 'Homepage position for %s', 'sbek' ), $category->name ) ); ?>">
 													</td>
 												</tr>
@@ -1160,28 +1088,24 @@ function sbek_render_theme_options_page(): void {
 
 						<?php sbek_section_open( 'external-link', __( 'Elsewhere in WordPress', 'sbek' ), __( 'Site data that has its own dedicated screen.', 'sbek' ) ); ?>
 							<ul class="sbek-links">
-								<li><a href="<?php echo esc_url( admin_url( 'nav-menus.php' ) ); ?>"><?php esc_html_e( 'Menus (Khmer and English)', 'sbek' ); ?></a></li>
+								<li><a href="<?php echo esc_url( admin_url( 'nav-menus.php' ) ); ?>"><?php esc_html_e( 'Menus', 'sbek' ); ?></a></li>
 								<li><a href="<?php echo esc_url( admin_url( 'widgets.php' ) ); ?>"><?php esc_html_e( 'Ad slots and sidebar widgets', 'sbek' ); ?></a></li>
 								<li><a href="<?php echo esc_url( admin_url( 'edit.php?post_type=post&show_sticky=1' ) ); ?>"><?php esc_html_e( 'Sticky posts (homepage hero)', 'sbek' ); ?></a></li>
-								<li><a href="<?php echo esc_url( admin_url( 'edit.php?post_type=sbek_subscriber' ) ); ?>"><?php esc_html_e( 'Newsletter subscribers', 'sbek' ); ?></a></li>
 								<li><a href="<?php echo esc_url( admin_url( 'options-general.php' ) ); ?>"><?php esc_html_e( 'Language, time zone and date format', 'sbek' ); ?></a></li>
 								<li><a href="<?php echo esc_url( admin_url( 'options-permalink.php' ) ); ?>"><?php esc_html_e( 'Permalinks', 'sbek' ); ?></a></li>
 							</ul>
 						<?php sbek_section_close(); ?>
+
+						<?php do_action( 'sbek_theme_options_panel_homepage', $s ); ?>
 					</section>
 
 					<?php // ── Contact & footer ──────────────────────────────────── ?>
 					<section class="sbek-panel" id="sbek-panel-contact" role="tabpanel" aria-labelledby="sbek-tab-contact" data-sbek-panel="contact">
-						<?php sbek_section_open( 'info', __( 'About', 'sbek' ), __( 'Short description in the footer\'s "About us" column, also used for SEO and structured data.', 'sbek' ) ); ?>
-							<div class="sbek-grid sbek-grid--2">
-								<?php
-								sbek_option_textarea( "{$opt}[description]", __( 'Description (Khmer)', 'sbek' ), (string) $s['description'], array( 'rows' => '4' ) );
-								sbek_option_textarea( "{$opt}[description_en]", __( 'Description (English)', 'sbek' ), (string) $s['description_en'], array( 'rows' => '4' ) );
-								?>
-							</div>
+						<?php sbek_section_open( 'info', __( 'About', 'sbek' ), __( 'Short description in the footer\'s "About us" column.', 'sbek' ) ); ?>
+							<?php sbek_option_textarea( "{$opt}[description]", __( 'Description', 'sbek' ), (string) $s['description'], array( 'rows' => '4' ) ); ?>
 						<?php sbek_section_close(); ?>
 
-						<?php sbek_section_open( 'phone', __( 'Contact', 'sbek' ), __( 'Shown in the footer and in structured data. Add as many phone numbers as you need.', 'sbek' ), sbek_add_button( 'phones' ) ); ?>
+						<?php sbek_section_open( 'phone', __( 'Contact', 'sbek' ), __( 'Shown in the footer. Add as many phone numbers as you need.', 'sbek' ), sbek_add_button( 'phones' ) ); ?>
 							<?php sbek_option_input( "{$opt}[email]", __( 'Contact email', 'sbek' ), (string) $s['email'], array( 'type' => 'email', 'placeholder' => 'newsroom@example.com' ) ); ?>
 							<div class="sbek-field">
 								<span class="sbek-field__label"><?php esc_html_e( 'Phone numbers', 'sbek' ); ?></span>
@@ -1196,79 +1120,20 @@ function sbek_render_theme_options_page(): void {
 							</div>
 						<?php sbek_section_close(); ?>
 
-						<?php sbek_section_open( 'map-pin', __( 'Address & location', 'sbek' ), __( 'Postal address for the footer. The coordinates are not shown to visitors; they tell search engines where your newsroom is (structured data).', 'sbek' ) ); ?>
-							<div class="sbek-grid sbek-grid--2">
-								<?php
-								sbek_option_textarea( "{$opt}[address]", __( 'Address (Khmer)', 'sbek' ), (string) $s['address'] );
-								sbek_option_textarea( "{$opt}[address_en]", __( 'Address (English)', 'sbek' ), (string) $s['address_en'] );
-								sbek_option_input(
-									"{$opt}[lat]",
-									__( 'Latitude', 'sbek' ),
-									(string) $s['lat'],
-									array(
-										'type'        => 'number',
-										'placeholder' => '11.5564',
-										'dir'         => 'ltr',
-										'attrs'       => array( 'min' => '-90', 'max' => '90', 'step' => 'any' ),
-									)
-								);
-								sbek_option_input(
-									"{$opt}[lng]",
-									__( 'Longitude', 'sbek' ),
-									(string) $s['lng'],
-									array(
-										'type'        => 'number',
-										'placeholder' => '104.9282',
-										'dir'         => 'ltr',
-										'attrs'       => array( 'min' => '-180', 'max' => '180', 'step' => 'any' ),
-									)
-								);
-								?>
-							</div>
-						<?php sbek_section_close(); ?>
-
-						<?php
-						$subscribers = sbek_subscriber_count( 'confirmed' );
-						$pending     = sbek_subscriber_count( 'pending' );
-						sbek_section_open( 'panel-bottom', __( 'Footer', 'sbek' ), __( 'Optional footer sections.', 'sbek' ) );
-						?>
-							<?php sbek_option_toggle( "{$opt}[show_newsletter]", __( 'Newsletter signup', 'sbek' ), __( 'Email signup form in the footer. Addresses are stored on this site, under Subscribers, and count only after the visitor clicks the link in the confirmation email (double opt-in). Your site must be able to send email.', 'sbek' ), (bool) $s['show_newsletter'] ); ?>
-							<div class="sbek-inline-actions">
-								<span class="sbek-inline-actions__text">
-									<?php
-									/* translators: %s: number of subscribers. */
-									echo esc_html( sprintf( _n( '%s subscriber', '%s subscribers', $subscribers, 'sbek' ), number_format_i18n( $subscribers ) ) );
-									if ( $pending ) {
-										echo ' · ' . esc_html(
-											/* translators: %s: number of unconfirmed signups. */
-											sprintf( _n( '%s waiting for confirmation', '%s waiting for confirmation', $pending, 'sbek' ), number_format_i18n( $pending ) )
-										);
-									}
-									?>
-								</span>
-								<a class="sbek-btn sbek-btn--plain" href="<?php echo esc_url( admin_url( 'edit.php?post_type=sbek_subscriber' ) ); ?>"><?php esc_html_e( 'View subscribers', 'sbek' ); ?></a>
-								<?php if ( $subscribers || $pending ) : ?>
-									<a class="sbek-btn sbek-btn--plain" href="<?php echo esc_url( sbek_subscribers_export_url() ); ?>">
-										<?php echo sbek_icon( 'download', array( 'width' => 15, 'height' => 15 ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- static SVG. ?>
-										<?php esc_html_e( 'Export CSV', 'sbek' ); ?>
-									</a>
-								<?php endif; ?>
-							</div>
+						<?php sbek_section_open( 'map-pin', __( 'Address', 'sbek' ), __( 'Postal address for the footer.', 'sbek' ) ); ?>
+							<?php sbek_option_textarea( "{$opt}[address]", __( 'Address', 'sbek' ), (string) $s['address'] ); ?>
 						<?php sbek_section_close(); ?>
 
 						<?php sbek_section_open( 'copyright', __( 'Copyright line', 'sbek' ), __( 'Leave empty for the default. You can use {year} and {site}.', 'sbek' ) ); ?>
-							<div class="sbek-grid sbek-grid--2">
-								<?php
-								sbek_option_input( "{$opt}[copyright]", __( 'Copyright (Khmer)', 'sbek' ), (string) $s['copyright'], array( 'placeholder' => '© រក្សាសិទ្ធិគ្រប់យ៉ាងដោយ {site} ឆ្នាំ{year}' ) );
-								sbek_option_input( "{$opt}[copyright_en]", __( 'Copyright (English)', 'sbek' ), (string) $s['copyright_en'], array( 'placeholder' => '© {year} {site}. All rights reserved.' ) );
-								?>
-							</div>
+							<?php sbek_option_input( "{$opt}[copyright]", __( 'Copyright', 'sbek' ), (string) $s['copyright'], array( 'placeholder' => '© {year} {site}. All rights reserved.' ) ); ?>
 						<?php sbek_section_close(); ?>
+
+						<?php do_action( 'sbek_theme_options_panel_contact', $s ); ?>
 					</section>
 
 					<?php // ── Social ────────────────────────────────────────────── ?>
 					<section class="sbek-panel" id="sbek-panel-social" role="tabpanel" aria-labelledby="sbek-tab-social" data-sbek-panel="social">
-						<?php sbek_section_open( 'share-2', __( 'Social profiles', 'sbek' ), __( 'Icons in the footer and "sameAs" links in structured data. Known platforms (Facebook, Instagram, YouTube, TikTok, Telegram, X, LinkedIn, WhatsApp) get their own icon.', 'sbek' ), sbek_add_button( 'socials' ) ); ?>
+						<?php sbek_section_open( 'share-2', __( 'Social profiles', 'sbek' ), __( 'Icons in the footer. Known platforms (Facebook, Instagram, YouTube, TikTok, Telegram, X, LinkedIn, WhatsApp) get their own icon.', 'sbek' ), sbek_add_button( 'socials' ) ); ?>
 							<div class="sbek-repeater" data-sbek-rows="socials">
 								<?php
 								$socials = $s['socials'] ? $s['socials'] : array( array() );
@@ -1278,54 +1143,18 @@ function sbek_render_theme_options_page(): void {
 								?>
 							</div>
 						<?php sbek_section_close(); ?>
+
+						<?php do_action( 'sbek_theme_options_panel_social', $s ); ?>
 					</section>
 
-					<?php // ── Integrations ──────────────────────────────────────── ?>
-					<section class="sbek-panel" id="sbek-panel-integrations" role="tabpanel" aria-labelledby="sbek-tab-integrations" data-sbek-panel="integrations">
-						<?php sbek_section_open( 'trending-up', __( 'Analytics', 'sbek' ), __( 'Google Analytics 4 loads only when no Tag Manager container is set.', 'sbek' ) ); ?>
-							<div class="sbek-grid sbek-grid--2">
-								<?php
-								sbek_option_input(
-									"{$opt}[ga4_id]",
-									__( 'Google Analytics 4 ID', 'sbek' ),
-									(string) $s['ga4_id'],
-									array(
-										'placeholder' => 'G-XXXXXXXXXX',
-										'dir'         => 'ltr',
-										'help'        => __( 'Starts with G- (Admin → Data streams in Google Analytics).', 'sbek' ),
-										'attrs'       => array( 'pattern' => '[Gg]-[A-Za-z0-9]{4,}', 'title' => 'G-XXXXXXXXXX', 'spellcheck' => 'false' ),
-									)
-								);
-								sbek_option_input(
-									"{$opt}[gtm_id]",
-									__( 'Google Tag Manager ID', 'sbek' ),
-									(string) $s['gtm_id'],
-									array(
-										'placeholder' => 'GTM-XXXXXXX',
-										'dir'         => 'ltr',
-										'help'        => __( 'Starts with GTM-. When set, the GA4 ID above is ignored — add GA4 inside Tag Manager instead.', 'sbek' ),
-										'attrs'       => array( 'pattern' => '[Gg][Tt][Mm]-[A-Za-z0-9]{4,}', 'title' => 'GTM-XXXXXXX', 'spellcheck' => 'false' ),
-									)
-								);
-								?>
-							</div>
-						<?php sbek_section_close(); ?>
-
-						<?php sbek_section_open( 'code', __( 'Custom code', 'sbek' ), __( 'Raw HTML/JS added to every public page. Only paste code from sources you trust.', 'sbek' ) ); ?>
-							<?php
-							sbek_option_textarea( "{$opt}[header_scripts]", __( 'Before </head>', 'sbek' ), (string) $s['header_scripts'], array( 'rows' => '5', 'code' => '1' ) );
-							sbek_option_textarea( "{$opt}[footer_scripts]", __( 'Before </body>', 'sbek' ), (string) $s['footer_scripts'], array( 'rows' => '5', 'code' => '1' ) );
-							?>
-							<?php if ( ! current_user_can( 'unfiltered_html' ) ) : ?>
-								<p class="sbek-field__help sbek-field__help--warn"><?php esc_html_e( 'Your role cannot save raw scripts; unsafe markup will be stripped on save.', 'sbek' ); ?></p>
-							<?php endif; ?>
-						<?php sbek_section_close(); ?>
-					</section>
-
-					<?php // ── Tools ─────────────────────────────────────────────── ?>
-					<section class="sbek-panel" id="sbek-panel-tools" role="tabpanel" aria-labelledby="sbek-tab-tools" data-sbek-panel="tools">
-						<?php sbek_render_demo_tools(); ?>
-					</section>
+					<?php
+					// ── Tabs added by plugins ─────────────────────────────────
+					foreach ( array_diff_key( $tabs, array_flip( array( 'general', 'design', 'homepage', 'contact', 'social' ) ) ) as $slug => $tab ) :
+						?>
+						<section class="sbek-panel" id="sbek-panel-<?php echo esc_attr( $slug ); ?>" role="tabpanel" aria-labelledby="sbek-tab-<?php echo esc_attr( $slug ); ?>" data-sbek-panel="<?php echo esc_attr( $slug ); ?>"<?php echo empty( $tab[2] ) ? '' : ' data-sbek-no-save'; ?>>
+							<?php do_action( "sbek_theme_options_panel_{$slug}", $s ); ?>
+						</section>
+					<?php endforeach; ?>
 				</div>
 			</div>
 

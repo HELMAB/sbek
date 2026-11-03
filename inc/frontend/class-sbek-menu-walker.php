@@ -199,20 +199,3 @@ function sbek_menu_fallback(): void {
 	echo '</ul>';
 }
 
-/**
- * Footer menu: custom links into this site follow the visitor's language,
- * like the primary menu (page/post/term links are localized by core filters).
- *
- * @param array<string,string> $atts Link attributes.
- * @param WP_Post              $item Menu item.
- * @param stdClass             $args Menu args.
- * @return array<string,string>
- */
-function sbek_localize_footer_links( array $atts, $item, $args ): array {
-	if ( isset( $args->theme_location ) && str_starts_with( (string) $args->theme_location, 'footer' ) && 'custom' === $item->type && ! empty( $atts['href'] ) ) {
-		$atts['href'] = sbek_localize_url( $atts['href'] );
-	}
-
-	return $atts;
-}
-add_filter( 'nav_menu_link_attributes', 'sbek_localize_footer_links', 10, 3 );

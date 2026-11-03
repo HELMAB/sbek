@@ -2,11 +2,12 @@
 /**
  * Sbek theme bootstrap.
  *
- * Load order matters:
- *   1. inc/i18n.php     — detects the URL language and switches the locale
- *                         before anything is translated or routed.
- *   2. inc/security.php — hardening that applies to every request.
- *   3. everything else.
+ * The theme is presentation only: templates, design settings (Appearance →
+ * Sbek Theme), menus and widget areas. Non-design features — Khmer / English
+ * URLs and translations, news fields, newsletter, sharing, SEO, analytics,
+ * demo content — live in the Sbek Companion plugin, which hooks into the
+ * actions and filters documented in CLAUDE.md. Without it the theme serves
+ * one language and simply leaves those parts out.
  *
  * @package sbek
  */
@@ -18,43 +19,26 @@ define( 'SBEK_DIR', get_template_directory() );
 define( 'SBEK_URI', get_template_directory_uri() );
 
 $sbek_modules = array(
-	// Shared (admin + front end).
-	'inc/i18n.php',
-	'inc/security.php',
+	// Shared (admin + front end). language.php first: its fallbacks are used everywhere.
+	'inc/language.php',
 	'inc/setup.php',
 	'inc/design.php',
 	'inc/icons.php',
 	'inc/queries.php',
 	'inc/template-tags.php',
 
-	// wp-admin screens, meta boxes and term fields.
+	// wp-admin: settings page and category fields.
 	'inc/admin/theme-options.php',
-	'inc/admin/custom-fields.php',
+	'inc/admin/design-reset.php',
 	'inc/admin/term-meta.php',
-	'inc/admin/translation.php',
-	'inc/admin/tools.php',
-	'inc/admin/dashboard-widget.php',
-	'inc/admin/login.php',
 
 	// Public site.
 	'inc/frontend/assets.php',
 	'inc/frontend/class-sbek-menu-walker.php',
 	'inc/frontend/content.php',
-	'inc/frontend/newsletter.php',
-	'inc/frontend/seo.php',
-	'inc/frontend/integrations.php',
 );
 
 foreach ( $sbek_modules as $sbek_module ) {
 	require SBEK_DIR . '/' . $sbek_module;
 }
 unset( $sbek_modules, $sbek_module );
-
-// Demo importer: only needed in wp-admin (Sbek Theme → Tools) and WP-CLI.
-if ( is_admin() || ( defined( 'WP_CLI' ) && WP_CLI ) ) {
-	require SBEK_DIR . '/inc/demo/class-sbek-demo-importer.php';
-}
-
-if ( defined( 'WP_CLI' ) && WP_CLI ) {
-	require SBEK_DIR . '/inc/cli/class-sbek-demo-command.php';
-}

@@ -217,7 +217,7 @@ add_action( 'wp_enqueue_scripts', 'sbek_enqueue_design', 20 );
 function sbek_design_head(): void {
 	$d = sbek_design();
 
-	if ( sbek_is_default_lang() ) {
+	if ( 'km' === sbek_lang() ) {
 		printf(
 			'<link rel="preload" href="%s" as="font" type="font/woff2" crossorigin>' . "\n",
 			esc_url( SBEK_URI . '/assets/fonts/' . sbek_font_choices()[ $d['font_body'] ]['file'] )
@@ -229,47 +229,9 @@ function sbek_design_head(): void {
 add_action( 'wp_head', 'sbek_design_head', 1 );
 
 /**
- * Brand the login screen with the Design colors and fonts: overrides the
- * --sbek-* tokens login.css declares on body.login, and adds the
- * @font-face rules of the selected body font (login.css loads no fonts).
- */
-function sbek_login_design(): void {
-	$d      = sbek_design();
-	$fonts  = sbek_font_choices();
-	$family = $fonts[ $d['font_body'] ]['family'];
-	$latin  = sbek_latin_font_choices()[ $d['font_latin'] ]['stack'];
-
-	// The panel text sits mid-gradient; it is normal-size text, so it needs
-	// 4.5:1 there (sbek_readable_on() targets 3:1 for large/bold UI text).
-	$panel_end = sbek_mix_hex( $d['brand'], '#000000', 0.5 );
-	$panel_mid = sbek_mix_hex( $d['brand'], '#000000', 0.25 );
-	$on_panel  = 1.05 / ( sbek_luminance( $panel_mid ) + 0.05 ) >= 4.5 ? '#ffffff' : '#111111';
-
-	$vars = array(
-		'--sbek-primary'       => $d['brand'],
-		'--sbek-primary-hover' => $d['brand_dark'],
-		'--sbek-on-primary'    => sbek_readable_on( $d['brand'] ),
-		'--sbek-ring'          => implode( ' ', sbek_hex_to_rgb( $d['brand'] ) ),
-		'--sbek-panel-from'    => $d['brand'],
-		'--sbek-panel-to'      => $panel_end,
-		'--sbek-on-panel'      => $on_panel,
-		'--sbek-font'          => '"' . $family . '", ' . $latin,
-	);
-
-	$css = 'body.login{';
-	foreach ( $vars as $name => $value ) {
-		$css .= $name . ':' . $value . ';';
-	}
-	$css .= '}';
-
-	wp_add_inline_style( 'sbek-login', sbek_font_face_css( $family ) . $css );
-}
-add_action( 'login_enqueue_scripts', 'sbek_login_design', 20 );
-
-/**
  * The @font-face rules for one family, taken from assets/css/src/fonts.css
  * (the single source of truth for the font files) with absolute URLs, for
- * pages that don't load main.css.
+ * pages that don't load main.css (the Sbek Companion login screen uses it).
  *
  * @param string $family Font family name as declared in fonts.css.
  * @return string CSS ('' if the family isn't declared).
@@ -291,3 +253,18 @@ function sbek_font_face_css( string $family ): string {
 
 	return preg_replace( '/\s+/', ' ', $out );
 }
+
+/**
+ * The Design colors and fonts in the block editor too (editor.css reads the
+ * same variables).
+ *
+ * @param array<string,mixed> $settings Block editor settings.
+ * @return array<string,mixed>
+ */
+function sbek_editor_design( array $settings ): array {
+	$settings['styles']   = $settings['styles'] ?? array();
+	$settings['styles'][] = array( 'css' => sbek_design_css() );
+
+	return $settings;
+}
+add_filter( 'block_editor_settings_all', 'sbek_editor_design' );

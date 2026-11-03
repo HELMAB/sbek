@@ -8,7 +8,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-$sbek_menu_location = sbek_is_default_lang() ? 'primary' : 'primary-' . sbek_lang();
+$sbek_menu_location = sbek_menu_location( 'primary' );
 $sbek_breaking      = sbek_section_enabled( 'ticker' ) ? sbek_get_breaking_posts() : array();
 ?>
 <!doctype html>
@@ -69,16 +69,13 @@ $sbek_breaking      = sbek_section_enabled( 'ticker' ) ? sbek_get_breaking_posts
 							<?php echo sbek_icon( 'search', array( 'width' => 18, 'height' => 18 ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- static SVG. ?>
 							<span class="screen-reader-text"><?php esc_html_e( 'Search', 'sbek' ); ?></span>
 						</button>
-						<ul class="lang-switch" aria-label="<?php esc_attr_e( 'Language', 'sbek' ); ?>">
-							<?php foreach ( sbek_language_switcher_items() as $sbek_lang_slug => $sbek_lang_item ) : ?>
-								<li>
-									<a href="<?php echo esc_url( $sbek_lang_item['url'] ); ?>"
-										lang="<?php echo esc_attr( sbek_languages()[ $sbek_lang_slug ]['hreflang'] ); ?>"
-										hreflang="<?php echo esc_attr( sbek_languages()[ $sbek_lang_slug ]['hreflang'] ); ?>"
-										<?php echo $sbek_lang_item['active'] ? 'aria-current="true" class="is-active"' : ''; ?>><?php echo esc_html( $sbek_lang_item['label'] ); ?></a>
-								</li>
-							<?php endforeach; ?>
-						</ul>
+						<?php
+						/**
+						 * Extra controls after the search button (a multilingual plugin's
+						 * language switcher, for example).
+						 */
+						do_action( 'sbek_menu_tools' );
+						?>
 					</div>
 				</div>
 			</div>

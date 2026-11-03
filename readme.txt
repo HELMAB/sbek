@@ -6,69 +6,56 @@ Requires PHP: 8.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-Khmer-first news, bilingual by design. A fast classic news theme for Khmer / English sites, with no translation plugin needed.
+Khmer-first news theme: hero grid, video and colored category blocks, breaking-news ticker and infinite-scroll archives, in about 16 KB.
 
 == Description ==
 
-Sbek is a classic WordPress theme for news sites that publish in Khmer first and English second. The home page has a hero grid, a video block, colored category blocks, and a breaking-news ticker. Archives use infinite scroll and can switch between list and grid. Articles get a clean reading page with a Khmer word-break toggle.
+Sbek is a classic WordPress theme for news sites, designed for Khmer and equally at home in English. The home page has a hero grid, a video block, colored category blocks, and a breaking-news ticker. Archives use infinite scroll and can switch between list and grid. Articles get a clean reading page with a Khmer word-break toggle, related stories and threaded comments.
 
-**Bilingual without a plugin**
-
-* `/` is Khmer and `/en/` is English. Theme strings, dates and WordPress core strings follow the URL.
-* Link each post to its translation. This drives the header language switcher and the hreflang tags.
-* Categories and tags have an English name field.
-* One click creates the English draft of a post, with its title, content, image, categories and tags copied over.
-
-**Editorial controls**
+**Editorial layout**
 
 * Sticky posts fill the hero; posts in the *Video* format fill the video block.
 * Each category has its own accent color and homepage position.
-* Popular-post score, a breaking-news ticker that expires on its own, a sponsored label shown on every card, and a source name and link.
+* Breadcrumbs, a two-level menu that moves extra items into a "More" menu, and widget areas for a sidebar and three ad slots (empty slots take no space).
 
 **For readers**
 
-* Breadcrumb, a two-level menu that moves extra items into a "More" menu, and sharing to Facebook, Telegram, X, email or copy link.
-* Infinite scroll that switches to a "Load more" button, so the footer stays reachable.
-* A double opt-in newsletter with unsubscribe links.
+* Infinite scroll that switches to a "Load more" button, so the footer stays reachable; plain pagination without JavaScript.
+* A list / grid switch on archives that is remembered.
+* A "show word breaks" switch on Khmer articles that use zero-width spaces.
 
 **Fast and accessible**
 
-* 11 self-hosted Khmer fonts; visitors never contact a font CDN, and only the fonts in use are downloaded.
+* 11 self-hosted Khmer fonts; visitors never contact a font service, and only the fonts in use are downloaded.
 * About 10 KB of CSS and 6 KB of JavaScript (gzipped), with no jQuery.
 * Skip link, visible focus styles, a pausable carousel and ticker, announced feed updates and reduced-motion support.
 
 **One settings page**
 
-The *Sbek Theme* admin page sets the site title and tagline in both languages, logo and icons, brand colors and fonts, homepage sections, category colors and order, contact details, social links and analytics. It can also import demo content and remove it again.
+*Appearance > Sbek Theme* sets the logo and site icon, brand colors and fonts (with a live preview), homepage sections, category colors and order, contact details, the copyright line and social links.
 
 == Installation ==
 
 1. In your admin area, go to Appearance > Themes and click Add New Theme.
 2. Click Upload Theme, choose the theme zip file, then click Install Now.
 3. Click Activate.
-4. For Khmer dates and admin strings, install the Khmer language pack under Settings > General > Site Language.
-5. Open *Sbek Theme* in the admin menu and work through the tabs.
-6. Under Appearance > Menus, assign menus to *Primary menu (Khmer)*, *Primary menu (English)*, *Footer links (Khmer)* and *Footer links (English)*.
-
-To see the theme with sample posts, use *Sbek Theme > Tools > Import demo content*. *Remove demo content* deletes exactly what the import created.
+4. For Khmer dates and admin strings, choose Khmer under Settings > General > Site Language.
+5. Open *Appearance > Sbek Theme* and work through the tabs.
+6. Under Appearance > Menus, assign menus to *Primary menu* and *Footer links*.
 
 == Frequently Asked Questions ==
 
-= Do I need a translation plugin? =
-
-No. The theme handles Khmer and English itself. Set each post's language in the editor, and link translations in the *Translation* box.
-
 = How do I choose which categories appear on the home page? =
 
-In *Sbek Theme > Homepage*, give categories a homepage order (1, 2, 3…). Up to six categories are shown, and empty ones are skipped.
+In *Appearance > Sbek Theme > Homepage*, give categories a homepage position (1, 2, 3…). Up to six categories are shown, and empty ones are skipped. Without positions, the first top-level categories with posts are shown.
 
-= Why doesn't the newsletter send emails? =
+= What fills the breaking-news ticker? =
 
-Subscribers must confirm by email, so your site needs to be able to send mail. Use an SMTP plugin if your host doesn't send it.
+Posts with the post meta `_sbek_is_breaking` set to 1, published within the time set under *Homepage > Freshness*. Without such posts the ticker is hidden.
 
-= Does the theme support comments? =
+= Does the theme collect any data? =
 
-No. The theme has no comment form or comment list. Existing comments stay in the database.
+No. The theme stores only its own settings, sets no cookies of its own and loads nothing from other sites: fonts, icons and scripts are all bundled. Comments use WordPress's own comment form.
 
 == Changelog ==
 
@@ -95,7 +82,7 @@ This theme bundles the following third-party resources:
 Tailwind CSS, Copyright (c) Tailwind Labs, Inc.
 License: MIT
 Source: https://tailwindcss.com
-Used for: the base styles and utility classes compiled into assets/css/main.css and assets/css/admin.css.
+Used for: the base styles and utility classes compiled into assets/css/main.css, admin.css and editor.css.
 
 Lucide icons, Copyright (c) Lucide Contributors 2022; portions Copyright (c) Cole Bemis 2013-2022 (Feather)
 License: ISC
@@ -126,10 +113,6 @@ Images
 
 * screenshot.png, Copyright 2026 Hel Mab
   License: GPLv2 or later
-  Shows the theme with its own generated demo content.
-* assets/images/demo-logo.png, Copyright 2026 Hel Mab
-  License: GPLv2 or later
+  Shows the theme with sample content; the sample images and logo in it were drawn for this theme.
 * assets/images/theme-options-banner.png, Copyright 2026 Hel Mab
   License: GPLv2 or later
-
-The demo content images are not bundled: the demo importer draws them with the PHP GD extension when it runs.
