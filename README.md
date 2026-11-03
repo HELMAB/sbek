@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="docs/brand/readme-banner.png" width="1280" alt="Sbek — the bilingual Khmer / English news theme for WordPress: hero grid, video and category blocks, 11 Khmer fonts, about 8 KB CSS and 4 KB JS">
+  <img src=".github/readme-banner.png" width="1280" alt="Sbek — the bilingual Khmer / English news theme for WordPress: hero grid, video and category blocks, 11 Khmer fonts, about 8 KB CSS and 4 KB JS">
 </p>
 
 # Sbek — bilingual news theme (Khmer / English)
