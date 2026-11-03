@@ -13,7 +13,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-define( 'SBEK_VERSION', '2.0.0' );
+define( 'SBEK_VERSION', '1.0.0' );
 define( 'SBEK_DIR', get_template_directory() );
 define( 'SBEK_URI', get_template_directory_uri() );
 

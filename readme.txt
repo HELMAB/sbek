@@ -72,15 +72,7 @@ No. The theme has no comment form or comment list. Existing comments stay in the
 
 == Changelog ==
 
-= 2.0.0 - 2026-11-02 =
-* New *Sbek Theme* settings page with General, Design, Homepage, Contact & Footer, Social, Integrations and Tools tabs.
-* Brand colors and 11 Khmer fonts, chosen in the admin.
-* Linked translations with a "Create the English version" button.
-* Demo content import and removal, in the admin and with WP-CLI.
-* Double opt-in newsletter.
-* New home page, archive, search and article layouts.
-
-= 1.0.0 - 2026-02-02 =
+= 1.0.0 - 2026-11-03 =
 * Initial release.
 
 == Copyright ==
