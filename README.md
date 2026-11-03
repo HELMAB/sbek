@@ -22,9 +22,9 @@ WordPress 6.5+, PHP 8.0+, Node 20+ (build only).
 ## Setup
 
 ```bash
-cd wp-content/themes/wp-sbek-theme
+cd wp-content/themes/sbek
 nvm use && npm install && npm run build && npm run build:admin
-wp theme activate wp-sbek-theme
+wp theme activate sbek
 wp language core install km          # Khmer core strings (dates, comments, admin)
 wp option update WPLANG km
 ```

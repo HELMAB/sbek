@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Sbek 2.0.0\n"
-"Report-Msgid-Bugs-To: https://wordpress.org/support/theme/wp-sbek-theme\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/theme/sbek\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Khmer\n"
 "MIME-Version: 1.0\n"
