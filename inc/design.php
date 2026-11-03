@@ -229,21 +229,65 @@ function sbek_design_head(): void {
 add_action( 'wp_head', 'sbek_design_head', 1 );
 
 /**
- * Brand the login screen with the same color.
+ * Brand the login screen with the Design colors and fonts: overrides the
+ * --sbek-* tokens login.css declares on body.login, and adds the
+ * @font-face rules of the selected body font (login.css loads no fonts).
  */
 function sbek_login_design(): void {
-	$d = sbek_design();
+	$d      = sbek_design();
+	$fonts  = sbek_font_choices();
+	$family = $fonts[ $d['font_body'] ]['family'];
+	$latin  = sbek_latin_font_choices()[ $d['font_latin'] ]['stack'];
 
-	// login.css scopes its tokens on #login, so match that specificity.
-	wp_add_inline_style(
-		'sbek-login',
-		sprintf(
-			'body.login #login{--sbek-primary:%1$s;--sbek-primary-hover:%2$s;--sbek-ring:%3$s;}body.login .sbek-login-panel{background:linear-gradient(135deg,%1$s 0%%,%4$s 100%%);}',
-			$d['brand'],
-			$d['brand_dark'],
-			implode( ' ', sbek_hex_to_rgb( $d['brand'] ) ),
-			sbek_mix_hex( $d['brand'], '#000000', 0.4 )
-		)
+	// The panel text sits mid-gradient; it is normal-size text, so it needs
+	// 4.5:1 there (sbek_readable_on() targets 3:1 for large/bold UI text).
+	$panel_end = sbek_mix_hex( $d['brand'], '#000000', 0.5 );
+	$panel_mid = sbek_mix_hex( $d['brand'], '#000000', 0.25 );
+	$on_panel  = 1.05 / ( sbek_luminance( $panel_mid ) + 0.05 ) >= 4.5 ? '#ffffff' : '#111111';
+
+	$vars = array(
+		'--sbek-primary'       => $d['brand'],
+		'--sbek-primary-hover' => $d['brand_dark'],
+		'--sbek-on-primary'    => sbek_readable_on( $d['brand'] ),
+		'--sbek-ring'          => implode( ' ', sbek_hex_to_rgb( $d['brand'] ) ),
+		'--sbek-panel-from'    => $d['brand'],
+		'--sbek-panel-to'      => $panel_end,
+		'--sbek-on-panel'      => $on_panel,
+		'--sbek-font'          => '"' . $family . '", ' . $latin,
 	);
+
+	$css = 'body.login{';
+	foreach ( $vars as $name => $value ) {
+		$css .= $name . ':' . $value . ';';
+	}
+	$css .= '}';
+
+	wp_add_inline_style( 'sbek-login', sbek_font_face_css( $family ) . $css );
 }
 add_action( 'login_enqueue_scripts', 'sbek_login_design', 20 );
+
+/**
+ * The @font-face rules for one family, taken from assets/css/src/fonts.css
+ * (the single source of truth for the font files) with absolute URLs, for
+ * pages that don't load main.css.
+ *
+ * @param string $family Font family name as declared in fonts.css.
+ * @return string CSS ('' if the family isn't declared).
+ */
+function sbek_font_face_css( string $family ): string {
+	$file = SBEK_DIR . '/assets/css/src/fonts.css';
+	$css  = is_readable( $file ) ? (string) file_get_contents( $file ) : ''; // phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents -- local theme file.
+
+	if ( '' === $css || ! preg_match_all( '/@font-face\s*\{[^}]*\}/', $css, $matches ) ) {
+		return '';
+	}
+
+	$out = '';
+	foreach ( $matches[0] as $rule ) {
+		if ( false !== strpos( $rule, 'font-family: "' . $family . '";' ) ) {
+			$out .= str_replace( 'url("../fonts/', 'url("' . SBEK_URI . '/assets/fonts/', $rule );
+		}
+	}
+
+	return preg_replace( '/\s+/', ' ', $out );
+}

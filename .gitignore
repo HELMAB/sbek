@@ -19,3 +19,5 @@ Thumbs.db
 package-lock.json
 yarn.lock
 docs/
+dist/
+bin/
