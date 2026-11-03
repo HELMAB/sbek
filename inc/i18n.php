@@ -393,6 +393,26 @@ function sbek_get_translation( int $post_id, string $lang ): ?WP_Post {
 }
 
 /**
+ * On non-default-language pages, point the privacy policy link (footer,
+ * newsletter consent) at the page's linked translation instead of the
+ * default-language page, which would only redirect there.
+ *
+ * @param string $url            Privacy policy URL.
+ * @param int    $policy_page_id Privacy policy page ID.
+ * @return string
+ */
+function sbek_localize_privacy_policy_url( $url, $policy_page_id ) {
+	if ( ! $url || ! sbek_is_routed_request() || sbek_is_default_lang() ) {
+		return $url;
+	}
+
+	$translation = sbek_get_translation( (int) $policy_page_id, sbek_lang() );
+
+	return $translation ? (string) get_permalink( $translation ) : $url;
+}
+add_filter( 'privacy_policy_url', 'sbek_localize_privacy_policy_url', 10, 2 );
+
+/**
  * hreflang alternates for the home page, singular views (linked
  * translations) and category/tag archives (when the term has posts in the
  * other language too).
