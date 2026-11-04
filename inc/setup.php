@@ -34,6 +34,19 @@ function sbek_setup(): void {
 			'default-color' => 'f6f6f6', // --color-page in input.css.
 		)
 	);
+	// Optional background image for the top bar (behind the logo and header
+	// ad, desktop only); printed by sbek_enqueue_design() in inc/design.php.
+	add_theme_support(
+		'custom-header',
+		array(
+			'width'       => 1920,
+			'height'      => 120,
+			'flex-width'  => true,
+			'flex-height' => true,
+			'header-text' => false,
+			'uploads'     => true,
+		)
+	);
 	add_theme_support( 'wp-block-styles' );
 	add_theme_support( 'align-wide' );
 	add_theme_support( 'editor-styles' );

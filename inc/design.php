@@ -206,7 +206,21 @@ function sbek_design_css(): string {
  * Attach the overrides to the main stylesheet and preload the body font.
  */
 function sbek_enqueue_design(): void {
-	wp_add_inline_style( 'sbek-main', sbek_design_css() );
+	wp_add_inline_style( 'sbek-main', sbek_design_css() . sbek_header_image_css() );
+}
+
+/**
+ * Custom header image (Appearance → Customize → Header Image) as the top
+ * bar's background, over the top-bar color. '' when none is set.
+ */
+function sbek_header_image_css(): string {
+	$image = get_header_image();
+
+	if ( ! $image ) {
+		return '';
+	}
+
+	return '.top-bar{background-image:url("' . esc_url( $image ) . '");background-size:cover;background-position:center;}';
 }
 add_action( 'wp_enqueue_scripts', 'sbek_enqueue_design', 20 );
 

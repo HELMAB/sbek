@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-11-03T08:19:17+00:00\n"
+"POT-Creation-Date: 2026-11-04T02:17:09+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: sbek\n"
@@ -668,6 +668,152 @@ msgstr ""
 msgid "You have unsaved changes."
 msgstr ""
 
+#: inc/block-editor.php:20
+#: inc/block-editor.php:85
+msgid "Fact box"
+msgstr ""
+
+#: inc/block-editor.php:23
+msgid "Underlined"
+msgstr ""
+
+#: inc/block-editor.php:26
+msgid "Large"
+msgstr ""
+
+#: inc/block-editor.php:29
+#: inc/block-editor.php:64
+#: inc/block-editor.php:68
+msgid "Key points"
+msgstr ""
+
+#: inc/block-editor.php:32
+msgid "Brand line"
+msgstr ""
+
+#: inc/block-editor.php:35
+msgid "Framed"
+msgstr ""
+
+#: inc/block-editor.php:59
+msgctxt "block pattern category"
+msgid "Sbek news"
+msgstr ""
+
+#: inc/block-editor.php:65
+msgid "A short summary list at the top of an article."
+msgstr ""
+
+#: inc/block-editor.php:66
+msgid "summary"
+msgstr ""
+
+#: inc/block-editor.php:66
+msgid "highlights"
+msgstr ""
+
+#: inc/block-editor.php:71
+msgid "The most important fact of the story."
+msgstr ""
+
+#: inc/block-editor.php:75
+msgid "A second point readers should know."
+msgstr ""
+
+#: inc/block-editor.php:79
+msgid "What happens next."
+msgstr ""
+
+#: inc/block-editor.php:86
+msgid "Background information set apart from the story."
+msgstr ""
+
+#: inc/block-editor.php:87
+msgid "background"
+msgstr ""
+
+#: inc/block-editor.php:87
+msgid "info box"
+msgstr ""
+
+#: inc/block-editor.php:89
+msgid "Background"
+msgstr ""
+
+#: inc/block-editor.php:91
+msgid "Add context, figures or a short timeline that helps readers follow the story."
+msgstr ""
+
+#: inc/block-editor.php:96
+#: inc/block-editor.php:100
+msgid "Read also"
+msgstr ""
+
+#: inc/block-editor.php:97
+msgid "Links to related stories inside the article."
+msgstr ""
+
+#: inc/block-editor.php:98
+msgid "related"
+msgstr ""
+
+#: inc/block-editor.php:98
+msgid "links"
+msgstr ""
+
+#: inc/block-editor.php:103
+#: inc/block-editor.php:107
+msgid "Select this text and add a link to a related story"
+msgstr ""
+
+#: inc/block-editor.php:113
+msgid "Quote with source"
+msgstr ""
+
+#: inc/block-editor.php:114
+msgid "A large quotation with the speaker’s name and role."
+msgstr ""
+
+#: inc/block-editor.php:115
+msgid "quotation"
+msgstr ""
+
+#: inc/block-editor.php:115
+msgid "interview"
+msgstr ""
+
+#: inc/block-editor.php:118
+msgid "Put the strongest line from the interview here."
+msgstr ""
+
+#: inc/block-editor.php:119
+msgid "Name, role"
+msgstr ""
+
+#: inc/block-editor.php:123
+msgid "Editor’s note"
+msgstr ""
+
+#: inc/block-editor.php:124
+msgid "A correction or update note, separated from the story by a line."
+msgstr ""
+
+#: inc/block-editor.php:125
+msgid "correction"
+msgstr ""
+
+#: inc/block-editor.php:125
+msgid "update"
+msgstr ""
+
+#: inc/block-editor.php:131
+msgid "Editor’s note:"
+msgstr ""
+
+#: inc/block-editor.php:131
+msgid "Describe what was corrected or updated, and when."
+msgstr ""
+
 #: inc/design.php:33
 msgid "Classic, very readable (default body)"
 msgstr ""
@@ -740,44 +886,44 @@ msgstr ""
 msgid "More"
 msgstr ""
 
-#: inc/setup.php:43
+#: inc/setup.php:62
 msgid "Primary menu"
 msgstr ""
 
-#: inc/setup.php:44
+#: inc/setup.php:63
 msgid "Footer links"
 msgstr ""
 
-#: inc/setup.php:71
+#: inc/setup.php:90
 #: sidebar.php:20
 msgid "Sidebar"
 msgstr ""
 
-#: inc/setup.php:71
+#: inc/setup.php:90
 msgid "Below the Popular / Latest lists on articles and archives."
 msgstr ""
 
-#: inc/setup.php:72
+#: inc/setup.php:91
 msgid "Ad: header (728×90)"
 msgstr ""
 
-#: inc/setup.php:72
+#: inc/setup.php:91
 msgid "Right of the logo in the black top bar (desktop)."
 msgstr ""
 
-#: inc/setup.php:73
+#: inc/setup.php:92
 msgid "Ad: beside hero (300×250 ×2)"
 msgstr ""
 
-#: inc/setup.php:73
+#: inc/setup.php:92
 msgid "Right of the homepage hero grid (desktop). Add up to two widgets."
 msgstr ""
 
-#: inc/setup.php:74
+#: inc/setup.php:93
 msgid "Ad: beside video (300×250)"
 msgstr ""
 
-#: inc/setup.php:74
+#: inc/setup.php:93
 msgid "Right of the homepage video grid (large screens)."
 msgstr ""
 

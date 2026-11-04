@@ -23,6 +23,7 @@ $sbek_modules = array(
 	'inc/language.php',
 	'inc/setup.php',
 	'inc/design.php',
+	'inc/block-editor.php',
 	'inc/icons.php',
 	'inc/queries.php',
 	'inc/template-tags.php',

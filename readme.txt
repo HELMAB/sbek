@@ -17,6 +17,8 @@ Sbek is a classic WordPress theme for news sites, designed for Khmer and equally
 * Sticky posts fill the hero; posts in the *Video* format fill the video block.
 * Each category has its own accent color and homepage position.
 * Breadcrumbs, a two-level menu that moves extra items into a "More" menu, and widget areas for a sidebar and three ad slots (empty slots take no space).
+* Block patterns for articles (Key points, Fact box, Read also, Quote with source, Editor's note) under *Sbek news* in the inserter, and matching block styles for groups, headings, quotes, lists, separators and images.
+* An optional header image behind the logo bar (Appearance > Customize > Header Image).
 
 **For readers**
 
