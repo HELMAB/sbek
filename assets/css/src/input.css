@@ -1927,6 +1927,92 @@
     font-weight: 700;
   }
 
+  /* Block styles (inc/block-editor.php); mirrored in src/editor.css. */
+  .entry-content .is-style-sbek-fact-box {
+    padding: 15px 18px;
+    border-top: 3px solid var(--color-menu);
+    background: #f9f9f9;
+  }
+  .entry-content .is-style-sbek-fact-box > :first-child {
+    margin-top: 0;
+  }
+  .entry-content .is-style-sbek-fact-box > :last-child {
+    margin-bottom: 0;
+  }
+  .entry-content .is-style-sbek-rule {
+    position: relative;
+    padding-bottom: 10px;
+    font-family: var(--font-strong);
+    font-weight: var(--font-strong-weight);
+  }
+  .entry-content .is-style-sbek-rule::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 55px;
+    height: 3px;
+    background: var(--color-rule);
+  }
+  .entry-content .is-style-sbek-rule.has-text-align-center::after {
+    left: calc(50% - 27.5px);
+  }
+  .entry-content .is-style-sbek-large {
+    padding: 0 0 0 20px;
+    border-left-width: 4px;
+    background: none;
+    color: #222;
+    font-family: var(--font-strong);
+    font-size: 20px;
+    font-weight: var(--font-strong-weight);
+    line-height: 1.6;
+  }
+  .entry-content .is-style-sbek-large cite {
+    display: block;
+    margin-top: 8px;
+    color: #777;
+    font-family: var(--font-sans);
+    font-size: 13px;
+    font-style: normal;
+    font-weight: 400;
+  }
+  .entry-content .is-style-sbek-key-points {
+    padding-left: 0;
+    list-style: none;
+  }
+  .entry-content .is-style-sbek-key-points > li {
+    position: relative;
+    padding-left: 18px;
+  }
+  .entry-content .is-style-sbek-key-points > li::before {
+    content: "";
+    position: absolute;
+    top: 9px;
+    left: 0;
+    width: 8px;
+    height: 8px;
+    background: var(--color-menu);
+  }
+  .entry-content .wp-block-separator.is-style-sbek-brand {
+    width: 55px;
+    margin-inline: 0;
+    border-top: 3px solid var(--color-rule);
+    opacity: 1;
+  }
+  .entry-content .wp-block-separator.is-style-sbek-brand.aligncenter {
+    margin-inline: auto;
+  }
+  .entry-content .is-style-sbek-framed img {
+    padding: 5px;
+    border: 1px solid #e5e5e5;
+    background: #fff;
+  }
+  .entry-content .sbek-editor-note {
+    color: #555;
+    font-size: 13px;
+    font-style: italic;
+  }
+
   /* ── 404 ─────────────────────────────────────────────────────────────── */
 
   .not-found {

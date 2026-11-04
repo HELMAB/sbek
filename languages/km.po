@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Sbek 1.0.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/theme/sbek\n"
-"POT-Creation-Date: 2026-11-03T08:19:17+00:00\n"
+"POT-Creation-Date: 2026-11-04T02:17:09+00:00\n"
 "PO-Revision-Date: 2026-11-02T03:32:41+00:00\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Khmer\n"
@@ -35,7 +35,13 @@ msgid ""
 "colors, 11 self-hosted Khmer fonts, homepage sections, contact details and "
 "social links. About 10 KB of CSS and 6 KB of JavaScript (gzipped), no "
 "jQuery; built with Tailwind CSS v4 and vanilla JS."
-msgstr "ស្បែកព័ត៌មានដែលផ្ដោតលើភាសាខ្មែរ។ ស្បែកបុរាណដែលលឿនសម្រាប់គេហទំព័រព័ត៌មាន៖ ក្រឡាអត្ថបទលេចធ្លោ ប្លុកវីដេអូ និងប្លុកប្រភេទតាមពណ៌ ខ្សែព័ត៌មានទាន់ហេតុការណ៍ ទំព័របណ្ណសាររំកិលមិនចេះចប់ដែលប្ដូរបញ្ជី/ក្រឡាបាន និងទំព័រអត្ថបទស្អាតដែលអាចបង្ហាញចន្លោះពាក្យខ្មែរ។ ទំព័រ Sbek Theme (ក្រោម រូបរាង) កំណត់ឡូហ្គោ ពណ៌ម៉ាក ពុម្ពអក្សរខ្មែរ ១១ ដែលផ្ទុកលើគេហទំព័រផ្ទាល់ ផ្នែកទំព័រដើម ព័ត៌មានទំនាក់ទំនង និងតំណបណ្តាញសង្គម។ CSS ប្រហែល 10 KB និង JavaScript 6 KB (gzip) គ្មាន jQuery បង្កើតដោយ Tailwind CSS v4 និង JavaScript សុទ្ធ។"
+msgstr ""
+"ស្បែកព័ត៌មានដែលផ្ដោតលើភាសាខ្មែរ។ ស្បែកបុរាណដែលលឿនសម្រាប់គេហទំព័រព័ត៌មាន៖ ក្រឡាអត្ថបទលេចធ្លោ "
+"ប្លុកវីដេអូ និងប្លុកប្រភេទតាមពណ៌ ខ្សែព័ត៌មានទាន់ហេតុការណ៍ ទំព័របណ្ណសាររំកិលមិនចេះចប់ដែលប្ដូរបញ្ជី/"
+"ក្រឡាបាន និងទំព័រអត្ថបទស្អាតដែលអាចបង្ហាញចន្លោះពាក្យខ្មែរ។ ទំព័រ Sbek Theme (ក្រោម រូបរាង) "
+"កំណត់ឡូហ្គោ ពណ៌ម៉ាក ពុម្ពអក្សរខ្មែរ ១១ ដែលផ្ទុកលើគេហទំព័រផ្ទាល់ ផ្នែកទំព័រដើម ព័ត៌មានទំនាក់ទំនង "
+"និងតំណបណ្តាញសង្គម។ CSS ប្រហែល 10 KB និង JavaScript 6 KB (gzip) គ្មាន jQuery "
+"បង្កើតដោយ Tailwind CSS v4 និង JavaScript សុទ្ធ។"
 
 #. Author URI of the theme
 #: style.css
@@ -741,6 +747,148 @@ msgstr ""
 msgid "You have unsaved changes."
 msgstr "អ្នកមានការផ្លាស់ប្ដូរដែលមិនទាន់រក្សាទុក។"
 
+#: inc/block-editor.php:20 inc/block-editor.php:85
+msgid "Fact box"
+msgstr "ប្រអប់ព័ត៌មាន"
+
+#: inc/block-editor.php:23
+msgid "Underlined"
+msgstr "មានបន្ទាត់ក្រោម"
+
+#: inc/block-editor.php:26
+msgid "Large"
+msgstr "ធំ"
+
+#: inc/block-editor.php:29 inc/block-editor.php:64 inc/block-editor.php:68
+msgid "Key points"
+msgstr "ចំណុចសំខាន់ៗ"
+
+#: inc/block-editor.php:32
+msgid "Brand line"
+msgstr "បន្ទាត់ពណ៌ម៉ាក"
+
+#: inc/block-editor.php:35
+msgid "Framed"
+msgstr "មានស៊ុម"
+
+#: inc/block-editor.php:59
+msgctxt "block pattern category"
+msgid "Sbek news"
+msgstr "ព័ត៌មាន Sbek"
+
+#: inc/block-editor.php:65
+msgid "A short summary list at the top of an article."
+msgstr "បញ្ជីសង្ខេបខ្លីនៅខាងដើមអត្ថបទ។"
+
+#: inc/block-editor.php:66
+msgid "summary"
+msgstr "សេចក្តីសង្ខេប"
+
+#: inc/block-editor.php:66
+msgid "highlights"
+msgstr "ចំណុចលេចធ្លោ"
+
+#: inc/block-editor.php:71
+msgid "The most important fact of the story."
+msgstr "ព័ត៌មានសំខាន់បំផុតនៃរឿងរ៉ាវ។"
+
+#: inc/block-editor.php:75
+msgid "A second point readers should know."
+msgstr "ចំណុចទីពីរដែលអ្នកអានគួរដឹង។"
+
+#: inc/block-editor.php:79
+msgid "What happens next."
+msgstr "អ្វីដែលនឹងកើតឡើងបន្ទាប់។"
+
+#: inc/block-editor.php:86
+msgid "Background information set apart from the story."
+msgstr "ព័ត៌មានផ្ទៃខាងក្រោយ ដាក់ដាច់ដោយឡែកពីរឿងរ៉ាវ។"
+
+#: inc/block-editor.php:87
+msgid "background"
+msgstr "ផ្ទៃខាងក្រោយ"
+
+#: inc/block-editor.php:87
+msgid "info box"
+msgstr "ប្រអប់ព័ត៌មាន"
+
+#: inc/block-editor.php:89
+msgid "Background"
+msgstr "ផ្ទៃខាងក្រោយ"
+
+#: inc/block-editor.php:91
+msgid ""
+"Add context, figures or a short timeline that helps readers follow the story."
+msgstr "បន្ថែមបរិបទ តួលេខ ឬកាលប្បវត្តិខ្លីៗ ដែលជួយអ្នកអានឲ្យតាមដានរឿងរ៉ាវបាន។"
+
+#: inc/block-editor.php:96 inc/block-editor.php:100
+msgid "Read also"
+msgstr "អានបន្ថែម"
+
+#: inc/block-editor.php:97
+msgid "Links to related stories inside the article."
+msgstr "តំណទៅរឿងរ៉ាវពាក់ព័ន្ធ នៅក្នុងអត្ថបទ។"
+
+#: inc/block-editor.php:98
+msgid "related"
+msgstr "ពាក់ព័ន្ធ"
+
+#: inc/block-editor.php:98
+msgid "links"
+msgstr "តំណ"
+
+#: inc/block-editor.php:103 inc/block-editor.php:107
+msgid "Select this text and add a link to a related story"
+msgstr "ជ្រើសអត្ថបទនេះ ហើយបន្ថែមតំណទៅរឿងរ៉ាវពាក់ព័ន្ធ"
+
+#: inc/block-editor.php:113
+msgid "Quote with source"
+msgstr "សម្រង់សម្តីមានប្រភព"
+
+#: inc/block-editor.php:114
+msgid "A large quotation with the speaker’s name and role."
+msgstr "សម្រង់សម្តីធំ ជាមួយឈ្មោះ និងតួនាទីរបស់អ្នកនិយាយ។"
+
+#: inc/block-editor.php:115
+msgid "quotation"
+msgstr "សម្រង់សម្តី"
+
+#: inc/block-editor.php:115
+msgid "interview"
+msgstr "បទសម្ភាសន៍"
+
+#: inc/block-editor.php:118
+msgid "Put the strongest line from the interview here."
+msgstr "ដាក់សម្តីដែលខ្លាំងបំផុតពីបទសម្ភាសន៍នៅទីនេះ។"
+
+#: inc/block-editor.php:119
+msgid "Name, role"
+msgstr "ឈ្មោះ, តួនាទី"
+
+#: inc/block-editor.php:123
+msgid "Editor’s note"
+msgstr "កំណត់សម្គាល់របស់និពន្ធនាយក"
+
+#: inc/block-editor.php:124
+msgid "A correction or update note, separated from the story by a line."
+msgstr "កំណត់សម្គាល់អំពីការកែតម្រូវ ឬបច្ចុប្បន្នភាព ដែលបំបែកពីរឿងរ៉ាវដោយបន្ទាត់មួយ។"
+
+#: inc/block-editor.php:125
+msgid "correction"
+msgstr "ការកែតម្រូវ"
+
+#: inc/block-editor.php:125
+msgid "update"
+msgstr "បច្ចុប្បន្នភាព"
+
+#: inc/block-editor.php:131
+msgid "Editor’s note:"
+msgstr "កំណត់សម្គាល់របស់និពន្ធនាយក៖"
+
+#: inc/block-editor.php:131
+msgid "Describe what was corrected or updated, and when."
+msgstr "ពិពណ៌នាអំពីអ្វីដែលបានកែតម្រូវ ឬធ្វើបច្ចុប្បន្នភាព និងនៅពេលណា។"
+
 #: inc/design.php:33
 msgid "Classic, very readable (default body)"
 msgstr "បុរាណ អានងាយស្រួល (លំនាំដើមសម្រាប់អត្ថបទ)"
@@ -812,43 +960,43 @@ msgstr "បង្ហាញម៉ឺនុយរងសម្រាប់ %s"
 msgid "More"
 msgstr "ច្រើនទៀត"
 
-#: inc/setup.php:43
+#: inc/setup.php:62
 msgid "Primary menu"
 msgstr "ម៉ឺនុយមេ"
 
-#: inc/setup.php:44
+#: inc/setup.php:63
 msgid "Footer links"
 msgstr "តំណបាតទំព័រ"
 
-#: inc/setup.php:71 sidebar.php:20
+#: inc/setup.php:90 sidebar.php:20
 msgid "Sidebar"
 msgstr "របារចំហៀង"
 
-#: inc/setup.php:71
+#: inc/setup.php:90
 msgid "Below the Popular / Latest lists on articles and archives."
 msgstr "នៅក្រោមបញ្ជីអត្ថបទពេញនិយម / ថ្មីៗ លើទំព័រអត្ថបទ និងបណ្ណសារ។"
 
-#: inc/setup.php:72
+#: inc/setup.php:91
 msgid "Ad: header (728×90)"
 msgstr "ពាណិជ្ជកម្ម៖ ខាងលើ (728×90)"
 
-#: inc/setup.php:72
+#: inc/setup.php:91
 msgid "Right of the logo in the black top bar (desktop)."
 msgstr "នៅខាងស្ដាំឡូហ្គោក្នុងរបារខាងលើពណ៌ខ្មៅ (កុំព្យូទ័រ)។"
 
-#: inc/setup.php:73
+#: inc/setup.php:92
 msgid "Ad: beside hero (300×250 ×2)"
 msgstr "ពាណិជ្ជកម្ម៖ ក្បែរផ្នែកលេចធ្លោ (300×250 ×2)"
 
-#: inc/setup.php:73
+#: inc/setup.php:92
 msgid "Right of the homepage hero grid (desktop). Add up to two widgets."
 msgstr "នៅខាងស្ដាំក្រឡាអត្ថបទលេចធ្លោលើទំព័រដើម (កុំព្យូទ័រ)។ បន្ថែមបានរហូតដល់ពីរវិដជិត។"
 
-#: inc/setup.php:74
+#: inc/setup.php:93
 msgid "Ad: beside video (300×250)"
 msgstr "ពាណិជ្ជកម្ម៖ ក្បែរវីដេអូ (300×250)"
 
-#: inc/setup.php:74
+#: inc/setup.php:93
 msgid "Right of the homepage video grid (large screens)."
 msgstr "នៅខាងស្ដាំក្រឡាវីដេអូលើទំព័រដើម (អេក្រង់ធំ)។"
 
