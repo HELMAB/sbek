@@ -19,7 +19,7 @@ The project is two parts, so the theme can be listed on WordPress.org (which doe
 - **Editorial controls:** sticky posts → hero; *Video* post format → video block; per-category accent color and homepage position; with the plugin, a trending score, a breaking-news ticker that expires on its own, a sponsored flag (labelled on every card), source name/URL, and one-click "create the English version" drafts.
 - **Reader features:** breadcrumb, two-level menu with a "More" overflow, infinite scroll that hands over to a "Load more" button, threaded comments; with the plugin, share to Facebook / Telegram / X / email / copy link and a double opt-in newsletter.
 - **Performance:** self-hosted Khmer font subsets, one deferred vanilla-JS file, about 10 KB gzipped CSS and 6 KB JS, responsive `srcset` images, hero images downloaded once on every viewport; the plugin adds ID-only transient caching with automatic invalidation.
-- **Security:** nonces, capability checks and registered sanitizers on every write; escaped output; the plugin adds login lockout, hardened headers and a throttled newsletter with a honeypot.
+- **Security:** nonces, capability checks and registered sanitizers on every write; escaped output; the plugin adds login lockout, optional hardening (security headers, XML-RPC and file editors off, hidden user list) and a throttled newsletter with a honeypot.
 - **Accessible:** skip link, semantic headings, focus-visible styles, carousel hidden-slide handling with pause and slide buttons, a pause button on the ticker, announced pager and feed updates, reduced-motion support.
 
 ## Requirements
