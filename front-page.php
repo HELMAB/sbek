@@ -1,11 +1,17 @@
 <?php
 /**
  * Homepage: hero, video block, then one block per homepage category.
+ * With a static homepage (Settings → Reading) the chosen page shows instead.
  *
  * @package sbek
  */
 
 defined( 'ABSPATH' ) || exit;
+
+if ( 'page' === get_option( 'show_on_front' ) ) {
+	get_template_part( 'page' );
+	return;
+}
 
 get_header();
 ?>
