@@ -18,7 +18,7 @@ if ( ! $sbek_post instanceof WP_Post ) {
 	return;
 }
 ?>
-<article class="feed-item" data-feed-item>
+<article <?php post_class( 'feed-item', $sbek_post ); ?> data-feed-item>
 	<a href="<?php echo esc_url( get_permalink( $sbek_post ) ); ?>" class="feed-item__link">
 		<div class="feed-item__media">
 			<?php

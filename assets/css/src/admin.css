@@ -6,6 +6,8 @@
 @source '../../../inc/admin/theme-options.php';
 @source '../../../inc/admin/dashboard-widget.php';
 @source '../../../assets/js/admin-theme-options.js';
+/* "sticky" only appears in UI text; don't emit the utility. */
+@source not inline('sticky');
 @import './fonts.css';
 
 @theme {
@@ -25,6 +27,19 @@
 	--sbek-accent-soft-2: color-mix(in srgb, var(--sbek-accent) 16%, transparent);
 	--sbek-accent-ring: color-mix(in srgb, var(--sbek-accent) 18%, transparent);
 	--sbek-danger: #b91c1c;
+}
+
+/* Inline icons (inc/icons.php), mirrored from input.css: the Sbek Theme page
+   and the companion plugin's admin screens. */
+.sbek-icon--line {
+	fill: none;
+	stroke: currentColor;
+	stroke-width: 2;
+	stroke-linecap: round;
+	stroke-linejoin: round;
+}
+.sbek-icon--solid {
+	fill: currentColor;
 }
 
 /* ─────────────────────────────────────────────────────────────────────────

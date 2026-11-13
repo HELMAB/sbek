@@ -268,8 +268,12 @@ function sbek_get_breaking_posts( int $limit = 5 ): array {
 	$hours = absint( sbek_site_setting( 'breaking_hours', 48 ) );
 	$args  = array(
 		'posts_per_page' => $limit,
-		'meta_key'       => '_sbek_is_breaking', // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key
-		'meta_value'     => '1', // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_value
+		'meta_query'     => array( // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
+			array(
+				'key'   => '_sbek_is_breaking',
+				'value' => '1',
+			),
+		),
 	);
 
 	if ( $hours ) {
@@ -298,11 +302,11 @@ function sbek_get_home_categories( int $limit = SBEK_HOME_BLOCK_LIMIT ): array {
 			'taxonomy'   => 'category',
 			'hide_empty' => true,
 			'number'     => $limit,
-			'meta_key'   => 'sbek_home_order', // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key
-			'orderby'    => 'meta_value_num',
+			// Order by the named meta_query clause (no top-level meta_key).
+			'orderby'    => 'home_order',
 			'order'      => 'ASC',
 			'meta_query' => array( // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
-				array(
+				'home_order' => array(
 					'key'     => 'sbek_home_order',
 					'value'   => 0,
 					'compare' => '>',

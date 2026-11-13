@@ -36,7 +36,6 @@ $sbek_modules = array(
 	// Public site.
 	'inc/frontend/assets.php',
 	'inc/frontend/class-sbek-menu-walker.php',
-	'inc/frontend/content.php',
 );
 
 foreach ( $sbek_modules as $sbek_module ) {

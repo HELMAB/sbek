@@ -197,6 +197,42 @@ function sbek_get_post_image( WP_Post $post, string $size = 'sbek-card', array $
 }
 
 /**
+ * The article's featured image (with caption) above the text, unless the post
+ * leads with a video: a plugin that embeds one there (`sbek_has_lead_video`)
+ * gets no second picture.
+ *
+ * @param WP_Post $post Post.
+ */
+function sbek_article_cover( WP_Post $post ): void {
+	if ( ! has_post_thumbnail( $post ) || apply_filters( 'sbek_has_lead_video', false, $post ) ) {
+		return;
+	}
+
+	$thumbnail_id = (int) get_post_thumbnail_id( $post );
+	$alt          = trim( (string) get_post_meta( $thumbnail_id, '_wp_attachment_image_alt', true ) );
+	$caption      = wp_get_attachment_caption( $thumbnail_id );
+	?>
+	<figure class="article__cover">
+		<?php
+		echo get_the_post_thumbnail( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- core image markup, attributes escaped.
+			$post,
+			'large',
+			array(
+				'alt'           => '' !== $alt ? $alt : get_the_title( $post ),
+				'sizes'         => '(max-width: 767px) 100vw, 730px',
+				'loading'       => 'eager',
+				'fetchpriority' => 'high',
+			)
+		);
+		?>
+		<?php if ( $caption ) : ?>
+			<figcaption><?php echo esc_html( $caption ); ?></figcaption>
+		<?php endif; ?>
+	</figure>
+	<?php
+}
+
+/**
  * The 16:9 zoom-on-hover thumbnail frame (`.thumb` in the stylesheet).
  *
  * @param WP_Post             $post    Post.

@@ -19,6 +19,9 @@
 @source "../../../inc/template-tags.php";
 @source "../../js/theme.js";
 @source "../../../inc/design.php";
+/* "sticky" appears in comments; never emit the utility, since core's post
+   class `.sticky` would then turn into position: sticky. */
+@source not inline("sticky");
 
 @import "./fonts.css";
 
@@ -97,11 +100,42 @@
     font-family: var(--font-sans);
     font-size: 14px;
     line-height: 1.6;
+    overflow-wrap: break-word;
+  }
+
+  /* Long unbroken words (titles, URLs) wrap instead of overflowing. `anywhere`
+     also lowers the min-content width, so grid/flex cards don't widen either. */
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6,
+  .hero-item__title,
+  .media-row__title,
+  .archive-intro__name,
+  .breadcrumb__item,
+  .widget,
+  .comment-content,
+  .comment-author {
+    overflow-wrap: anywhere;
   }
 
   a {
     color: inherit;
     text-decoration: none;
+  }
+
+  /* Inline icons (inc/icons.php): presentation lives here, not in the markup. */
+  .sbek-icon--line {
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+  .sbek-icon--solid {
+    fill: currentColor;
   }
 
   :focus-visible {
@@ -1264,6 +1298,11 @@
   .feed-item {
     margin-bottom: 15px;
   }
+  /* Sticky posts on the blog page (core adds `.sticky` via post_class()). */
+  .feed-item.sticky .feed-item__link {
+    padding-left: 10px;
+    box-shadow: inset 3px 0 0 var(--color-menu);
+  }
   .feed-item__link {
     display: flex;
     flex-direction: column;
@@ -1906,6 +1945,14 @@
   .entry-content hr {
     border: 0;
     border-top: 1px solid #eee;
+  }
+  /* Contain floated media so it never runs into what follows (tags, footer,
+     the next comment). */
+  .entry-content,
+  .comment-content,
+  .archive-intro,
+  .widget {
+    display: flow-root;
   }
   .entry-content .alignleft {
     float: left;

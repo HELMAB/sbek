@@ -1,8 +1,7 @@
 <?php
 /**
- * Single article: blurred cover backdrop, breadcrumb, headline + meta, body
- * (cover image injected after the first paragraph, see
- * inc/frontend/content.php), byline, tags, related stories, comments;
+ * Single article: blurred cover backdrop, breadcrumb, headline + meta, cover
+ * image (sbek_article_cover()), body, byline, tags, related stories, comments;
  * sidebar on the right.
  *
  * Plugin hooks (the Sbek Companion plugin uses them for the video embed, the
@@ -72,6 +71,8 @@ while ( have_posts() ) :
 						<?php endif; ?>
 					</ul>
 				</header>
+
+				<?php sbek_article_cover( $sbek_post ); ?>
 
 				<?php if ( $sbek_has_zwsp ) : ?>
 					<div class="zwsp-toggle">
