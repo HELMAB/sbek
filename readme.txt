@@ -61,8 +61,16 @@ No. The theme stores only its own settings, sets no cookies of its own and loads
 
 == Changelog ==
 
+= 1.0.1 - 2026-11-13 =
+* Fixed: long titles and words wrap instead of overflowing the content area.
+* Fixed: post content, comments, widgets and archive intros contain floated images.
+* Fixed: homepage categories are ordered with a named meta_query clause instead of the deprecated meta_key argument.
+* Changed: the article cover image is printed by the single post template instead of being injected into the_content.
+* Changed: SVG icon fill and stroke now come from CSS instead of markup attributes.
+* Changed: the front page honors a static homepage set in Settings > Reading.
+
 = 1.0.0 - 2026-11-03 =
-* Initial release.
+* Initial submission.
 
 == Copyright ==
 

@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: Sbek 1.0.0\n"
+"Project-Id-Version: Sbek 1.0.1\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/theme/sbek\n"
 "POT-Creation-Date: 2026-11-04T02:17:09+00:00\n"
 "PO-Revision-Date: 2026-11-02T03:32:41+00:00\n"

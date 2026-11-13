@@ -1,6 +1,6 @@
 {
   "name": "sbek",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Sbek WordPress theme build tooling (Tailwind CSS v4).",
   "scripts": {
     "build": "npx @tailwindcss/cli -i ./assets/css/src/input.css -o ./assets/css/main.css --minify && npm run --silent build:editor",
